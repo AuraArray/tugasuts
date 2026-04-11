@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apotek Sehat Mandiri - Rizky Tanjung</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <h1 class="brand">Apotek<span>Sehat</span></h1>
+            <nav class="navbar">
+                <a href="#home">Beranda</a>
+                <a href="#produk">Produk</a>
+                <a href="#pemesanan">Pesan Obat</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="hero-section">
+            <div class="hero-content">
+                <h2>Layanan Kesehatan Terpercaya</h2>
+                <p>Menyediakan obat-obatan berkualitas dengan pelayanan cepat langsung ke rumah Anda.</p>
+            </div>
+        </section>
+
+        <section id="produk" class="container">
+            <h2 class="section-title">Produk & Layanan Kami</h2>
+            
+            <div class="dynamic-control">
+                <input type="text" id="itemName" placeholder="Nama Obat Baru">
+                <input type="text" id="itemPrice" placeholder="Harga (Rp)">
+                <button id="addBtn">Tambah Produk</button>
+            </div>
+
+            <div id="productGrid" class="flex-layout">
+                </div>
+        </section>
+
+        <section id="pemesanan" class="container bg-light">
+            <h2 class="section-title">Formulir Pemesanan Obat</h2>
+            <form id="orderForm" class="modern-form">
+                <div class="form-row">
+                    <label>Nama Pasien</label>
+                    <input type="text" id="custName" placeholder="Nama Lengkap">
+                    <span class="error" id="err-custName"></span>
+                </div>
+
+                <div class="form-row">
+                    <label>Email Aktif</label>
+                    <input type="email" id="custEmail" placeholder="nama@email.com">
+                    <span class="error" id="err-custEmail"></span>
+                </div>
+
+                <div class="form-row">
+                    <label>Nomor Telepon</label>
+                    <input type="number" id="custPhone" placeholder="0812...">
+                    <span class="error" id="err-custPhone"></span>
+                </div>
+
+                <div class="form-row">
+                    <label>Kategori Obat</label>
+                    <select id="category">
+                        <option value="">-- Pilih Kategori --</option>
+                        <option value="umum">Obat Umum</option>
+                        <option value="keras">Obat Keras (Butuh Resep)</option>
+                        <option value="herbal">Herbal</option>
+                    </select>
+                </div>
+
+                <div class="form-row radio-box">
+                    <label>Metode Pembayaran:</label>
+                    <input type="radio" name="pay" value="transfer" checked> Transfer Bank
+                    <input type="radio" name="pay" value="cod"> COD
+                </div>
+
+                <button type="submit" class="btn-primary">Kirim Pesanan Sekarang</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>Ujian Tengah Semester - Pemrograman Web Dasar</p>
+        <p><strong>Rizky Tanjung</strong> | Universitas Muhammadiyah Sumatera Utara</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
