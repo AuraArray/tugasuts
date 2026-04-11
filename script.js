@@ -1,64 +1,75 @@
-let products = [
-    { id: 1, name: "Amoxicillin 500mg", price: 25000 },
-    { id: 2, name: "Sanmol Tablet", price: 15000 },
-    { id: 3, name: "Vitamin B Complex", price: 12000 },
-    { id: 4, name: "Antasida Doen", price: 8000 }
+// Data Array of Objects (Soal 5)
+let stock = [
+    { id: 1, name: "Paracetamol", price: 12000 },
+    { id: 2, name: "Cefadroxil", price: 45000 },
+    { id: 3, name: "Vitamin D3", price: 32000 },
+    { id: 4, name: "Antasida Syrup", price: 18500 }
 ];
 
-const grid = document.getElementById('productGrid');
+const productGrid = document.getElementById('productGrid');
 
-function render() {
-    grid.innerHTML = "";
-    products.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-            <h3>${p.name}</h3>
-            <p>Harga: <strong>Rp ${p.price.toLocaleString()}</strong></p>
-            <button class="btn-delete" onclick="remove(${p.id})">[ Hapus Item ]</button>
+// Render Function
+function renderUI() {
+    productGrid.innerHTML = "";
+    stock.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+            <h3>${item.name}</h3>
+            <p>Rp ${item.price.toLocaleString('id-ID')}</p>
+            <button class="btn-del" onclick="deleteItem(${item.id})">Hapus Produk</button>
         `;
-        grid.appendChild(card);
+        productGrid.appendChild(div);
     });
 }
 
-document.getElementById('addBtn').addEventListener('click', () => {
-    const n = document.getElementById('itemName');
-    const p = document.getElementById('itemPrice');
-    if(n.value && p.value) {
-        products.push({ id: Date.now(), name: n.value, price: parseInt(p.value) });
-        n.value = ""; p.value = "";
-        render();
+// Add Item
+document.getElementById('addBtn').onclick = () => {
+    const name = document.getElementById('itemName');
+    const price = document.getElementById('itemPrice');
+    
+    if(name.value && price.value) {
+        stock.push({ id: Date.now(), name: name.value, price: parseInt(price.value) });
+        name.value = ""; price.value = "";
+        renderUI();
     }
-});
+};
 
-function remove(id) {
-    products = products.filter(x => x.id !== id);
-    render();
+// Delete Item
+function deleteItem(id) {
+    stock = stock.filter(item => item.id !== id);
+    renderUI();
 }
 
-document.getElementById('orderForm').addEventListener('submit', function(e) {
+// Form Validation (Soal 4)
+document.getElementById('orderForm').onsubmit = function(e) {
     e.preventDefault();
-    let valid = true;
-    
-    // Validasi Sederhana
-    const name = document.getElementById('custName');
-    const email = document.getElementById('custEmail');
-    const qty = document.getElementById('custQty');
+    let isSuccess = true;
 
-    if(name.value.length < 3) {
-        document.getElementById('err-custName').innerText = "Nama terlalu pendek!";
-        valid = false;
+    // Reset errors
+    document.querySelectorAll('.error').forEach(e => e.innerText = "");
+
+    const name = document.getElementById('custName').value;
+    const email = document.getElementById('custEmail').value;
+    const phone = document.getElementById('custPhone').value;
+
+    if(name === "") {
+        document.getElementById('err-custName').innerText = "Nama wajib diisi!";
+        isSuccess = false;
     }
-    if(!email.value.includes('@')) {
-        document.getElementById('err-custEmail').innerText = "Email tidak valid!";
-        valid = false;
+    if(!email.includes('@')) {
+        document.getElementById('err-custEmail').innerText = "Format email salah!";
+        isSuccess = false;
     }
-    if(qty.value <= 0) {
-        document.getElementById('err-custQty').innerText = "Jumlah harus positif!";
-        valid = false;
+    if(phone <= 0 || phone === "") {
+        document.getElementById('err-custPhone').innerText = "Nomor telepon harus angka positif!";
+        isSuccess = false;
     }
 
-    if(valid) alert("Pesanan Berhasil!");
-});
+    if(isSuccess) {
+        alert("Terima kasih Rizky! Pesanan diproses.");
+        this.reset();
+    }
+};
 
-render();
+renderUI();
