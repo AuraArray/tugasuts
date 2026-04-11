@@ -3,96 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apotek Modern - Rizky Tanjung</title>
+    <title>Bio-Kinetik Pharma | Rizky Tanjung</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="background-blob"></div>
+    <div class="grid-overlay"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
 
-    <header class="navbar">
-        <div class="nav-container">
-            <div class="logo">Apotek<span>Pro</span></div>
+    <header class="cyber-header">
+        <div class="container nav-box">
+            <h1 class="logo">BIO<span>KINETIK</span></h1>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#produk">Produk</a></li>
-                    <li><a href="#pemesanan">Pemesanan</a></li>
+                    <li><a href="#home">HOME</a></li>
+                    <li><a href="#katalog">INVENTORY</a></li>
+                    <li><a href="#order">RESERVASI</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <main class="container">
-        
+    <main>
         <section id="home" class="hero">
-            <h1>Layanan Kesehatan <br><span>Masa Depan</span></h1>
-            <p>Sistem manajemen obat pintar untuk kesehatan Anda yang lebih baik.</p>
-        </section>
-
-        <section id="produk" class="glass-section">
-            <h2 class="title">Katalog Obat</h2>
-            
-            <div class="admin-panel">
-                <input type="text" id="itemName" placeholder="Nama Produk">
-                <input type="number" id="itemPrice" placeholder="Harga (Rp)">
-                <button id="addBtn">Tambah</button>
-            </div>
-
-            <div id="productGrid" class="grid-container">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">EST 2026 - TECH PHARMA</span>
+                    <h1>EVOLUSI <br><span class="gradient-text">APOTEK DIGITAL</span></h1>
+                    <p>Integrasi bioteknologi dalam genggaman. Solusi kesehatan presisi untuk masa depan bionik Anda.</p>
+                    <div class="hero-btns">
+                        <a href="#katalog" class="btn-main">LIHAT KATALOG</a>
+                        <a href="#order" class="btn-sub">PESAN OBAT</a>
+                    </div>
                 </div>
+            </div>
         </section>
 
-        <section id="pemesanan" class="form-section">
-            <div class="glass-card">
-                <h2 class="title">Form Pemesanan</h2>
-                <form id="orderForm">
-                    <div class="form-row">
-                        <div class="input-group">
-                            <label>Nama Pasien</label>
-                            <input type="text" id="custName" placeholder="Tulis nama anda">
-                            <span class="error" id="err-custName"></span>
-                        </div>
-                        <div class="input-group">
-                            <label>Email</label>
-                            <input type="email" id="custEmail" placeholder="email@gmail.com">
-                            <span class="error" id="err-custEmail"></span>
-                        </div>
+        <section id="katalog" class="katalog">
+            <div class="container">
+                <h2 class="section-title">LOG AKTIVITAS INVENTORI</h2>
+                
+                <div class="admin-panel">
+                    <div class="input-wrapper">
+                        <input type="text" id="itemName" placeholder="NAMA MATERIAL OBAT">
+                        <input type="number" id="itemPrice" placeholder="UNIT PRICE (RP)">
+                        <button id="addBtn" class="add-circle">+</button>
                     </div>
+                </div>
 
-                    <div class="input-group">
-                        <label>Nomor Telepon</label>
-                        <input type="number" id="custPhone" placeholder="08...">
-                        <span class="error" id="err-custPhone"></span>
+                <div id="productGrid" class="flex-container">
                     </div>
+            </div>
+        </section>
 
-                    <div class="form-row">
-                        <div class="input-group">
-                            <label>Jenis Obat</label>
-                            <select id="cat">
-                                <option value="Bebas">Obat Bebas</option>
-                                <option value="Resep">Obat Resep</option>
-                            </select>
-                        </div>
-                        <div class="input-group radio-check">
-                            <label>Metode</label>
-                            <div class="radio-group">
-                                <label><input type="radio" name="pay" checked> Transfer</label>
-                                <label><input type="radio" name="pay"> COD</label>
+        <section id="order" class="order">
+            <div class="container">
+                <div class="glass-form-box">
+                    <h2 class="form-title">VALIDASI PESANAN</h2>
+                    <form id="orderForm">
+                        <div class="row">
+                            <div class="field">
+                                <label>IDENTITAS PASIEN</label>
+                                <input type="text" id="custName" placeholder="Nama Lengkap">
+                                <span class="error" id="err-custName"></span>
+                            </div>
+                            <div class="field">
+                                <label>ALAMAT EMAIL</label>
+                                <input type="email" id="custEmail" placeholder="nama@provider.com">
+                                <span class="error" id="err-custEmail"></span>
                             </div>
                         </div>
-                    </div>
 
-                    <button type="submit" class="btn-glow">Konfirmasi Pesanan</button>
-                </form>
+                        <div class="field">
+                            <label>NOMOR TELEPON (WA)</label>
+                            <input type="number" id="custPhone" placeholder="0812...">
+                            <span class="error" id="err-custPhone"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="field">
+                                <label>METODE PEMBAYARAN</label>
+                                <div class="radio-wrap">
+                                    <label><input type="radio" name="pay" checked> TRANSFER</label>
+                                    <label><input type="radio" name="pay"> COD</label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>PRIORITAS</label>
+                                <select id="prio">
+                                    <option value="reguler">REGULER</option>
+                                    <option value="express">EXPRESS (ANTAR CEPAT)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">AKTIFKAN PROSES PESANAN</button>
+                    </form>
+                </div>
             </div>
         </section>
-
     </main>
 
-    <footer>
-        <p>Created by <strong>Rizky Tanjung</strong> &copy; 2026</p>
+    <footer class="cyber-footer">
+        <div class="container">
+            <p><strong>DEVELOPED BY: RIZKY TANJUNG</strong></p>
+            <p>UTS PRAKTIKUM PEMROGRAMAN WEB DASAR &copy; 2026</p>
+        </div>
     </footer>
 
     <script src="script.js"></script>
