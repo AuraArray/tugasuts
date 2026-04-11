@@ -9,19 +9,21 @@
 <body>
 
     <header class="main-header">
-        <div class="container">
+        <div class="container nav-wrapper">
             <h1 class="brand">Apotek<span>Sehat</span></h1>
             <nav class="navbar">
-                <a href="#home">Beranda</a>
-                <a href="#produk">Produk</a>
-                <a href="#pemesanan">Pesan Obat</a>
+                <ul>
+                    <li><a href="#home">Beranda</a></li>
+                    <li><a href="#produk">Produk</a></li>
+                    <li><a href="#pemesanan">Pesan Obat</a></li>
+                </ul>
             </nav>
         </div>
     </header>
 
     <main>
-        <section id="home" class="hero-section">
-            <div class="hero-content">
+        <section id="home" class="hero">
+            <div class="container">
                 <h2>Layanan Kesehatan Terpercaya</h2>
                 <p>Menyediakan obat-obatan berkualitas dengan pelayanan cepat langsung ke rumah Anda.</p>
             </div>
@@ -30,61 +32,57 @@
         <section id="produk" class="container">
             <h2 class="section-title">Produk & Layanan Kami</h2>
             
-            <div class="dynamic-control">
+            <div class="admin-panel">
                 <input type="text" id="itemName" placeholder="Nama Obat Baru">
-                <input type="text" id="itemPrice" placeholder="Harga (Rp)">
+                <input type="number" id="itemPrice" placeholder="Harga (Rp)">
                 <button id="addBtn">Tambah Produk</button>
             </div>
 
-            <div id="productGrid" class="flex-layout">
+            <div id="productGrid" class="product-layout">
                 </div>
         </section>
 
-        <section id="pemesanan" class="container bg-light">
-            <h2 class="section-title">Formulir Pemesanan Obat</h2>
-            <form id="orderForm" class="modern-form">
-                <div class="form-row">
-                    <label>Nama Pasien</label>
-                    <input type="text" id="custName" placeholder="Nama Lengkap">
-                    <span class="error" id="err-custName"></span>
-                </div>
-
-                <div class="form-row">
-                    <label>Email Aktif</label>
-                    <input type="email" id="custEmail" placeholder="nama@email.com">
-                    <span class="error" id="err-custEmail"></span>
-                </div>
-
-                <div class="form-row">
-                    <label>Nomor Telepon</label>
-                    <input type="number" id="custPhone" placeholder="0812...">
-                    <span class="error" id="err-custPhone"></span>
-                </div>
-
-                <div class="form-row">
-                    <label>Kategori Obat</label>
-                    <select id="category">
-                        <option value="">-- Pilih Kategori --</option>
-                        <option value="umum">Obat Umum</option>
-                        <option value="keras">Obat Keras (Butuh Resep)</option>
-                        <option value="herbal">Herbal</option>
-                    </select>
-                </div>
-
-                <div class="form-row radio-box">
-                    <label>Metode Pembayaran:</label>
-                    <input type="radio" name="pay" value="transfer" checked> Transfer Bank
-                    <input type="radio" name="pay" value="cod"> COD
-                </div>
-
-                <button type="submit" class="btn-primary">Kirim Pesanan Sekarang</button>
-            </form>
+        <section id="pemesanan" class="container">
+            <div class="form-wrapper">
+                <h2 class="section-title">Formulir Pemesanan</h2>
+                <form id="orderForm">
+                    <div class="input-group">
+                        <label>Nama Pasien</label>
+                        <input type="text" id="custName" placeholder="Nama Lengkap">
+                        <span class="error" id="err-custName"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" id="custEmail" placeholder="nama@email.com">
+                        <span class="error" id="err-custEmail"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Jumlah Pesanan</label>
+                        <input type="number" id="custQty" placeholder="0">
+                        <span class="error" id="err-custQty"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Jenis Layanan</label>
+                        <select id="serviceType">
+                            <option value="reguler">Pengiriman Reguler</option>
+                            <option value="express">Express (1 Jam)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Pembayaran</label>
+                        <div class="radio-wrap">
+                            <input type="radio" name="pay" checked> Transfer 
+                            <input type="radio" name="pay"> COD
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">Kirim Pesanan</button>
+                </form>
+            </div>
         </section>
     </main>
 
-    <footer class="main-footer">
-        <p>Ujian Tengah Semester - Pemrograman Web Dasar</p>
-        <p><strong>Rizky Tanjung</strong> | Universitas Muhammadiyah Sumatera Utara</p>
+    <footer class="footer">
+        <p><strong>Rizky Tanjung</strong> | UTS Praktikum Pemrograman Web Dasar 2026</p>
     </footer>
 
     <script src="script.js"></script>
