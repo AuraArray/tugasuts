@@ -1,89 +1,64 @@
-// 1. Data Inventory Awal (Soal 5)
-let inventory = [
-    { id: 1, name: "Amoxicillin 500mg", price: "25000" },
-    { id: 2, name: "Sanmol Tablet", price: "15000" },
-    { id: 3, name: "Vitamin B Complex", price: "12000" },
-    { id: 4, name: "Antasida Doen", price: "8000" }
+let products = [
+    { id: 1, name: "Amoxicillin 500mg", price: 25000 },
+    { id: 2, name: "Sanmol Tablet", price: 15000 },
+    { id: 3, name: "Vitamin B Complex", price: 12000 },
+    { id: 4, name: "Antasida Doen", price: 8000 }
 ];
 
 const grid = document.getElementById('productGrid');
 
-// Fungsi Render Item
-function renderProducts() {
+function render() {
     grid.innerHTML = "";
-    inventory.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'product-card';
-        div.innerHTML = `
-            <h3>${item.name}</h3>
-            <p>Harga: Rp ${item.price}</p>
-            <button onclick="deleteItem(${item.id})" style="background:none; border:none; color:red; cursor:pointer; margin-top:10px;">[ Hapus Item ]</button>
+    products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+            <h3>${p.name}</h3>
+            <p>Harga: <strong>Rp ${p.price.toLocaleString()}</strong></p>
+            <button class="btn-delete" onclick="remove(${p.id})">[ Hapus Item ]</button>
         `;
-        grid.appendChild(div);
+        grid.appendChild(card);
     });
 }
 
-// Tambah Item Baru
 document.getElementById('addBtn').addEventListener('click', () => {
-    const nameInput = document.getElementById('itemName');
-    const priceInput = document.getElementById('itemPrice');
-
-    if (nameInput.value && priceInput.value) {
-        inventory.push({
-            id: Date.now(),
-            name: nameInput.value,
-            price: priceInput.value
-        });
-        nameInput.value = "";
-        priceInput.value = "";
-        renderProducts();
-    } else {
-        alert("Mohon lengkapi data produk!");
+    const n = document.getElementById('itemName');
+    const p = document.getElementById('itemPrice');
+    if(n.value && p.value) {
+        products.push({ id: Date.now(), name: n.value, price: parseInt(p.value) });
+        n.value = ""; p.value = "";
+        render();
     }
 });
 
-// Hapus Item
-function deleteItem(id) {
-    inventory = inventory.filter(obj => obj.id !== id);
-    renderProducts();
+function remove(id) {
+    products = products.filter(x => x.id !== id);
+    render();
 }
 
-// 2. Validasi Form (Soal 4)
 document.getElementById('orderForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    let status = true;
+    let valid = true;
+    
+    // Validasi Sederhana
+    const name = document.getElementById('custName');
+    const email = document.getElementById('custEmail');
+    const qty = document.getElementById('custQty');
 
-    // Reset Pesan
-    document.querySelectorAll('.error').forEach(s => s.innerText = "");
-
-    const name = document.getElementById('custName').value;
-    const email = document.getElementById('custEmail').value;
-    const phone = document.getElementById('custPhone').value;
-
-    // Validasi Kosong
-    if (name.length < 3) {
-        document.getElementById('err-custName').innerText = "Nama minimal 3 karakter";
-        status = false;
+    if(name.value.length < 3) {
+        document.getElementById('err-custName').innerText = "Nama terlalu pendek!";
+        valid = false;
+    }
+    if(!email.value.includes('@')) {
+        document.getElementById('err-custEmail').innerText = "Email tidak valid!";
+        valid = false;
+    }
+    if(qty.value <= 0) {
+        document.getElementById('err-custQty').innerText = "Jumlah harus positif!";
+        valid = false;
     }
 
-    // Validasi Email Regex
-    const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailReg.test(email)) {
-        document.getElementById('err-custEmail').innerText = "Gunakan format email yang benar";
-        status = false;
-    }
-
-    // Validasi Angka Positif
-    if (phone === "" || parseInt(phone) <= 0) {
-        document.getElementById('err-custPhone').innerText = "Nomor telepon harus angka positif";
-        status = false;
-    }
-
-    if (status) {
-        alert("Form Terkirim! Terima kasih Rizky Tanjung.");
-        this.reset();
-    }
+    if(valid) alert("Pesanan Berhasil!");
 });
 
-// Inisialisasi Pertama
-renderProducts();
+render();
