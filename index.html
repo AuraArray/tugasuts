@@ -3,86 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apotek Sehat Mandiri - Rizky Tanjung</title>
+    <title>Apotek Modern - Rizky Tanjung</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <header class="main-header">
-        <div class="container nav-wrapper">
-            <h1 class="brand">Apotek<span>Sehat</span></h1>
-            <nav class="navbar">
-                <ul>
-                    <li><a href="#home">Beranda</a></li>
+    <div class="background-blob"></div>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">Apotek<span>Pro</span></div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
                     <li><a href="#produk">Produk</a></li>
-                    <li><a href="#pemesanan">Pesan Obat</a></li>
+                    <li><a href="#pemesanan">Pemesanan</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <main>
+    <main class="container">
+        
         <section id="home" class="hero">
-            <div class="container">
-                <h2>Layanan Kesehatan Terpercaya</h2>
-                <p>Menyediakan obat-obatan berkualitas dengan pelayanan cepat langsung ke rumah Anda.</p>
-            </div>
+            <h1>Layanan Kesehatan <br><span>Masa Depan</span></h1>
+            <p>Sistem manajemen obat pintar untuk kesehatan Anda yang lebih baik.</p>
         </section>
 
-        <section id="produk" class="container">
-            <h2 class="section-title">Produk & Layanan Kami</h2>
+        <section id="produk" class="glass-section">
+            <h2 class="title">Katalog Obat</h2>
             
             <div class="admin-panel">
-                <input type="text" id="itemName" placeholder="Nama Obat Baru">
+                <input type="text" id="itemName" placeholder="Nama Produk">
                 <input type="number" id="itemPrice" placeholder="Harga (Rp)">
-                <button id="addBtn">Tambah Produk</button>
+                <button id="addBtn">Tambah</button>
             </div>
 
-            <div id="productGrid" class="product-layout">
+            <div id="productGrid" class="grid-container">
                 </div>
         </section>
 
-        <section id="pemesanan" class="container">
-            <div class="form-wrapper">
-                <h2 class="section-title">Formulir Pemesanan</h2>
+        <section id="pemesanan" class="form-section">
+            <div class="glass-card">
+                <h2 class="title">Form Pemesanan</h2>
                 <form id="orderForm">
-                    <div class="input-group">
-                        <label>Nama Pasien</label>
-                        <input type="text" id="custName" placeholder="Nama Lengkap">
-                        <span class="error" id="err-custName"></span>
-                    </div>
-                    <div class="input-group">
-                        <label>Email</label>
-                        <input type="email" id="custEmail" placeholder="nama@email.com">
-                        <span class="error" id="err-custEmail"></span>
-                    </div>
-                    <div class="input-group">
-                        <label>Jumlah Pesanan</label>
-                        <input type="number" id="custQty" placeholder="0">
-                        <span class="error" id="err-custQty"></span>
-                    </div>
-                    <div class="input-group">
-                        <label>Jenis Layanan</label>
-                        <select id="serviceType">
-                            <option value="reguler">Pengiriman Reguler</option>
-                            <option value="express">Express (1 Jam)</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Pembayaran</label>
-                        <div class="radio-wrap">
-                            <input type="radio" name="pay" checked> Transfer 
-                            <input type="radio" name="pay"> COD
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Nama Pasien</label>
+                            <input type="text" id="custName" placeholder="Tulis nama anda">
+                            <span class="error" id="err-custName"></span>
+                        </div>
+                        <div class="input-group">
+                            <label>Email</label>
+                            <input type="email" id="custEmail" placeholder="email@gmail.com">
+                            <span class="error" id="err-custEmail"></span>
                         </div>
                     </div>
-                    <button type="submit" class="btn-submit">Kirim Pesanan</button>
+
+                    <div class="input-group">
+                        <label>Nomor Telepon</label>
+                        <input type="number" id="custPhone" placeholder="08...">
+                        <span class="error" id="err-custPhone"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Jenis Obat</label>
+                            <select id="cat">
+                                <option value="Bebas">Obat Bebas</option>
+                                <option value="Resep">Obat Resep</option>
+                            </select>
+                        </div>
+                        <div class="input-group radio-check">
+                            <label>Metode</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="pay" checked> Transfer</label>
+                                <label><input type="radio" name="pay"> COD</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-glow">Konfirmasi Pesanan</button>
                 </form>
             </div>
         </section>
+
     </main>
 
-    <footer class="footer">
-        <p><strong>Rizky Tanjung</strong> | UTS Praktikum Pemrograman Web Dasar 2026</p>
+    <footer>
+        <p>Created by <strong>Rizky Tanjung</strong> &copy; 2026</p>
     </footer>
 
     <script src="script.js"></script>
