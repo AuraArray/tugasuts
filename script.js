@@ -616,8 +616,7 @@ function calculateLiveClosingDashboard() {
 
 /* ==========================================================================
    7. OWNER CORE HUB STRATEGIC MANAGEMENT ENGINE (CRUD TABLES)
-   ========================================================================== */
-function renderOwnerDashboardMetrics() {
+   ========================================================================== */function renderOwnerDashboardMetrics() {
     renderOwnerProductsTable();
     renderOwnerBundlesTable();
     renderOwnerVouchersTable();
@@ -652,7 +651,7 @@ function renderOwnerDashboardMetrics() {
     if(document.getElementById('own-rekap-bulan')) document.getElementById('own-rekap-bulan').innerText = `Rp ${omzetBulan.toLocaleString('id-ID')}`;
     if(document.getElementById('own-rekap-tahun')) document.getElementById('own-rekap-tahun').innerText = `Rp ${omzetTahun.toLocaleString('id-ID')}`;
 
-    // Render Update Chart.js 12 Bulan (Jan - Des)
+    // Render Update Chart.js 12 Bulan (Jan - Des) - PREMIUM DARK iOS STYLE
     const ctx = document.getElementById('canvasTrenOwner');
     if (!ctx) return;
 
@@ -664,23 +663,37 @@ function renderOwnerDashboardMetrics() {
             datasets: [{
                 label: 'Tren Omzet Bersih Pakchill (Rp)',
                 data: bulananMap,
-                borderColor: '#2d5a27',
-                backgroundColor: 'rgba(45, 90, 39, 0.1)',
+                borderColor: '#00ff66', /* Hijau neon premium menyala */
+                backgroundColor: 'rgba(0, 255, 102, 0.08)', /* Efek glow transparan di bawah grafik */
                 borderWidth: 3,
-                tension: 0.25,
-                fill: true
+                tension: 0.28, /* Melengkung halus khas iOS */
+                fill: true,
+                pointBackgroundColor: '#00ff66',
+                pointHoverRadius: 7
             }]
         },
         options: { 
             responsive: true, 
             maintainAspectRatio: false,
+            plugins: {
+                legend: { 
+                    labels: { color: '#ffffff', font: { weight: 'bold' } } /* Teks legenda jadi putih */
+                }
+            },
             scales: {
-                y: { beginAtZero: true }
+                y: { 
+                    beginAtZero: true,
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' }, /* Garis grid tipis transparan */
+                    ticks: { color: '#a2bca0' } /* Angka sumbu Y warna sage soft */
+                },
+                x: {
+                    grid: { display: false }, /* Bersih tanpa garis vertikal */
+                    ticks: { color: '#a2bca0' } /* Nama bulan warna sage soft */
+                }
             }
         }
     });
 }
-
 /* --- A. CRUD SUB-DASHBOARD: MENU UTAMA --- */
 function renderOwnerProductsTable() {
     const tbody = document.getElementById('render-owner-products-target');
