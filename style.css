@@ -1,222 +1,219 @@
 /* ==========================================================================
    PAKCHILL POS v5.2 - ULTIMATE SOFT & CLEAN SAGE THEME (iOS 26 STANDARD)
+   100% MATCHED WITH ORIGINAL HTML & JAVASCRIPT LAYOUT ARCHITECTURE
    ========================================================================== */
 
-/* --- 1. GLOBAL ROOT VARIABLES --- */
+/* --- 1. SETINGAN DANA UTAMA & VARIABEL WARNA SOFT --- */
 :root {
-    /* Latar Belakang: Hijau Sage Cerah, Sangat Lembut & Adem di Mata */
-    --pakchill-bg-canvas: linear-gradient(135deg, #e4ede1 0%, #cbdcc7 50%, #b8cfb3 100%);
+    /* Latar Belakang: Gradasi Hijau Sage Pucat yang Sangat Lembut & Cerah */
+    --pakchill-bg-gradient: linear-gradient(135deg, #e2ebe0 0%, #edf2ec 60%, #e4ede1 100%);
     
-    /* Modul Kontainer: Putih Bersih Solid dengan Opasitas Tinggi (Anti-Gekap) */
-    --pakchill-solid-white: #ffffff;
-    --pakchill-soft-card: rgba(255, 255, 255, 0.92);
-    --pakchill-input-white: #ffffff;
+    /* Modul Kontainer: Putih Bersih Solid dengan Efek Bayangan Halus (Bukan Hijau Botol) */
+    --pakchill-card-white: #ffffff;
+    --pakchill-input-bg: #ffffff;
     
-    /* Palet Huruf / Teks Kontras Tinggi */
-    --pakchill-text-dark: #1f2e1d;       /* Hijau pinus tua untuk judul */
-    --pakchill-text-muted: #4a6347;      /* Sage sedang untuk deskripsi */
+    /* Warna Huruf / Tipografi Kontras Tinggi (Mudah Dibaca & Bersih) */
+    --pakchill-text-main: #1c2b1a;      /* Hijau Zaitun Gelap Pekat untuk Judul Utama */
+    --pakchill-text-sub: #5b6e58;       /* Abu-abu Kehijauan untuk Sub-informasi */
     
-    /* Aksen Tombol Utama: Hijau Sage Premium */
-    --pakchill-btn-primary: linear-gradient(135deg, #2b4229 0%, #1e301c 100%);
-    --pakchill-btn-hover: linear-gradient(135deg, #1e301c 0%, #132012 100%);
+    /* Tombol Utama & Angka Nominal Uang: Sage Matte Doft Tegas */
+    --pakchill-btn-matte: linear-gradient(135deg, #3a5338 0%, #2b3d29 100%);
+    --pakchill-btn-hover: linear-gradient(135deg, #2b3d29 0%, #1c2b1a 100%);
 }
 
-/* --- 2. GLOBAL RESET & BASE CANVAS --- */
 * {
     box-sizing: border-box;
 }
 
 body {
-    background: var(--pakchill-bg-canvas) !important;
+    background: var(--pakchill-bg-gradient) !important;
     background-attachment: fixed !important;
-    color: var(--pakchill-text-dark) !important;
+    color: var(--pakchill-text-main) !important;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif !important;
     margin: 0;
     padding: 0;
 }
 
-/* --- 3. LAYAR LOGIN / PIN SCREEN (100% PRESISI SESUAI GAMBAR) --- */
-#login-screen {
-    background: var(--pakchill-bg-canvas) !important;
+/* --- 2. LAYAR LOGIN / AUTHENTICATION SCREEN (STRUKTUR 100% UTUH) --- */
+#login-screen-overlay {
+    background: var(--pakchill-bg-gradient) !important;
+    /* Efek bulatan dekorasi di belakang layar dibuat transparan sangat lembut */
+    --pakchill-green-dark: var(--pakchill-text-main);
 }
 
-/* Kotak Putih Tengah Layar Login */
-#login-screen .login-box,
-#login-screen .login-container,
-#login-screen div[style*="background"] {
-    background: var(--pakchill-soft-card) !important;
+.floating-orb {
+    opacity: 0.25 !important;
+    filter: blur(40px) !important;
+}
+.orb-1 { background: #cbdcc7 !important; }
+.orb-2 { background: #b8cfb3 !important; }
+.orb-3 { background: #e4ede1 !important; }
+
+/* Kotak Login Tengah (Dibuat Bening Kaca Berembun Halus) */
+.login-glass-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 16px 40px rgba(91, 110, 88, 0.08) !important;
     border-radius: 24px !important;
-    box-shadow: 0 16px 40px rgba(116, 140, 111, 0.12) !important;
-    border: 1px solid rgba(255, 255, 255, 0.7) !important;
 }
 
-/* Label Judul Aplikasi di Layar Login */
-#login-screen h1, .brand-title {
-    color: var(--pakchill-text-dark) !important;
-    font-weight: 800 !important;
-    letter-spacing: -0.5px !important;
+/* Placeholder Bulatan Logo Pakchill di Layar Login */
+.pakchill-logo-placeholder {
+    background: linear-gradient(135deg, #cbdcc7 0%, #9cb396 100%) !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
 }
 
-/* Kotak Input Kolom PIN */
-#login-screen input[type="password"],
-#login-pin-input-box {
-    background-color: var(--pakchill-input-white) !important;
+/* Kotak Baris Input PIN */
+#login-screen-overlay input[type="password"] {
+    background-color: var(--pakchill-input-bg) !important;
     border: 1px solid #c3d1c0 !important;
-    color: var(--pakchill-text-dark) !important;
+    color: var(--pakchill-text-main) !important;
     border-radius: 12px !important;
     font-weight: 600 !important;
 }
 
-/* Tombol Buka Kunci Sistem (Layar Login) */
-#login-screen button,
-#btn-unlock {
-    background: var(--pakchill-btn-primary) !important;
+/* Tombol Buka Kunci Sistem */
+#login-screen-overlay button {
+    background: var(--pakchill-btn-matte) !important;
     color: #ffffff !important;
     font-weight: 700 !important;
     border-radius: 12px !important;
     border: none !important;
-    box-shadow: 0 4px 12px rgba(43, 66, 41, 0.2) !important;
+    box-shadow: 0 4px 14px rgba(58, 83, 56, 0.2) !important;
     transition: all 0.2s ease !important;
 }
-
-#login-screen button:hover,
-#btn-unlock:hover {
+#login-screen-overlay button:hover {
     background: var(--pakchill-btn-hover) !important;
     transform: translateY(-1px) !important;
 }
 
 
-/* --- 4. NAVIGATION BAR ATAS (HEADER WORKSPACE) --- */
-nav, .navbar, header {
-    background: rgba(255, 255, 255, 0.8) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
+/* --- 3. DASHBOARD UTAMA & INTERIOR MESIN KASIR --- */
+/* Top Navigation Bar */
+.ios-navbar {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
-nav h1, .navbar-brand {
-    color: var(--pakchill-text-dark) !important;
+.navbar-brand-title {
+    color: var(--pakchill-text-main) !important;
     font-weight: 800 !important;
 }
 
-
-/* --- 5. INTERIOR PANEL UTAMA (KASIR & OWNER PANEL) --- */
-/* Modul Kotak Besar Pembungkus Konten */
-.card, 
-.panel, 
-.ios-panel-card, 
-#panel-kanan-keranjang, 
-.katalog-container-flex,
-div[style*="background-color: white"],
-div[style*="background: white"] {
-    background: var(--pakchill-soft-card) !important;
+/* Modul Panel Kiri & Kanan (.ios-panel-card) - DIUBAH JADI PUTIH BERSIH SOFT */
+.ios-panel-card {
+    background: var(--pakchill-card-white) !important;
     border-radius: 20px !important;
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
-    box-shadow: 0 10px 30px rgba(130, 150, 126, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.7) !important;
+    box-shadow: 0 8px 30px rgba(91, 110, 88, 0.04) !important;
 }
 
-/* Judul Kategori / Section */
-h2, h3, h4, .section-title, .panel h3 {
-    color: var(--pakchill-text-dark) !important;
-    font-weight: 700 !important;
+/* Tulisan Judul di Setiap Section */
+h2, h3, h4, .section-title, [style*="color: var(--pakchill-green-dark)"] {
+    color: var(--pakchill-text-main) !important;
 }
 
 
-/* --- 6. GRID ITEM PRODUK (PACHOY, NANAS, DLL) --- */
-.product-item-card, 
-.product-card, 
-.product-item,
-div[style*="cursor: pointer"] {
-    background: var(--pakchill-solid-white) !important;
-    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+/* --- 4. KARTU MENU KATALOG (PACHOY, NANAS, DLL) --- */
+/* Kotak Menu Kasir */
+.ios-panel-card div[style*="cursor: pointer"] {
+    background: #ffffff !important;
+    border: 1px solid #e2ebe0 !important;
     border-radius: 16px !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01) !important;
     transition: all 0.2s ease !important;
 }
 
-/* Hover Efek Kartu Menu */
-.product-item-card:hover, 
-.product-card:hover,
-div[style*="cursor: pointer"]:hover {
+/* Efek Hover Sentuhan Pada Menu */
+.ios-panel-card div[style*="cursor: pointer"]:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 6px 16px rgba(43, 66, 41, 0.08) !important;
-    border-color: #cbdcc7 !important;
+    border-color: #9cb396 !important;
+    box-shadow: 0 6px 16px rgba(58, 83, 56, 0.06) !important;
 }
 
-/* Tulisan Nama Menu & Harga di Dalam Kartu */
-.product-item-card h4, .product-title { color: var(--pakchill-text-dark) !important; font-weight: 700 !important; }
-.product-item-card span, .product-price { color: #3b5937 !important; font-weight: 700 !important; }
 
-
-/* --- 7. INPUT FIELD, FORM, & DROPDOWN SELECTION --- */
+/* --- 5. OPERASIONAL FORM INPUT & SELEKTOR --- */
 input[type="text"],
 input[type="number"],
 select,
 textarea {
-    background-color: var(--pakchill-input-white) !important;
-    border: 1px solid #d5ded4 !important;
-    color: var(--pakchill-text-dark) !important;
+    background-color: var(--pakchill-input-bg) !important;
+    border: 1px solid #cbdcc7 !important;
+    color: var(--pakchill-text-main) !important;
     border-radius: 10px !important;
     padding: 10px 14px !important;
 }
 
 input:focus, select:focus {
-    border-color: #597a55 !important;
-    box-shadow: 0 0 0 3px rgba(89, 122, 85, 0.12) !important;
+    border-color: #3a5338 !important;
+    box-shadow: 0 0 0 3px rgba(58, 83, 56, 0.1) !important;
     outline: none !important;
 }
 
 
-/* --- 8. TOTAL TRANSAKSI & ACTION BUTTON SYSTEM --- */
-.total-tagihan-box, .total-box, div[style*="font-size: 24px"] {
-    background: rgba(255, 255, 255, 0.5) !important;
+/* --- 6. SUMMARY KERANJANG, TOTAL TAGIHAN, & TOMBOL AKSI --- */
+/* Pembungkus Area Total Tagihan */
+div[style*="background: #f1f3f0"], .total-box {
+    background: #edf2ec !important;
     border-radius: 12px !important;
 }
 
-/* Angka Nominal Uang Besar (Rp 0) */
-.total-tagihan-box span:last-child, 
-.grand-total-amount,
-div[style*="color: green"] {
-    color: #2b4229 !important; /* Hijau tua pekat padat */
+/* Nominal Angka Belanja Besar (Menghapus Hijau Neon/Hijau Gelap) */
+div[style*="color: #00ff66"], 
+div[style*="color: green"],
+.grand-total-amount {
+    color: #2b3d29 !important; /* Hijau Zaitun Tegas Solid */
     font-weight: 800 !important;
 }
 
-/* Seluruh Tombol Utama Transaksi & Submit */
-.ios-primary-btn, 
-.btn-primary, 
-.btn-checkout, 
-button[style*="background-color: green"],
-button[id*="simpan"],
-button[id*="proses"] {
-    background: var(--pakchill-btn-primary) !important;
+/* Seluruh Tombol Utama Eksekusi (Simpan, Proses, Aktifkan) */
+button, 
+.ios-primary-btn,
+button[style*="background: #112d18"],
+button[onclick*="save"],
+button[onclick*="process"] {
+    background: var(--pakchill-btn-matte) !important;
     color: #ffffff !important;
     border: none !important;
     font-weight: 700 !important;
     border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(58, 83, 56, 0.15) !important;
+    transition: all 0.2s ease !important;
 }
 
-/* --- 9. TABEL MANAJEMEN DATA CRUD & LOG TRANSAKSI --- */
-table {
+button:hover {
+    background: var(--pakchill-btn-hover) !important;
+}
+
+
+/* --- 7. TABEL LOG TRANSAKSI & DATA CRUDS --- */
+.ios-table-view {
     width: 100% !important;
-    color: var(--pakchill-text-dark) !important;
+    color: var(--pakchill-text-main) !important;
 }
 
-table th {
-    background-color: rgba(0, 0, 0, 0.02) !important;
-    color: var(--pakchill-text-muted) !important;
+.ios-table-view th {
+    background-color: #f7faf6 !important;
+    color: var(--pakchill-text-sub) !important;
     font-weight: 700 !important;
-    border-bottom: 2px solid #d5ded4 !important;
+    border-bottom: 2px solid #edf2ec !important;
 }
 
-table td {
-    border-bottom: 1px solid #e2ece0 !important;
-    color: var(--pakchill-text-dark) !important;
+.ios-table-view td {
+    border-bottom: 1px solid #edf2ec !important;
+    color: var(--pakchill-text-main) !important;
+    background-color: #ffffff !important;
 }
 
-table tr:hover td {
-    background-color: rgba(255, 255, 255, 0.6) !important;
+.ios-table-view tr:hover td {
+    background-color: #f7faf6 !important;
 }
 
-/* Status Badges di Log Transaksi */
-.badge-success, .badge-sukses { background: rgba(52, 199, 89, 0.15) !important; color: #1e6b30 !important; font-weight: 700 !important; }
-.badge-danger, .badge-void { background: rgba(255, 59, 48, 0.12) !important; color: #cc251b !important; font-weight: 700 !important; }
+/* Penyesuaian Warna Cetak Label Status */
+.badge-success, .badge-sukses { background: rgba(52, 199, 89, 0.12) !important; color: #1e6b30 !important; font-weight: 700 !important; }
+.badge-danger, .badge-void { background: rgba(255, 59, 48, 0.1) !important; color: #cc251b !important; font-weight: 700 !important; }
