@@ -1,155 +1,163 @@
 /* ==========================================================================
-   PAKCHILL POS SYSTEM - 100% ABSOLUTE OVERRIDE
-   THEME: ULTRA-PREMIUM SAGE GREEN & FROSTED WHITE GLASS (ANTI-DARK)
+   PAKCHILL POS - PREMIUM SAGE GLASS (iOS 26 STYLE)
+   100% COMPATIBLE WITH HTML & JAVASCRIPT APP ARCHITECTURE
    ========================================================================== */
 
-/* 1. PAKSA LATAR BELAKANG GLOBAL JADI HIJAU SAGE CERAH & LEMBUT (BUANG HIJAU PEKAT BUSUK) */
-html, body, div, section, main, article, .workspace-container, .container, .main-container {
-    background: linear-gradient(135deg, #e4ede1 0%, #cbdcc7 50%, #b8cfb3 100%) !important;
+/* --- 1. GLOBAL CORE & BACKGROUND CANVAS --- */
+:root {
+    --ios-sage-bg: linear-gradient(135deg, #e4ede1 0%, #cbdcc7 50%, #b8cfb3 100%);
+    --ios-glass-card: rgba(255, 255, 255, 0.35);
+    --ios-glass-input: rgba(255, 255, 255, 0.55);
+    --ios-glass-border: rgba(255, 255, 255, 0.45);
+    --ios-text-primary: #1f2e1d;
+    --ios-text-secondary: #4a6347;
+    --ios-btn-sage: linear-gradient(135deg, #597a55 0%, #43613f 100%);
+    --ios-btn-sage-hover: linear-gradient(135deg, #4d6b49 0%, #354e32 100%);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--ios-sage-bg) !important;
     background-attachment: fixed !important;
-    color: #253623 !important;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif !important;
+    color: var(--ios-text-primary) !important;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-/* 2. PAKSA HALAMAN LOGIN / PIN SCREEN JADI SAGE BENING TRANSPARAN */
-#login-screen, 
-.login-screen, 
-.login-container, 
-[id*="login"], 
-[class*="login"] {
-    background: linear-gradient(135deg, #e4ede1 0%, #cbdcc7 50%, #b8cfb3 100%) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
+/* --- 2. LAYAR LOGIN / AUTHENTICATION SCREEN (MODEL AWAL KEMBALI) --- */
+#login-screen {
+    background: var(--ios-sage-bg) !important;
+    /* Properti layout bawaan HTML/JS Anda tetap bekerja tanpa intervensi posisi di sini */
 }
 
-/* 3. UBAH KOTAK PIN (YANG DI FOTO HITAM/GELAP) JADI PUTIH BENING KACA (FROSTED GLASS) */
+/* Kotak Box Putih Tengah di Layar Login (Ubah Kaku Jadi Kaca Bening) */
+#login-screen .login-box, 
+#login-screen [class*="container"], 
+#login-screen [class*="card"] {
+    background: var(--ios-glass-card) !important;
+    backdrop-filter: blur(25px) saturate(120%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(120%) !important;
+    border: 1px solid var(--ios-glass-border) !important;
+    box-shadow: 0 12px 30px rgba(116, 140, 111, 0.15) !important;
+    border-radius: 20px !important; /* Gaya lengkungan iOS 26 */
+}
+
+/* --- 3. INPUT PIN UTAMA & CONTROLS --- */
+#login-screen input[type="password"], 
 .pin-display-wrapper, 
-.pin-input-box,
-#login-pin-input-box,
-input[type="password"],
-[id*="pin"],
-[class*="pin"] {
-    background: rgba(255, 255, 255, 0.55) !important;
-    backdrop-filter: blur(25px) saturate(130%) !important;
-    -webkit-backdrop-filter: blur(25px) saturate(130%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    color: #253623 !important;
-    box-shadow: 0 10px 25px rgba(142, 164, 138, 0.2) !important;
+#login-pin-input-box {
+    background: var(--ios-glass-input) !important;
+    border: 1px solid var(--ios-glass-border) !important;
+    color: var(--ios-text-primary) !important;
+    font-weight: 600 !important;
 }
 
-/* 4. UBAH TOMBOL "BUKA KUNCI SISTEM" JADI WARNA SAGE PREMIUM YANG SERASI DENGAN SECTION */
+/* Tombol Buka Kunci Sistem (Ganti Hijau Pekat Norak Menjadi Sage Premium) */
 #login-screen button, 
-.btn-unlock-system, 
-button[onclick*="login"],
-[id*="login"] button,
-.btn-login {
-    background: linear-gradient(135deg, #597a55 0%, #43613f 100%) !important;
+#login-screen .btn, 
+#btn-unlock {
+    background: var(--ios-btn-sage) !important;
     color: #ffffff !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     font-weight: 700 !important;
-    box-shadow: 0 6px 16px rgba(67, 97, 63, 0.15) !important;
-    text-shadow: none !important;
+    box-shadow: 0 4px 12px rgba(67, 97, 63, 0.12) !important;
 }
 
-#login-screen button:hover, 
-.btn-unlock-system:hover {
-    background: linear-gradient(135deg, #4d6b49 0%, #354e32 100%) !important;
-    box-shadow: 0 8px 22px rgba(67, 97, 63, 0.25) !important;
+#login-screen button:hover {
+    background: var(--ios-btn-sage-hover) !important;
 }
 
-/* 5. PAKSA SEMUA MODUL PANEL / KOTAK CARD INTERIOR JADI PUTIH BENING */
-.card, .panel, .ios-panel-card, .container-box, div[class*="card"], div[id*="panel"] {
-    background: rgba(255, 255, 255, 0.45) !important;
-    backdrop-filter: blur(25px) !important;
-    -webkit-backdrop-filter: blur(25px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
-    box-shadow: 0 12px 32px rgba(142, 164, 138, 0.12) !important;
-    color: #253623 !important;
-}
 
-/* 6. NAVIGASI ATAS (HEADER) */
+/* --- 4. INTERIOR DASHBOARD & INTERFACE KASIR --- */
 nav, .navbar, header {
     background: rgba(255, 255, 255, 0.4) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.5) !important;
+    border-bottom: 1px solid var(--ios-glass-border) !important;
 }
 
-/* 7. SEMUA HURUF / TEKS DISET SESUAI WARNA SECTION (SAGE TUA TAJAM) */
-h1, h2, h3, h4, h5, h6, th, .brand-title, .section-title {
-    color: #253623 !important;
-    font-weight: 700 !important;
-    text-shadow: none !important;
+/* Modul Panel Kiri & Kanan (Katalog & Keranjang Belanja) */
+.ios-panel-card, 
+.card, 
+.panel, 
+#panel-kanan-keranjang, 
+.katalog-container-flex {
+    background: var(--ios-glass-card) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--ios-glass-border) !important;
+    box-shadow: 0 8px 32px rgba(142, 164, 138, 0.08) !important;
 }
 
-p, span, label, td, small, .brand-subtitle {
-    color: #526b4f !important;
-    text-shadow: none !important;
-}
-
-/* 8. KARTU KATALOG PRODUK */
-.product-item, .product-card, [id*="product"], [class*="product"] {
+/* Kartu Item Produk di Grid Katalog */
+.product-item-card, .product-card, .product-item {
     background: rgba(255, 255, 255, 0.5) !important;
     border: 1px solid rgba(255, 255, 255, 0.7) !important;
 }
-.product-item:hover, .product-card:hover {
+.product-item-card:hover {
     background: #ffffff !important;
-    border-color: #526b4f !important;
+    border-color: var(--ios-text-secondary) !important;
 }
 
-/* 9. SELURUH INPUT & DROPDOWN */
+
+/* --- 5. OPERATIONAL INPUTS & FORM SYSTEM --- */
 input, select, textarea {
-    background-color: rgba(255, 255, 255, 0.65) !important;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
-    color: #253623 !important;
+    background-color: var(--ios-glass-input) !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    color: var(--ios-text-primary) !important;
 }
 input:focus, select:focus {
     background-color: #ffffff !important;
     border-color: #597a55 !important;
 }
 
-/* 10. TOTAL BOX / NOMINAL AKHIR RINGKASAN BELANJA */
-.total-box, .total-tagihan-box, [id*="total"], [class*="total"] {
-    background: rgba(255, 255, 255, 0.7) !important;
+
+/* --- 6. SUMMARY TRANSACTION & GENERAL BUTTONS --- */
+.total-tagihan-box, .total-box {
+    background: rgba(255, 255, 255, 0.65) !important;
     border: 1px solid #ffffff !important;
 }
-.total-box h2, .total-tagihan-box h2, .grand-total-amount, [id*="total"] span {
-    color: #3b5937 !important; /* Hijau sage tua pekat kontras tinggi khusus angka nominal */
+.total-tagihan-box span:last-child, .grand-total-amount {
+    color: #3b5937 !important; /* Warna hijau sage tua yang kontras untuk angka uang */
 }
 
-/* 11. SEMUA TOMBOL UTAMA DI SETIAP SECTION (ADAPTIF SAGE) */
-.btn, button, .ios-primary-btn, .btn-primary, [class*="btn-"] {
-    background: linear-gradient(135deg, #597a55 0%, #43613f 100%) !important;
+/* Seluruh Tombol Utama Transaksi di Setiap Section */
+.ios-primary-btn, .btn-primary, .btn-checkout, button[id*="proses"] {
+    background: var(--ios-btn-sage) !important;
     color: #ffffff !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
-.btn:hover, button:hover, .btn-primary:hover {
-    background: linear-gradient(135deg, #4d6b49 0%, #354e32 100%) !important;
+
+
+/* --- 7. EXECUTIVE MANAGEMENT (OWNER HUB & CRUD TABLES) --- */
+.card-rekap-box, .rekap-box, .metric-card {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: 1px solid var(--ios-glass-border) !important;
 }
 
-/* Pengecualian Tombol Void / Bahaya (Tetap Merah Soft Transparan Agar Tidak Keliru) */
-.btn-danger, #btn-trigger-void-receipt, [class*="void"], [class*="danger"] {
-    background: rgba(255, 59, 48, 0.15) !important;
-    color: #cc251b !important;
-    border: 1px solid rgba(255, 59, 48, 0.2) !important;
-}
-.btn-danger:hover, #btn-trigger-void-receipt:hover {
-    background: #ff3b30 !important;
-    color: #ffffff !important;
-}
-
-/* 12. TABEL CRUD & METRIK OWNER */
-.rekap-box, .metric-card, [id*="rekap"] {
-    background: rgba(255, 255, 255, 0.55) !important;
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+/* Sinkronisasi Baris Tabel Data CRUD */
+table th {
+    color: var(--ios-text-secondary) !important;
+    border-bottom: 2px solid rgba(67, 97, 63, 0.12) !important;
 }
 table td {
-    background: rgba(255, 255, 255, 0.3) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
-tr:hover td {
-    background: rgba(255, 255, 255, 0.65) !important;
+table tr:hover td {
+    background: rgba(255, 255, 255, 0.55) !important;
+}
+
+
+/* --- 8. SYSTEM TYPOGRAPHY COLORS ADAPTIVE --- */
+h1, h2, h3, h4, h5, h6, .brand-title, .section-title {
+    color: var(--ios-text-primary) !important;
+}
+p, span, label, td, th, small, li {
+    color: var(--ios-text-secondary) !important;
 }
