@@ -1,35 +1,19 @@
 /* ==========================================================================
-   1. GLOBAL VARIABLES & PURE iOS GLASS CORE (BENING & HIJAU)
+   1. GLOBAL VARIABLES & PREMIUM SAGE GLASS MATRIX
    ========================================================================== */
 :root {
-    /* Background Canvas: Gradasi Lembut Antara Hijau Alami dan Gelap */
-    --pakchill-grad-bg: linear-gradient(135deg, #071406 0%, #0d220c 50%, #133011 100%);
+    /* Base Canvas: Hijau Sage Lembut Cerah, Bukan Hitam Pekat */
+    --pakchill-grad-bg: linear-gradient(135deg, #e2ece0 0%, #cbdcc7 50%, #b8cfb3 100%);
     
-    /* Dynamic Aurora Backlight (Efek Bias Cahaya di Belakang Kaca) */
-    --pakchill-grad-aurora: linear-gradient(135deg, rgba(0, 255, 102, 0.15) 0%, rgba(34, 139, 34, 0.25) 100%);
+    /* Pure Frosted Glass (Putih Bening Berembun) */
+    --pakchill-glass-card: rgba(255, 255, 255, 0.45);
+    --pakchill-glass-input: rgba(255, 255, 255, 0.6);
+    --pakchill-glass-border: rgba(255, 255, 255, 0.5);
     
-    /* iOS Pure Glassmorphism: Bening Transparan dengan Efek Blur Tebal */
-    --pakchill-glass-card: rgba(255, 255, 255, 0.04); 
-    --pakchill-glass-input: rgba(255, 255, 255, 0.06);
-    --pakchill-glass-border: rgba(255, 255, 255, 0.12); /* Garis tepi kaca tipis bening */
-    
-    /* Interactive Premium Buttons (Gradasi Hijau Segar Premium) */
-    --pakchill-grad-button: linear-gradient(135deg, #1f702b 0%, #16933b 100%);
-    --pakchill-grad-active: linear-gradient(135deg, #19a33f 0%, #00ff66 100%);
-    --pakchill-glow-green: 0 8px 24px rgba(22, 147, 59, 0.3);
-    
-    /* iOS Typography Colors (Super Kontras & Bersih) */
-    --ios-text-primary: #ffffff;             /* Judul & Angka Utama */
-    --ios-text-secondary: rgba(255, 255, 255, 0.65); /* Keterangan / Sub-teks */
-    --ios-text-muted: rgba(255, 255, 255, 0.4);     /* Label / Placeholder */
-    
-    /* System Alerts */
-    --ios-alert-red: linear-gradient(135deg, #ff3b30 0%, #ff2d55 100%);
-    
-    /* Fluid Radius UI iOS */
+    /* Layout Constants */
     --radius-ios-fluid: 20px;
     --radius-ios-inner: 12px;
-    --transition-smooth: all 0.35s cubic-bezier(0.15, 1, 0.3, 1);
+    --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * {
@@ -42,49 +26,33 @@
 body {
     background: var(--pakchill-grad-bg);
     background-attachment: fixed;
-    color: var(--ios-text-primary);
+    color: #2d3e2b; /* Warna teks global sage tua agar tajam */
     overflow-x: hidden;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
 }
 
-/* ==========================================================================
-   2. BACKGROUND ORBS (MEMBUAT EFEK TRANSPARAN BENING MAKIN HIDUP)
-   ========================================================================== */
+/* Dynamic Aurora Orbs di Belakang Layar untuk Efek Kedalaman Kaca */
 .workspace-container::before {
     content: "";
     position: fixed;
-    top: 20%;
-    left: 15%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(0, 255, 102, 0.12) 0%, transparent 70%);
-    filter: blur(60px);
-    z-index: -1;
-    pointer-events: none;
-}
-
-.workspace-container::after {
-    content: "";
-    position: fixed;
-    bottom: 10%;
-    right: 10%;
+    top: -10%;
+    right: -10%;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(31, 112, 43, 0.18) 0%, transparent 70%);
-    filter: blur(80px);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
     z-index: -1;
     pointer-events: none;
 }
 
 /* ==========================================================================
-   3. NAVIGATION BAR (HEADER KACA BENING)
+   2. NAVIGATION BAR (TOP HEADER SECTION)
    ========================================================================== */
 nav {
     height: 75px;
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
     border-bottom: 1px solid var(--pakchill-glass-border);
     padding: 0 30px;
     display: flex;
@@ -100,27 +68,25 @@ nav {
 nav h1 {
     font-size: 22px;
     font-weight: 800;
+    color: #1e2d1c; /* Huruf khusus header: Hijau pinus pekat */
     letter-spacing: -0.5px;
-    background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 #badge-status-role {
     font-size: 11px;
     font-weight: 700;
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.08);
+    color: #3b5239;
+    background: rgba(255, 255, 255, 0.6);
     padding: 6px 14px;
     border-radius: 30px;
     border: 1px solid var(--pakchill-glass-border);
 }
 
 .logout-btn {
-    background: var(--ios-alert-red);
-    color: white;
-    border: none;
-    padding: 10px 20px;
+    background: rgba(255, 59, 48, 0.15);
+    color: #d11a10; /* Huruf tombol logout mengikuti warna alert */
+    border: 1px solid rgba(255, 59, 48, 0.3);
+    padding: 8px 18px;
     font-size: 12px;
     font-weight: 700;
     border-radius: var(--radius-ios-inner);
@@ -128,8 +94,9 @@ nav h1 {
     transition: var(--transition-smooth);
 }
 .logout-btn:hover {
+    background: #ff3b30;
+    color: #ffffff;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(255, 59, 48, 0.3);
 }
 
 .workspace-container {
@@ -139,20 +106,20 @@ nav h1 {
 }
 
 .main-welcome-title {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 800;
-    color: var(--ios-text-primary);
-    margin-bottom: 30px;
+    color: #243522;
+    margin-bottom: 25px;
     letter-spacing: -0.5px;
 }
 
 /* ==========================================================================
-   4. LAYOUT PANEL (PURE GLASSMORPHISM CARD)
+   3. KASIR WORKSPACE SECTION (LEFT PANEL)
    ========================================================================== */
 .kasir-operational-grid {
     display: grid;
     grid-template-columns: 1.15fr 0.85fr;
-    gap: 30px;
+    gap: 25px;
     align-items: start;
 }
 
@@ -160,294 +127,326 @@ nav h1 {
     .kasir-operational-grid { grid-template-columns: 1fr; }
 }
 
-.katalog-container-flex {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-/* KOTAK MODUL INDUK (BENING + BLUR TEBAL) */
+/* Kotak Induk Bening Putih Berembun */
 .ios-panel-card {
     background: var(--pakchill-glass-card);
-    backdrop-filter: blur(40px) saturate(160%);
-    -webkit-backdrop-filter: blur(40px) saturate(160%);
+    backdrop-filter: blur(30px) saturate(140%);
+    -webkit-backdrop-filter: blur(30px) saturate(140%);
     border-radius: var(--radius-ios-fluid);
-    padding: 28px;
+    padding: 25px;
     border: 1px solid var(--pakchill-glass-border);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 16px 32px rgba(142, 164, 138, 0.2);
 }
 
-.ios-panel-card h3 {
+/* Judul Section Kasir */
+.katalog-container-flex h3 {
+    color: #384e36; 
     font-size: 18px;
     font-weight: 700;
     margin-bottom: 20px;
-    color: var(--ios-text-primary);
-    letter-spacing: -0.3px;
 }
 
-/* ITEM KATALOG PRODUK */
+/* Grid Item Produk */
 .products-adaptive-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+    gap: 15px;
 }
 
 .product-item-card {
-    background: var(--pakchill-glass-input);
+    background: rgba(255, 255, 255, 0.5);
     border-radius: var(--radius-ios-inner);
-    padding: 20px 14px;
+    padding: 18px 12px;
     text-align: center;
     cursor: pointer;
-    position: relative;
     transition: var(--transition-smooth);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-}
-.product-item-card:hover {
-    transform: translateY(-4px);
-    background: rgba(255, 255, 255, 0.09);
-    border-color: rgba(255, 255, 255, 0.25);
-}
-.product-item-card:active {
-    transform: scale(0.96);
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
+/* Huruf di dalam kartu produk */
 .product-item-card h4 {
-    color: var(--ios-text-primary);
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 6px;
+    color: #2d3e2b;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
 }
 .product-item-card span {
-    color: var(--ios-text-secondary);
+    color: #556f52; /* Sage sedang */
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
+}
+
+/* Interaksi hover kartu produk */
+.product-item-card:hover {
+    transform: translateY(-4px);
+    background: #ffffff;
+    border-color: #60805c;
+    box-shadow: 0 8px 20px rgba(96, 128, 92, 0.15);
 }
 
 /* ==========================================================================
-   5. TRANSAKSI & KERANJANG BELANJA
+   4. SHOPPING CART SECTION (RIGHT PANEL)
    ========================================================================== */
-#cart-items-wrapper {
-    min-height: 80px;
-    max-height: 340px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-    padding-right: 4px;
+/* Judul Section Ringkasan Belanja */
+#panel-kanan-keranjang h3 {
+    color: #435c40;
+    font-size: 18px;
+    font-weight: 700;
 }
 
 .cart-item-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.cart-item-row .item-info h5 {
-    color: var(--ios-text-primary);
-    font-size: 14px;
-    font-weight: 600;
-}
-.cart-item-row .item-info p {
-    color: var(--ios-text-secondary);
-    font-size: 12px;
-}
+/* Huruf list belanja */
+.cart-item-row h5 { color: #2d3e2b; font-size: 14px; font-weight: 700; }
+.cart-item-row p { color: #688265; font-size: 12px; }
 
-/* TOTAL TAGIHAN BOX (BENING DENGAN BORDER GRADIASI HIJAU LEMBUT) */
+/* KOTAK TOTAL TAGIHAN (PUTIH TRANSPARAN PREMIUM) */
 .total-tagihan-box {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(0, 255, 102, 0.03) 100%);
+    background: rgba(255, 255, 255, 0.7);
     border-radius: var(--radius-ios-inner);
-    padding: 18px 22px;
+    padding: 16px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 20px 0;
-    border: 1px solid rgba(0, 255, 102, 0.2);
-    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.01);
+    border: 1px solid #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.02);
 }
+/* Tulisan "TOTAL AKHIR" */
 .total-tagihan-box span:first-child {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
-    color: var(--ios-text-secondary);
+    color: #556f52;
     letter-spacing: 0.5px;
 }
+/* Huruf Angka Total Nominal */
 .total-tagihan-box span:last-child {
-    font-size: 26px;
-    font-weight: 800;
+    font-size: 24px;
+    font-weight: 900;
+    color: #43643d; /* Hijau sage tua kontras tinggi */
+}
+
+/* Tombol Transaksi Utama (Section Kasir) */
+.ios-primary-btn {
+    width: 100%;
+    border: none;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: var(--radius-ios-inner);
+    cursor: pointer;
+    background: linear-gradient(135deg, #597a55 0%, #43613f 100%); /* Tombol warna sage berwibawa */
+    color: #ffffff; /* Huruf tombol putih bersih */
+    transition: var(--transition-smooth);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 6px 16px rgba(67, 97, 63, 0.2);
+}
+.ios-primary-btn:hover {
+    background: linear-gradient(135deg, #4d6b49 0%, #354e32 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(67, 97, 63, 0.35);
+}
+
+#btn-trigger-void-receipt {
+    background: rgba(255, 59, 48, 0.1);
+    color: #ff3b30; /* Huruf void merah */
+    border: 1px solid rgba(255, 59, 48, 0.2);
+    box-shadow: none;
+}
+#btn-trigger-void-receipt:hover {
+    background: #ff3b30;
     color: #ffffff;
-    text-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
 }
 
 /* ==========================================================================
-   6. INPUTS & FORM CONTROL (BENING SAGE CONTRAST)
+   5. INPUT & INPUT CONTROLS SYSTEM
    ========================================================================== */
 input, select {
     width: 100%;
-    padding: 13px 18px;
+    padding: 12px 16px;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     border-radius: var(--radius-ios-inner);
-    border: 1px solid var(--pakchill-glass-border);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     background-color: var(--pakchill-glass-input);
-    color: #ffffff;
-    margin-bottom: 15px;
+    color: #2d3e2b;
+    margin-bottom: 12px;
     outline: none;
     transition: var(--transition-smooth);
 }
 input:focus, select:focus {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.35);
+    background-color: #ffffff;
+    border-color: #597a55;
+    box-shadow: 0 0 0 3px rgba(89, 122, 85, 0.15);
 }
 input::placeholder {
-    color: var(--ios-text-muted);
+    color: #8fa38c;
 }
 
-/* SEGMENTED CONTROL (IOS FLAT SLIDER) */
+/* Segmented Radio Selector Tab */
 .segmented-control-ios {
     display: flex;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.05);
     padding: 3px;
     border-radius: var(--radius-ios-inner);
-    margin-bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.02);
 }
 .segmented-control-ios label {
     flex: 1;
     text-align: center;
     font-size: 12px;
-    font-weight: 600;
-    padding: 9px 0;
+    font-weight: 700;
+    padding: 8px 0;
     cursor: pointer;
     border-radius: 10px;
-    color: var(--ios-text-secondary);
-    transition: var(--transition-smooth);
+    color: #556f52;
 }
 .segmented-control-ios input[type="radio"]:checked + label {
-    background: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    background: #ffffff;
+    color: #354e32;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
 }
 
 /* ==========================================================================
-   7. INTERACTIVE PREMIUM BUTTONS (HIJAU GRADASI ADAPTIF)
+   6. OWNER EXECUTIVE SECTION (DASHBOARD SUITE)
    ========================================================================== */
-.ios-primary-btn {
-    width: 100%;
-    border: none;
-    padding: 15px;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 700;
-    border-radius: var(--radius-ios-inner);
-    cursor: pointer;
-    background: var(--pakchill-grad-button);
-    transition: var(--transition-smooth);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    box-shadow: var(--pakchill-glow-green);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-.ios-primary-btn:hover {
-    background: var(--pakchill-grad-active);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(25, 163, 63, 0.45);
-}
-.ios-primary-btn:active {
-    transform: scale(0.98);
+/* Judul utama dashboard owner */
+#owner-dashboard-panel h3 {
+    color: #243522;
+    font-size: 20px;
+    font-weight: 800;
 }
 
-/* Custom Modifiers For Bottom Action Panel */
-#btn-trigger-print-receipt { background: var(--pakchill-grad-button); }
-#btn-trigger-void-receipt { background: var(--ios-alert-red); box-shadow: none; }
-#btn-trigger-void-receipt:hover { box-shadow: 0 8px 24px rgba(255, 59, 48, 0.35); }
-
-/* ==========================================================================
-   8. METRIK DASHBOARD OWNER & TABEL DATA BENING
-   ========================================================================== */
 .rekap-owner-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
+/* Kartu Rekap Ringkasan Finansial */
 .card-rekap-box {
     border-radius: var(--radius-ios-fluid);
-    padding: 24px;
-    background: var(--pakchill-glass-card);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
+    padding: 22px;
+    background: rgba(255, 255, 255, 0.6);
     border: 1px solid var(--pakchill-glass-border);
+    box-shadow: 0 10px 24px rgba(142, 164, 138, 0.1);
     transition: var(--transition-smooth);
 }
 .card-rekap-box:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.85);
+    transform: translateY(-3px);
+    border-color: #597a55;
 }
+/* Huruf sub-judul kartu rekap */
 .card-rekap-box h5 {
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    color: var(--ios-text-secondary);
-    letter-spacing: 0.8px;
-    margin-bottom: 10px;
+    color: #688265;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
 }
+/* Huruf nominal angka omzet */
 .card-rekap-box h2 {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 800;
-    color: var(--ios-text-primary);
+    color: #2d422a;
 }
 
-/* PREMIUM TRANSLUCENT TABLES */
+/* TABEL TRANSLUCENT MANAGEMENT (CRUD) */
 .ios-table-view {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 8px;
+    border-spacing: 0 6px;
     font-size: 13px;
     text-align: left;
 }
+/* Huruf Header Tabel */
 .ios-table-view th {
-    color: var(--ios-text-secondary);
-    font-weight: 600;
-    padding: 12px 18px;
-    border-bottom: 1px solid var(--pakchill-glass-border);
+    color: #435c40;
+    font-weight: 700;
+    padding: 12px 16px;
+    border-bottom: 2px solid rgba(90, 114, 87, 0.15);
 }
+/* Isi Kolom Tabel */
 .ios-table-view td {
-    padding: 14px 18px;
-    background: rgba(255, 255, 255, 0.02);
-    color: var(--ios-text-primary);
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.35);
+    color: #2d3e2b;
     vertical-align: middle;
-    border-top: 1px solid rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    border-top: 1px solid rgba(255,255,255,0.5);
+    border-bottom: 1px solid rgba(255,255,255,0.5);
 }
 .ios-table-view tr td:first-child {
     border-top-left-radius: var(--radius-ios-inner);
     border-bottom-left-radius: var(--radius-ios-inner);
-    border-left: 1px solid rgba(255, 255, 255, 0.03);
 }
 .ios-table-view tr td:last-child {
     border-top-right-radius: var(--radius-ios-inner);
     border-bottom-right-radius: var(--radius-ios-inner);
-    border-right: 1px solid rgba(255, 255, 255, 0.03);
 }
 .ios-table-view tr:hover td {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.75);
 }
 
-/* STATUS BADGES */
+/* Tombol Aksi di baris tabel (Edit / Hapus) */
+.ios-table-view button {
+    font-weight: 700 !important;
+    padding: 6px 12px !important;
+    transition: var(--transition-smooth);
+}
+.ios-table-view button[style*="background:#ff9500"] {
+    background: rgba(242, 153, 34, 0.15) !important;
+    color: #d47a00 !important;
+    border: 1px solid rgba(242, 153, 34, 0.3) !important;
+}
+.ios-table-view button[style*="background:#ff9500"]:hover {
+    background: #f29922 !important;
+    color: #fff !important;
+}
+.ios-table-view button[style*="background:#ff3b30"] {
+    background: rgba(255, 59, 48, 0.15) !important;
+    color: #d11a10 !important;
+    border: 1px solid rgba(255, 59, 48, 0.3) !important;
+}
+.ios-table-view button[style*="background:#ff3b30"]:hover {
+    background: #ff3b30 !important;
+    color: #fff !important;
+}
+
+/* STATUS BADGES LABELS */
 .status-badge {
     display: inline-block;
-    padding: 5px 12px;
+    padding: 4px 10px;
     border-radius: 20px;
     font-size: 11px;
     font-weight: 700;
 }
-.badge-sukses { background: rgba(0, 255, 102, 0.1); color: #00ff66; border: 1px solid rgba(0, 255, 102, 0.2); }
-.badge-void { background: rgba(255, 59, 48, 0.1); color: #ff453a; border: 1px solid rgba(255, 59, 48, 0.2); }
+.badge-sukses { background: rgba(52, 199, 89, 0.15); color: #248a3d; border: 1px solid rgba(52, 199, 89, 0.3); }
+.badge-void { background: rgba(255, 59, 48, 0.15); color: #d11a10; border: 1px solid rgba(255, 59, 48, 0.3); }
 
-/* GLOBAL SCROLLBAR SYSTEM */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.25); }
+/* ==========================================================================
+   7. GLOBAL SCROLLBAR INTERFACE
+   ========================================================================== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(90, 122, 85, 0.2);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(90, 122, 85, 0.5);
+}
