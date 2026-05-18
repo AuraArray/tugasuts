@@ -25,8 +25,7 @@
             
             <input type="password" id="sys-pin-access" placeholder="Masukkan PIN Otentikasi" style="text-align: center;">
             <button class="ios-primary-btn" onclick="executeAuthentication()">Buka Kunci Sistem</button>
-            
-            </div>
+        </div>
     </div>
 
     <div id="main-app-layer" style="display: none;">
@@ -85,40 +84,48 @@
                     </div>
                     
                     <div class="segmented-control-ios">
-                        <input type="radio" id="service-dinein" name="service_type" value="Dine In" checked onchange="saveServiceSelectionState()">
+                        <input type="radio" id="service-dinein" name="service_type" value="Dine In" checked>
                         <label for="service-dinein">Dine In</label>
                         
-                        <input type="radio" id="service-dineout" name="service_type" value="Dine Out" onchange="saveServiceSelectionState()">
+                        <input type="radio" id="service-dineout" name="service_type" value="Dine Out">
                         <label for="service-dineout">Dine Out</label>
                         
-                        <input type="radio" id="service-gofood" name="service_type" value="GoFood" onchange="saveServiceSelectionState()">
+                        <input type="radio" id="service-gofood" name="service_type" value="GoFood">
                         <label for="service-gofood">GoFood</label>
                         
-                        <input type="radio" id="service-grabfood" name="service_type" value="GrabFood" onchange="saveServiceSelectionState()">
+                        <input type="radio" id="service-grabfood" name="service_type" value="GrabFood">
                         <label for="service-grabfood">GrabFood</label>
                         
-                        <input type="radio" id="service-shopeefood" name="service_type" value="Shopee Food" onchange="saveServiceSelectionState()">
+                        <input type="radio" id="service-shopeefood" name="service_type" value="Shopee Food">
                         <label for="service-shopeefood">Shopee Food</label>
                     </div>
 
                     <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; color: #666; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.08); margin-top: 10px;">
                         <span style="width: 40%;">Nama Item</span>
-                        <span style="width: 35%; text-align: center;">Jumlah Kuantitas</span>
-                        <span style="width: 25%; text-align: right;">Total Harga</span>
+                        <span style="width: 35%; text-align: center;">Kuantitas</span>
+                        <span style="width: 25%; text-align: right;">Harga Total</span>
                     </div>
                     
                     <div id="cart-items-wrapper"></div>
                     
                     <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.08);">
                         <div class="cost-row"><span>Subtotal</span><span id="txt-subtotal-val">Rp 0</span></div>
+                        
                         <div class="input-inline-row">
-                            <label>Diskon Manual / Kode Kupon</label>
+                            <label>Diskon / Kupon Aktif</label>
                             <input type="text" id="kasir-input-diskon" value="0" oninput="recalculateCartTotals()">
                         </div>
                         <div class="input-inline-row">
-                            <label>Potongan Voucher Resmi</label>
+                            <label>Voucher Resmi Aktif</label>
                             <input type="text" id="kasir-input-voucher" value="0" oninput="recalculateCartTotals()">
                         </div>
+
+                        <div style="margin-top: 12px; margin-bottom: 12px;">
+                            <p style="font-size: 11px; font-weight: bold; color: var(--pakchill-green-medium); margin-bottom: 6px;">Kupon / Voucher Tersedia (Klik untuk Terapkan):</p>
+                            <div id="vouchers-render-target" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                </div>
+                        </div>
+
                         <div class="total-tagihan-box">
                             <span>TOTAL TAGIHAN</span>
                             <span id="txt-grand-total-display">Rp 0</span>
@@ -167,7 +174,7 @@
                         
                         <div id="wrapper-sub-transfer" style="display:none; margin-bottom:12px;">
                             <select id="sub-target-transfer" onchange="updateLiveRekeningInfo()"></select>
-                            <div id="live-rekening-info-box"></div>
+                            <div id="live-rekening-info-box" style="font-size:12px; font-weight:bold; color:var(--pakchill-green-medium); margin-top:4px;"></div>
                         </div>
                     </div>
                     
@@ -178,7 +185,14 @@
 
             <div id="view-segment-owner" style="display: none; margin-top: 25px;">
                 <hr style="border:0; border-top:1px dashed rgba(0,0,0,0.1); margin-bottom:25px;">
-                <h2 style="color:var(--pakchill-green-dark); margin-bottom:20px; font-weight:800;">Owner Control Executive Dashboard</h2>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:15px;">
+                    <h2 style="color:var(--pakchill-green-dark); font-weight:800; margin:0;">Owner Control Executive Dashboard</h2>
+                    <div style="display:flex; gap:8px;">
+                        <button onclick="exportOwnerReportExcel()" style="width:auto; background:#1d6f42; color:white; font-weight:bold; border:none; padding:8px 16px; border-radius:12px; cursor:pointer; font-size:13px;">Ekspor Laporan Excel</button>
+                        <button onclick="exportOwnerReportPDF()" style="width:auto; background:#b3261e; color:white; font-weight:bold; border:none; padding:8px 16px; border-radius:12px; cursor:pointer; font-size:13px;">Ekspor PDF</button>
+                    </div>
+                </div>
                 
                 <div class="rekap-owner-grid">
                     <div class="card-rekap-box" style="background:#34c759;"><h5>Omzet Hari Ini</h5><h2 id="own-rekap-hari">Rp 0</h2></div>
@@ -187,17 +201,48 @@
                     <div class="card-rekap-box" style="background:#5856d6;"><h5>Tahun Ini</h5><h2 id="own-rekap-tahun">Rp 0</h2></div>
                 </div>
                 
-                <div class="ios-panel-card">
-                    <h3>Visualisasi Tren Finansial Bulanan</h3>
-                    <div style="position: relative; height:240px; width:100%; margin-top:15px;">
-                        <canvas id="canvasTrenOwner"></canvas>
+                <div id="owner-report-pdf-area">
+                    <div class="ios-panel-card">
+                        <h3>Visualisasi Tren Finansial Bulanan</h3>
+                        <div style="position: relative; height:240px; width:100%; margin-top:15px;">
+                            <canvas id="canvasTrenOwner"></canvas>
+                        </div>
                     </div>
+                </div>
+
+                <div class="owner-double-form-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-top:20px;">
+                    <div class="ios-panel-card">
+                        <h4 style="color:var(--pakchill-green-dark); margin-bottom:12px;">+ Registrasi Item Menu Baru</h4>
+                        <input type="text" id="own-add-menu-name" placeholder="Nama Produk Baru (Misal: MATCHA)">
+                        <input type="number" id="own-add-menu-price" placeholder="Harga Jual Jernih (Rp)">
+                        <button onclick="saveNewMenuFromOwner()" class="ios-primary-btn" style="background:var(--pakchill-green-medium)">Simpan Menu</button>
+                    </div>
+                    
+                    <div class="ios-panel-card">
+                        <h4 style="color:var(--pakchill-green-dark); margin-bottom:12px;">+ Buat Paket Bundling Hemat</h4>
+                        <input type="text" id="own-add-bundle-name" placeholder="Nama Paket (Misal: COMBO SEHAT)">
+                        <input type="number" id="own-add-bundle-price" placeholder="Harga Paket Combo (Rp)">
+                        <button onclick="saveNewBundleFromOwner()" class="ios-primary-btn" style="background:#ff9500;">Aktifkan Paket</button>
+                    </div>
+                </div>
+
+                <div class="ios-panel-card" style="margin-top:20px;">
+                    <h4 style="color:var(--pakchill-green-dark); margin-bottom:12px;">+ Aturan Kupon Promosi & Potongan Voucher</h4>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
+                        <input type="text" id="own-vch-code" placeholder="Kode Unik Kupon (Misal: PROMO20)">
+                        <input type="number" id="own-vch-nominal" placeholder="Nominal Potongan (Rp)">
+                        <select id="own-vch-type">
+                            <option value="Diskon">Diskon Manual / Kupon</option>
+                            <option value="Voucher">Voucher Resmi</option>
+                        </select>
+                    </div>
+                    <button onclick="saveNewVoucherFromOwner()" class="ios-primary-btn" style="margin-top:10px; background:#007aff;">Daftarkan Kode Promo</button>
                 </div>
 
                 <div class="ios-panel-card" style="margin-top:20px;">
                     <h3 style="color:var(--pakchill-green-dark); margin-bottom:12px;">Manajemen Database Member Terdaftar</h3>
                     <div style="overflow-x:auto;">
-                        <table class="ios-table-view" id="table-owner-members">
+                        <table class="ios-table-view">
                             <thead>
                                 <tr>
                                     <th>Nama Member</th>
@@ -215,7 +260,7 @@
                     <h3 style="color:var(--pakchill-green-dark); margin-bottom:12px;">Pengaturan Akun Rekening Bank / E-Wallet</h3>
                     
                     <div class="form-crud-container" style="background:rgba(0,0,0,0.02); padding:15px; border-radius:16px; margin-bottom:15px; border:1px dashed rgba(0,0,0,0.1);">
-                        <h5 id="title-crud-rekening" style="margin-bottom:10px; color:var(--pakchill-green-medium);">+ Tambah Akun Rekening Baru</h5>
+                        <h5 id="title-crud-rekening" style="margin-bottom:10px; color:var(--pakchill-green-medium); font-weight:bold;">+ Tambah Akun Rekening Baru</h5>
                         <input type="hidden" id="form-rek-id-index" value="">
                         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
                             <input type="text" id="form-rek-bank" placeholder="Nama Bank/E-Wallet (Misal: BCA)">
@@ -244,7 +289,24 @@
                 </div>
 
                 <div class="ios-panel-card" style="margin-top:20px;">
-                    <h3 style="color:var(--pakchill-green-dark); margin-bottom:12px;">Audit Penjualan & Pembatalan Transaksi (Log Void)</h3>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+                        <h3 style="color:var(--pakchill-green-dark); margin:0;">Audit Penjualan & Pembatalan Transaksi (Log Void)</h3>
+                        <select id="own-filter-month-select" onchange="renderHistoryTable()" style="width:180px; margin:0;">
+                            <option value="all">Semua Bulan</option>
+                            <option value="0">Januari</option>
+                            <option value="1">Februari</option>
+                            <option value="2">Maret</option>
+                            <option value="3">April</option>
+                            <option value="4">Mei</option>
+                            <option value="5">Juni</option>
+                            <option value="6">Juli</option>
+                            <option value="7">Agustus</option>
+                            <option value="8">September</option>
+                            <option value="9">Oktober</option>
+                            <option value="10">November</option>
+                            <option value="11">Desember</option>
+                        </select>
+                    </div>
                     <div style="overflow-x:auto;">
                         <table class="ios-table-view">
                             <thead>
