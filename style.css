@@ -1,29 +1,35 @@
 /* ==========================================================================
-   1. GLOBAL VARIABLES & PREMIUM ACCENT GRADIENTS (iOS STYLE)
+   1. GLOBAL VARIABLES & PURE iOS GLASS CORE (BENING & HIJAU)
    ========================================================================== */
 :root {
-    /* Pure Premium Green Gradients & Glass Core */
-    --pakchill-grad-bg: linear-gradient(135deg, #0b1a0a 0%, #122a10 50%, #1a3c17 100%);
-    --pakchill-grad-aurora: linear-gradient(45deg, #2d5a27, #478241, #1e3f1b, #15b347);
-    --pakchill-grad-button: linear-gradient(135deg, #24691e 0%, #157930 100%);
-    --pakchill-grad-active: linear-gradient(135deg, #159334 0%, #00ff66 100%);
+    /* Background Canvas: Gradasi Lembut Antara Hijau Alami dan Gelap */
+    --pakchill-grad-bg: linear-gradient(135deg, #071406 0%, #0d220c 50%, #133011 100%);
     
-    /* Transparent Glassmorphism Matrix */
-    --pakchill-glass-card: rgba(20, 45, 18, 0.45);
-    --pakchill-glass-input: rgba(255, 255, 255, 0.07);
-    --pakchill-glass-border: rgba(255, 255, 255, 0.12);
-    --pakchill-glow-green: 0 0 15px rgba(21, 179, 71, 0.4);
+    /* Dynamic Aurora Backlight (Efek Bias Cahaya di Belakang Kaca) */
+    --pakchill-grad-aurora: linear-gradient(135deg, rgba(0, 255, 102, 0.15) 0%, rgba(34, 139, 34, 0.25) 100%);
     
-    /* System Elements Accent */
-    --ios-text-primary: #ffffff;
-    --ios-text-secondary: #a2bca0;
+    /* iOS Pure Glassmorphism: Bening Transparan dengan Efek Blur Tebal */
+    --pakchill-glass-card: rgba(255, 255, 255, 0.04); 
+    --pakchill-glass-input: rgba(255, 255, 255, 0.06);
+    --pakchill-glass-border: rgba(255, 255, 255, 0.12); /* Garis tepi kaca tipis bening */
+    
+    /* Interactive Premium Buttons (Gradasi Hijau Segar Premium) */
+    --pakchill-grad-button: linear-gradient(135deg, #1f702b 0%, #16933b 100%);
+    --pakchill-grad-active: linear-gradient(135deg, #19a33f 0%, #00ff66 100%);
+    --pakchill-glow-green: 0 8px 24px rgba(22, 147, 59, 0.3);
+    
+    /* iOS Typography Colors (Super Kontras & Bersih) */
+    --ios-text-primary: #ffffff;             /* Judul & Angka Utama */
+    --ios-text-secondary: rgba(255, 255, 255, 0.65); /* Keterangan / Sub-teks */
+    --ios-text-muted: rgba(255, 255, 255, 0.4);     /* Label / Placeholder */
+    
+    /* System Alerts */
     --ios-alert-red: linear-gradient(135deg, #ff3b30 0%, #ff2d55 100%);
-    --ios-alert-orange: linear-gradient(135deg, #ff9500 0%, #ffcc00 100%);
     
-    /* Layout Constants */
-    --radius-ios-fluid: 18px;
+    /* Fluid Radius UI iOS */
+    --radius-ios-fluid: 20px;
     --radius-ios-inner: 12px;
-    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-smooth: all 0.35s cubic-bezier(0.15, 1, 0.3, 1);
 }
 
 * {
@@ -43,91 +49,42 @@ body {
 }
 
 /* ==========================================================================
-   2. AUTHENTICATION & LOGIN SCREEN OVERLAY (AURORA GLASS)
+   2. BACKGROUND ORBS (MEMBUAT EFEK TRANSPARAN BENING MAKIN HIDUP)
    ========================================================================== */
-#login-screen-overlay {
+.workspace-container::before {
+    content: "";
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: var(--pakchill-grad-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    overflow: hidden;
+    top: 20%;
+    left: 15%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 255, 102, 0.12) 0%, transparent 70%);
+    filter: blur(60px);
+    z-index: -1;
+    pointer-events: none;
 }
 
-/* Fluid Moving Background Orbs */
-.floating-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.25;
-    z-index: 1;
-    animation: auroraWave 18s infinite alternate ease-in-out;
-}
-.orb-1 { width: 450px; height: 450px; background: #15b347; top: -10%; left: -10%; }
-.orb-2 { width: 500px; height: 500px; background: #478241; bottom: -15%; right: -5%; animation-delay: 3s; }
-.orb-3 { width: 350px; height: 350px; background: #00ff66; top: 40%; left: 45%; animation-delay: 6s; }
-
-@keyframes auroraWave {
-    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-    50% { transform: translate(40px, -60px) scale(1.15) rotate(180deg); }
-    100% { transform: translate(-20px, 30px) scale(0.9) rotate(360deg); }
-}
-
-.login-glass-card {
-    position: relative;
-    z-index: 5;
-    width: 100%;
-    max-width: 400px;
-    padding: 40px 30px;
-    background: var(--pakchill-glass-card);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border: 1px solid var(--pakchill-glass-border);
-    border-radius: 28px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), var(--pakchill-glow-green);
-    text-align: center;
-    animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes cardEntrance {
-    from { opacity: 0; transform: translateY(30px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.pakchill-logo-placeholder {
-    width: 80px;
-    height: 80px;
-    background: var(--pakchill-grad-button);
-    margin: 0 auto 20px auto;
-    border-radius: 20px;
-    box-shadow: var(--pakchill-glow-green);
-    position: relative;
-    border: 1px solid rgba(255,255,255,0.2);
-}
-.pakchill-logo-placeholder::after {
-    content: "P";
-    color: white;
-    font-size: 40px;
-    font-weight: 900;
-    line-height: 80px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+.workspace-container::after {
+    content: "";
+    position: fixed;
+    bottom: 10%;
+    right: 10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(31, 112, 43, 0.18) 0%, transparent 70%);
+    filter: blur(80px);
+    z-index: -1;
+    pointer-events: none;
 }
 
 /* ==========================================================================
-   3. NAVIGATION BAR (IOS GLASS HEADER)
+   3. NAVIGATION BAR (HEADER KACA BENING)
    ========================================================================== */
 nav {
-    height: 70px;
-    background: rgba(11, 26, 10, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    height: 75px;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
     border-bottom: 1px solid var(--pakchill-glass-border);
     padding: 0 30px;
     display: flex;
@@ -140,21 +97,30 @@ nav {
     z-index: 100;
 }
 
+nav h1 {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 #badge-status-role {
     font-size: 11px;
-    font-weight: 800;
+    font-weight: 700;
     color: #ffffff;
-    padding: 5px 12px;
-    border-radius: 20px;
-    box-shadow: var(--pakchill-glow-green);
-    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.08);
+    padding: 6px 14px;
+    border-radius: 30px;
+    border: 1px solid var(--pakchill-glass-border);
 }
 
 .logout-btn {
     background: var(--ios-alert-red);
     color: white;
     border: none;
-    padding: 8px 16px;
+    padding: 10px 20px;
     font-size: 12px;
     font-weight: 700;
     border-radius: var(--radius-ios-inner);
@@ -163,31 +129,30 @@ nav {
 }
 .logout-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 59, 48, 0.4);
+    box-shadow: 0 8px 20px rgba(255, 59, 48, 0.3);
 }
 
 .workspace-container {
     max-width: 1600px;
-    margin: 70px auto 0 auto;
-    padding: 30px;
+    margin: 75px auto 0 auto;
+    padding: 35px 30px;
 }
 
 .main-welcome-title {
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 800;
-    color: #ffffff;
-    margin-bottom: 25px;
+    color: var(--ios-text-primary);
+    margin-bottom: 30px;
     letter-spacing: -0.5px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 /* ==========================================================================
-   4. TRANSPARENT WORKSPACE LAYOUT PANELS
+   4. LAYOUT PANEL (PURE GLASSMORPHISM CARD)
    ========================================================================== */
 .kasir-operational-grid {
     display: grid;
     grid-template-columns: 1.15fr 0.85fr;
-    gap: 25px;
+    gap: 30px;
     align-items: start;
 }
 
@@ -198,153 +163,178 @@ nav {
 .katalog-container-flex {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 30px;
 }
 
-/* IOS GLASSMORPHIC PANEL CONTAINER */
+/* KOTAK MODUL INDUK (BENING + BLUR TEBAL) */
 .ios-panel-card {
     background: var(--pakchill-glass-card);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(40px) saturate(160%);
+    -webkit-backdrop-filter: blur(40px) saturate(160%);
     border-radius: var(--radius-ios-fluid);
-    padding: 25px;
+    padding: 28px;
     border: 1px solid var(--pakchill-glass-border);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
 }
 
-/* ADAPTIVE INTERACTIVE CARD GRID */
+.ios-panel-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--ios-text-primary);
+    letter-spacing: -0.3px;
+}
+
+/* ITEM KATALOG PRODUK */
 .products-adaptive-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 15px;
+    gap: 16px;
 }
 
 .product-item-card {
     background: var(--pakchill-glass-input);
     border-radius: var(--radius-ios-inner);
-    padding: 18px 12px;
+    padding: 20px 14px;
     text-align: center;
     cursor: pointer;
     position: relative;
     transition: var(--transition-smooth);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.04);
 }
 .product-item-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    background: var(--pakchill-grad-button);
-    border-color: #00ff66;
-    box-shadow: var(--pakchill-glow-green);
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.25);
 }
 .product-item-card:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
+}
+
+.product-item-card h4 {
+    color: var(--ios-text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.product-item-card span {
+    color: var(--ios-text-secondary);
+    font-size: 12px;
+    font-weight: 500;
 }
 
 /* ==========================================================================
-   5. OPERATIONS CORE FOR LIVE SHOPPING CART 
+   5. TRANSAKSI & KERANJANG BELANJA
    ========================================================================== */
 #cart-items-wrapper {
-    min-height: 100px;
-    max-height: 320px;
+    min-height: 80px;
+    max-height: 340px;
     overflow-y: auto;
-    padding-right: 6px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    padding-right: 4px;
 }
 
 .cart-item-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    animation: rowFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-@keyframes rowFadeIn {
-    from { opacity: 0; transform: translateX(15px); }
-    to { opacity: 1; transform: translateX(0); }
+.cart-item-row .item-info h5 {
+    color: var(--ios-text-primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+.cart-item-row .item-info p {
+    color: var(--ios-text-secondary);
+    font-size: 12px;
 }
 
-/* TOTAL TAGIHAN BOX (THE LUXURY GREEN SCREEN EYE CANDY) */
+/* TOTAL TAGIHAN BOX (BENING DENGAN BORDER GRADIASI HIJAU LEMBUT) */
 .total-tagihan-box {
-    background: linear-gradient(135deg, rgba(21, 179, 71, 0.2) 0%, rgba(0, 255, 102, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(0, 255, 102, 0.03) 100%);
     border-radius: var(--radius-ios-inner);
-    padding: 16px 20px;
+    padding: 18px 22px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 15px 0;
-    border: 1px solid rgba(0, 255, 102, 0.3);
-    box-shadow: inset 0 0 15px rgba(0,255,102,0.1);
+    margin: 20px 0;
+    border: 1px solid rgba(0, 255, 102, 0.2);
+    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.01);
 }
 .total-tagihan-box span:first-child {
     font-size: 13px;
     font-weight: 700;
     color: var(--ios-text-secondary);
-    text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 .total-tagihan-box span:last-child {
-    font-size: 24px;
-    font-weight: 900;
-    color: #00ff66;
-    text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+    font-size: 26px;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
 }
 
 /* ==========================================================================
-   6. PREMIUM GLOWING INPUTS & INTERACTIVE CONTROLS
+   6. INPUTS & FORM CONTROL (BENING SAGE CONTRAST)
    ========================================================================== */
 input, select {
     width: 100%;
-    padding: 12px 16px;
+    padding: 13px 18px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
     border-radius: var(--radius-ios-inner);
     border: 1px solid var(--pakchill-glass-border);
     background-color: var(--pakchill-glass-input);
     color: #ffffff;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
     outline: none;
     transition: var(--transition-smooth);
 }
 input:focus, select:focus {
-    background-color: rgba(20, 45, 18, 0.8);
-    border-color: #00ff66;
-    box-shadow: var(--pakchill-glow-green);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+input::placeholder {
+    color: var(--ios-text-muted);
 }
 
-/* SEGMENTED CONTROL (IOS FLAT SELECTOR) */
+/* SEGMENTED CONTROL (IOS FLAT SLIDER) */
 .segmented-control-ios {
     display: flex;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.2);
     padding: 3px;
     border-radius: var(--radius-ios-inner);
-    margin-bottom: 15px;
-    border: 1px solid var(--pakchill-glass-border);
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 .segmented-control-ios label {
     flex: 1;
     text-align: center;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 8px 0;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 9px 0;
     cursor: pointer;
     border-radius: 10px;
     color: var(--ios-text-secondary);
     transition: var(--transition-smooth);
-    margin: 0;
 }
 .segmented-control-ios input[type="radio"]:checked + label {
-    background: var(--pakchill-grad-button);
+    background: rgba(255, 255, 255, 0.12);
     color: #ffffff;
-    box-shadow: var(--pakchill-glow-green);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-/* BUTTON SYSTEMS (BOTTOM & ACTION SUBMISSIONS) */
+/* ==========================================================================
+   7. INTERACTIVE PREMIUM BUTTONS (HIJAU GRADASI ADAPTIF)
+   ========================================================================== */
 .ios-primary-btn {
     width: 100%;
     border: none;
-    padding: 14px;
-    color: white;
+    padding: 15px;
+    color: #ffffff;
     font-size: 14px;
     font-weight: 700;
     border-radius: var(--radius-ios-inner);
@@ -355,144 +345,109 @@ input:focus, select:focus {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: var(--pakchill-glow-green);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .ios-primary-btn:hover {
     background: var(--pakchill-grad-active);
-    box-shadow: var(--pakchill-glow-green);
     transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(25, 163, 63, 0.45);
 }
 .ios-primary-btn:active {
     transform: scale(0.98);
 }
 
-/* Bottom Actions Custom Tweaks for Void/Print */
+/* Custom Modifiers For Bottom Action Panel */
 #btn-trigger-print-receipt { background: var(--pakchill-grad-button); }
-#btn-trigger-void-receipt { background: var(--ios-alert-red); }
+#btn-trigger-void-receipt { background: var(--ios-alert-red); box-shadow: none; }
+#btn-trigger-void-receipt:hover { box-shadow: 0 8px 24px rgba(255, 59, 48, 0.35); }
 
 /* ==========================================================================
-   7. OWNER EXECUTIVE SUITE & CHART GLASS DESIGN
+   8. METRIK DASHBOARD OWNER & TABEL DATA BENING
    ========================================================================== */
 .rekap-owner-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .card-rekap-box {
     border-radius: var(--radius-ios-fluid);
-    padding: 22px;
-    background: linear-gradient(135deg, rgba(36, 105, 30, 0.3) 0%, rgba(20, 45, 18, 0.6) 100%);
+    padding: 24px;
+    background: var(--pakchill-glass-card);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
     border: 1px solid var(--pakchill-glass-border);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     transition: var(--transition-smooth);
 }
 .card-rekap-box:hover {
     transform: translateY(-4px);
-    border-color: #00ff66;
-    box-shadow: var(--pakchill-glow-green);
+    border-color: rgba(255, 255, 255, 0.25);
 }
 .card-rekap-box h5 {
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     color: var(--ios-text-secondary);
-    letter-spacing: 1px;
-    margin-bottom: 8px;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
 }
 .card-rekap-box h2 {
-    font-size: 24px;
-    font-weight: 900;
-    color: #ffffff;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--ios-text-primary);
 }
 
-/* PREMIUM TRANSLUCENT ANALYTICS CHART BLOCK */
-#canvasTrenOwner {
-    filter: drop-shadow(0px 10px 15px rgba(21, 179, 71, 0.15));
-}
-
-/* MANAGEMENT TRANSLUCENT GRIDS (CRUD TABLES) */
+/* PREMIUM TRANSLUCENT TABLES */
 .ios-table-view {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 6px;
-    font-size: 12px;
+    border-spacing: 0 8px;
+    font-size: 13px;
     text-align: left;
 }
 .ios-table-view th {
-    background: rgba(0, 0, 0, 0.2);
     color: var(--ios-text-secondary);
-    font-weight: 700;
-    padding: 12px 16px;
+    font-weight: 600;
+    padding: 12px 18px;
     border-bottom: 1px solid var(--pakchill-glass-border);
 }
 .ios-table-view td {
-    padding: 14px 16px;
+    padding: 14px 18px;
     background: rgba(255, 255, 255, 0.02);
-    color: #ffffff;
+    color: var(--ios-text-primary);
     vertical-align: middle;
-    border-top: 1px solid rgba(255,255,255,0.04);
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 .ios-table-view tr td:first-child {
     border-top-left-radius: var(--radius-ios-inner);
     border-bottom-left-radius: var(--radius-ios-inner);
-    border-left: 1px solid rgba(255,255,255,0.04);
+    border-left: 1px solid rgba(255, 255, 255, 0.03);
 }
 .ios-table-view tr td:last-child {
     border-top-right-radius: var(--radius-ios-inner);
     border-bottom-right-radius: var(--radius-ios-inner);
-    border-right: 1px solid rgba(255,255,255,0.04);
+    border-right: 1px solid rgba(255, 255, 255, 0.03);
 }
 .ios-table-view tr:hover td {
-    background: rgba(21, 179, 71, 0.12);
-    border-color: rgba(0, 255, 102, 0.2);
+    background: rgba(255, 255, 255, 0.06);
 }
 
-/* BADGES FOR STATUS LABELS */
+/* STATUS BADGES */
 .status-badge {
     display: inline-block;
-    padding: 4px 10px;
+    padding: 5px 12px;
     border-radius: 20px;
-    font-size: 10px;
-    font-weight: 800;
-    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
 }
-.badge-sukses { background: rgba(0, 255, 102, 0.15); color: #00ff66; border: 1px solid rgba(0,255,102,0.3); }
-.badge-void { background: rgba(255, 59, 48, 0.15); color: #ff453a; border: 1px solid rgba(255,59,48,0.3); }
+.badge-sukses { background: rgba(0, 255, 102, 0.1); color: #00ff66; border: 1px solid rgba(0, 255, 102, 0.2); }
+.badge-void { background: rgba(255, 59, 48, 0.1); color: #ff453a; border: 1px solid rgba(255, 59, 48, 0.2); }
 
-/* ==========================================================================
-   8. PRINTER PROFILES OPTIMIZATION (58MM THERMAL RECEIPTS)
-   ========================================================================== */
-@media print {
-    body * { visibility: hidden; }
-    #thermal-receipt-output, #thermal-receipt-output * { visibility: visible; }
-    #thermal-receipt-output {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 58mm;
-        margin: 0;
-        padding: 0;
-        display: block !important;
-        background: white !important;
-        color: black !important;
-    }
-}
-
-/* GLOBAL SCROLLBAR SYSTEM INTERFACE */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 255, 102, 0.4);
-}
+/* GLOBAL SCROLLBAR SYSTEM */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.25); }
