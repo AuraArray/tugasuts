@@ -1,654 +1,763 @@
-// ==========================================================================
-// 1. ENGINE DATABASE CORE (LOCALSTORAGE RECONCILIATION)
-// ==========================================================================
-let sysDatabase = JSON.parse(localStorage.getItem('pakchill_enterprise_db_v5.2')) || {
-    menu: [
-        { id: 'm1', name: 'PACHOY', price: 15000 },
-        { id: 'm2', name: 'NANAS', price: 12000 }
+/* ==========================================================================
+   1. CORE SYSTEM STATE & DATABASE INITIALIZATION
+   ========================================================================== */
+const DEFAULT_DATABASE = {
+    currentOrderSeq: 101,
+    products: [
+        { id: "P1", name: "PAKCHILL ORIGINAL", price: 15000, isBundle: false },
+        { id: "P2", name: "PAKCHILL NENAS", price: 18000, isBundle: false },
+        { id: "P3", name: "PAKCHILL PAKCOY", price: 18000, isBundle: false },
+        { id: "B1", name: "COMBO DOUBLE CHILL", price: 30000, isBundle: true }
     ],
-    bundles: [],
     vouchers: [
-        { code: 'PAKCHILLSEHAT', nominal: 5000, type: 'Voucher' }
-    ],
-    rekening: [
-        { bank: 'BCA', nomor: '8410923121 a/n PT PAKCHILL' },
-        { bank: 'GoPay', nomor: '081234567890 a/n PAKCHILL INDO' }
+        { code: "CHILLNEW", nominal: 5000, type: "Diskon" },
+        { code: "VCHPAKCHILL", nominal: 10000, type: "Voucher" }
     ],
     members: [
-        { name: 'APRIL', wa: '0812', poin: 10 }
+        { id: "M1", name: "April Yaman", phone: "081234567890", points: 150 },
+        { id: "M2", name: "Rizky Tanjung", phone: "085298765432", points: 85 }
     ],
-    transactions: [],
-    lastOrderDate: new Date().toDateString(),
-    currentOrderSeq: 101
+    rekening: [
+        { id: "R1", bank: "BCA", number: "1234567890", name: "PAKCHILL OFFICIAL" },
+        { id: "R2", bank: "MANDIRI", number: "0987654321", name: "PT PAKCHILL UTAMA" }
+    ],
+    transactions: []
 };
 
-// Auto Reset Nomor Orderan jika mendeteksi Hari Berganti
-const todayStr = new Date().toDateString();
-if (sysDatabase.lastOrderDate !== todayStr) {
-    sysDatabase.currentOrderSeq = 101;
-    sysDatabase.lastOrderDate = todayStr;
-    localStorage.setItem('pakchill_enterprise_db_v5.2', JSON.stringify(sysDatabase));
-}
-
-let activeRole = null;
+let sysDatabase = JSON.parse(localStorage.getItem('pakchill_pos_db')) || DEFAULT_DATABASE;
 let activeCart = [];
 let activeMemberObj = null;
-let chartInstanceGlobal = null;
+let activeRole = 'staff'; // 'staff' atau 'owner'
+let chartInstance = null;
 
 function saveToStorage() {
-    localStorage.setItem('pakchill_enterprise_db_v5.2', JSON.stringify(sysDatabase));
+    localStorage.setItem('pakchill_pos_db', JSON.stringify(sysDatabase));
 }
 
-// ==========================================================================
-// 2. OTENTIKASI SISTEM (KASIR: 123 | OWNER: 000)
-// ==========================================================================
+/* ==========================================================================
+   2. AUTHENTICATION & ROLE MANAGEMENT
+   ========================================================================== */
 function executeAuthentication() {
-    const pinInput = document.getElementById('sys-pin-access');
-    if (!pinInput) return;
-    const pin = pinInput.value.trim();
-    
-    if (pin === '123') {
-        activeRole = 'kasir';
-        if(document.getElementById('txt-nav-role-label')) document.getElementById('txt-nav-role-label').innerText = 'STAFF KASIR';
-        if(document.getElementById('badge-status-role')) {
-            document.getElementById('badge-status-role').innerText = 'Staff Kasir';
-            document.getElementById('badge-status-role').style.background = '#2d5a27';
-        }
-        if(document.getElementById('view-segment-kasir')) document.getElementById('view-segment-kasir').style.display = 'grid';
-        if(document.getElementById('view-segment-owner')) document.getElementById('view-segment-owner').style.display = 'none';
+    const pinInput = document.getElementById('sys-pin-access').value.trim();
+    const roleLabel = document.getElementById('txt-nav-role-label');
+    const badgeRole = document.getElementById('badge-status-role');
+    const ownerSection = document.getElementById('view-segment-owner');
+
+    if (pinInput === '1234') {
+        activeRole = 'staff';
+        roleLabel.innerText = 'STAFF MODE';
+        badgeRole.innerText = 'Staff';
+        badgeRole.style.background = '#8e8e93';
+        ownerSection.style.display = 'none';
         unlockInterface();
-    } else if (pin === '000') {
+    } else if (pinInput === '9999') {
         activeRole = 'owner';
-        if(document.getElementById('txt-nav-role-label')) document.getElementById('txt-nav-role-label').innerText = 'OWNER HUB';
-        if(document.getElementById('badge-status-role')) {
-            document.getElementById('badge-status-role').innerText = 'Owner Control';
-            document.getElementById('badge-status-role').style.background = '#5856d6';
-        }
-        if(document.getElementById('view-segment-kasir')) document.getElementById('view-segment-kasir').style.display = 'grid';
-        if(document.getElementById('view-segment-owner')) document.getElementById('view-segment-owner').style.display = 'block';
+        roleLabel.innerText = 'OWNER HUB';
+        badgeRole.innerText = 'Executive Owner';
+        badgeRole.style.background = '#1e3f1b';
+        ownerSection.style.display = 'block';
         unlockInterface();
         renderOwnerDashboardMetrics();
     } else {
-        alert('PIN Otentikasi Salah! Akses Sistem Terkunci.');
+        alert('PIN Otentikasi Salah! Akses Ditolak.');
     }
 }
 
 function unlockInterface() {
-    if(document.getElementById('login-screen-overlay')) document.getElementById('login-screen-overlay').style.display = 'none';
-    if(document.getElementById('main-app-layer')) document.getElementById('main-app-layer').style.display = 'block';
-    if(document.getElementById('sys-pin-access')) document.getElementById('sys-pin-access').value = '';
-    if(document.getElementById('txt-live-order-number')) document.getElementById('txt-live-order-number').innerText = `Order #: ${sysDatabase.currentOrderSeq}`;
+    document.getElementById('login-screen-overlay').style.display = 'none';
+    document.getElementById('main-app-layer').style.display = 'block';
+    document.getElementById('sys-pin-access').value = '';
+    document.getElementById('txt-live-order-number').innerText = `Order #: ${sysDatabase.currentOrderSeq}`;
     
-    // Sinkronisasi data awal dropdown target transfer bank dari owner
-    const subTargetTransfer = document.getElementById('sub-target-transfer');
-    if(subTargetTransfer) {
-        subTargetTransfer.innerHTML = '';
-        sysDatabase.rekening.forEach(rek => {
-            subTargetTransfer.innerHTML += `<option value="${rek.bank}">${rek.bank}</option>`;
-        });
-    }
-
-    try { renderKatalogKasir(); } catch(e) { console.error(e); }
-    try { renderCartUI(); } catch(e) { console.error(e); }
-    try { renderHistoryTable(); } catch(e) { console.error(e); }
-    try { renderMemberTable(); } catch(e) { console.error(e); }
-    try { calculateLiveClosingDashboard(); } catch(e) { console.error(e); }
+    syncRekeningDropdownOptions();
+    renderKatalogKasir();
+    renderCartUI();
+    renderVoucherSakuKasir();
+    calculateLiveClosingDashboard();
 }
 
 function triggerSystemLogout() {
-    activeRole = null;
     activeCart = [];
     activeMemberObj = null;
-    if(document.getElementById('main-app-layer')) document.getElementById('main-app-layer').style.display = 'none';
-    if(document.getElementById('login-screen-overlay')) document.getElementById('login-screen-overlay').style.display = 'flex';
+    document.getElementById('main-app-layer').style.display = 'none';
+    document.getElementById('login-screen-overlay').style.display = 'flex';
 }
 
-// ==========================================================================
-// 3. ENGINE UTAMA KATALOG & OPERASIONAL KASIR
-// ==========================================================================
+/* ==========================================================================
+   3. CASHIER OPERATIONS (CATALOG & CART LOGIC)
+   ========================================================================== */
 function renderKatalogKasir() {
     const target = document.getElementById('katalog-render-target');
     if (!target) return;
     target.innerHTML = '';
-    
-    sysDatabase.menu.forEach(item => {
+
+    sysDatabase.products.forEach(prod => {
+        const bundleBadge = prod.isBundle ? `<div class="badge-bundling-tag">Bndl</div>` : '';
         target.innerHTML += `
-            <div class="product-item-card" onclick="pushItemToCart('${item.name}', ${item.price})">
-                <div style="font-weight:900; font-size:15px; color:var(--pakchill-green-dark);">${item.name}</div>
-                <div style="color:var(--pakchill-green-soft); font-weight:700; margin-top:5px;">Rp ${item.price.toLocaleString('id-ID')}</div>
-            </div>
-        `;
-    });
-    
-    sysDatabase.bundles.forEach(bundle => {
-        target.innerHTML += `
-            <div class="product-item-card" onclick="pushItemToCart('${bundle.name}', ${bundle.price})">
-                <span class="badge-bundling-tag">Paket</span>
-                <div style="font-weight:900; font-size:14px; color:#ff9500; margin-top:10px;">${bundle.name}</div>
-                <div style="color:var(--pakchill-green-soft); font-weight:700; margin-top:5px;">Rp ${bundle.price.toLocaleString('id-ID')}</div>
+            <div class="product-item-card" onclick="addItemToCart('${prod.id}')">
+                ${bundleBadge}
+                <div style="font-weight:800; font-size:12px; margin-bottom:5px; min-height:32px; display:flex; align-items:center; justify-content:center; color:var(--pakchill-green-dark);">
+                    ${prod.name}
+                </div>
+                <div style="font-size:11px; font-weight:bold; color:#ff9500;">Rp ${prod.price.toLocaleString('id-ID')}</div>
             </div>
         `;
     });
 }
 
-function pushItemToCart(name, price) {
-    activeCart.push({ name, price, uid: Date.now() + Math.random() });
+function addItemToCart(id) {
+    const pLookup = sysDatabase.products.find(p => p.id === id);
+    if (!pLookup) return;
+
+    const existing = activeCart.find(item => item.id === id);
+    if (existing) {
+        existing.qty++;
+    } else {
+        activeCart.push({ ...pLookup, qty: 1 });
+    }
     renderCartUI();
 }
 
-function removeItemFromCart(uid) {
-    activeCart = activeCart.filter(item => item.uid !== uid);
+function changeCartQty(id, delta) {
+    const item = activeCart.find(i => i.id === id);
+    if (!item) return;
+
+    item.qty += delta;
+    if (item.qty <= 0) {
+        activeCart = activeCart.filter(i => i.id !== id);
+    }
     renderCartUI();
 }
 
 function renderCartUI() {
-    const container = document.getElementById('cart-items-wrapper');
-    if (!container) return;
-    container.innerHTML = '';
-    
+    const wrapper = document.getElementById('cart-items-wrapper');
+    if (!wrapper) return;
+    wrapper.innerHTML = '';
+
     if (activeCart.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#999; font-size:13px; padding:20px;">Keranjang belanja kosong.</p>';
-        if(document.getElementById('txt-subtotal-val')) document.getElementById('txt-subtotal-val').innerText = 'Rp 0';
-        if(document.getElementById('txt-grand-total-display')) document.getElementById('txt-grand-total-display').innerText = 'Rp 0';
+        wrapper.innerHTML = '<div style="text-align:center; color:#999; padding:20px; font-size:12px; font-style:italic;">Keranjang belanja kosong</div>';
+        recalculateCartTotals();
         return;
     }
-    
+
     activeCart.forEach(item => {
-        container.innerHTML += `
+        const totalHargaItem = item.price * item.qty;
+        wrapper.innerHTML += `
             <div class="cart-item-row">
-                <div style="width: 45%; font-weight:bold; font-size:13px;">${item.name}</div>
-                <div style="width: 35%; text-align: right; font-size:13px; color:#333;">Rp ${item.price.toLocaleString('id-ID')}</div>
-                <div style="width: 20%; text-align: right;">
-                    <button onclick="removeItemFromCart(${item.uid})" style="width:auto; margin:0; padding:3px 8px; background:#ff3b30; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">
-                        ✕
-                    </button>
+                <div style="width: 40%; font-size:12px; font-weight:bold; color:var(--pakchill-green-dark);">${item.name}</div>
+                <div style="width: 35%; display:flex; justify-content:center; align-items:center; gap:6px;">
+                    <button onclick="changeCartQty('${item.id}', -1)" style="width:24px; height:24px; padding:0; margin:0; border-radius:5px; background:#ff3b30; color:white; font-weight:bold; border:none; cursor:pointer;">-</button>
+                    <span style="font-size:13px; font-weight:bold; min-width:18px; text-align:center;">${item.qty}</span>
+                    <button onclick="changeCartQty('${item.id}', 1)" style="width:24px; height:24px; padding:0; margin:0; border-radius:5px; background:#34c759; color:white; font-weight:bold; border:none; cursor:pointer;">+</button>
                 </div>
+                <div style="width: 25%; text-align:right; font-size:12px; font-weight:bold;">Rp ${totalHargaItem.toLocaleString('id-ID')}</div>
             </div>
         `;
     });
+
+    recalculateCartTotals();
+}
+
+/* ==========================================================================
+   4. DYNAMIC VOUCHER FAST INTEGRATION & CALCULATION ENGINE
+   ========================================================================== */
+function renderVoucherSakuKasir() {
+    const target = document.getElementById('vouchers-render-target');
+    if (!target) return;
+    target.innerHTML = '';
+    
+    if (sysDatabase.vouchers.length === 0) {
+        target.innerHTML = '<span style="font-size:11px; color:#999; font-style:italic;">Tidak ada kupon/voucher aktif.</span>';
+        return;
+    }
+    
+    sysDatabase.vouchers.forEach(vch => {
+        let badgeColor = vch.type === 'Diskon' ? '#007aff' : '#5856d6';
+        target.innerHTML += `
+            <button onclick="applyVoucherToInput('${vch.code}', '${vch.type}')" type="button" style="width:auto; margin:0; padding:5px 10px; font-size:11px; background:${badgeColor}; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+                % ${vch.code} (-Rp ${vch.nominal.toLocaleString('id-ID')})
+            </button>
+        `;
+    });
+}
+
+function applyVoucherToInput(code, type) {
+    if (type === 'Diskon') {
+        const inputDiskon = document.getElementById('kasir-input-diskon');
+        if (inputDiskon) inputDiskon.value = code;
+    } else if (type === 'Voucher') {
+        const inputVoucher = document.getElementById('kasir-input-voucher');
+        if (inputVoucher) inputVoucher.value = code;
+    }
     recalculateCartTotals();
 }
 
 function recalculateCartTotals() {
-    let subtotal = activeCart.reduce((sum, item) => sum + item.price, 0);
-    if(document.getElementById('txt-subtotal-val')) {
-        document.getElementById('txt-subtotal-val').innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
-    }
-    
-    let diskonRaw = document.getElementById('kasir-input-diskon') ? document.getElementById('kasir-input-diskon').value.trim() : '0';
-    let voucherRaw = document.getElementById('kasir-input-voucher') ? document.getElementById('kasir-input-voucher').value.trim() : '0';
-    
+    let subtotal = 0;
+    activeCart.forEach(item => { subtotal += item.price * item.qty; });
+
+    document.getElementById('txt-subtotal-val').innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
+
+    // Perhitungan Diskon
+    const diskonRaw = document.getElementById('kasir-input-diskon')?.value.trim().toUpperCase() || '0';
     let nilaiDiskon = 0;
+    if (!isNaN(diskonRaw)) {
+        nilaiDiskon = parseInt(diskonRaw) || 0;
+    } else {
+        const vchMatch = sysDatabase.vouchers.find(v => v.code === diskonRaw && v.type === 'Diskon');
+        if (vchMatch) nilaiDiskon = vchMatch.nominal;
+    }
+
+    // Perhitungan Voucher
+    const voucherRaw = document.getElementById('kasir-input-voucher')?.value.trim().toUpperCase() || '0';
     let nilaiVoucher = 0;
-    
-    if (diskonRaw !== '' && diskonRaw !== '0') {
-        let match = sysDatabase.vouchers.find(v => v.code.toUpperCase() === diskonRaw.toUpperCase() && v.type === 'Diskon');
-        if (match) nilaiDiskon = match.nominal;
-        else nilaiDiskon = parseInt(diskonRaw) || 0;
+    if (!isNaN(voucherRaw)) {
+        nilaiVoucher = parseInt(voucherRaw) || 0;
+    } else {
+        const vchMatch = sysDatabase.vouchers.find(v => v.code === voucherRaw && v.type === 'Voucher');
+        if (vchMatch) nilaiVoucher = vchMatch.nominal;
     }
-    
-    if (voucherRaw !== '' && voucherRaw !== '0') {
-        let match = sysDatabase.vouchers.find(v => v.code.toUpperCase() === voucherRaw.toUpperCase() && v.type === 'Voucher');
-        if (match) nilaiVoucher = match.nominal;
-        else nilaiVoucher = parseInt(voucherRaw) || 0;
-    }
-    
+
     let grandTotal = subtotal - nilaiDiskon - nilaiVoucher;
     if (grandTotal < 0) grandTotal = 0;
-    
-    if(document.getElementById('txt-grand-total-display')) {
-        document.getElementById('txt-grand-total-display').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID');
-    }
-    
-    return { subtotal, nilaiDiskon, nilaiVoucher, grandTotal };
+
+    document.getElementById('txt-grand-total-display').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+    calculateCashReturn();
 }
 
-function handlePaymentDropdownBranching() {
-    const pm = document.getElementById('kasir-select-paymethod').value;
-    document.getElementById('wrapper-sub-cash').style.display = (pm === 'Cash') ? 'block' : 'none';
-    document.getElementById('wrapper-sub-qris').style.display = (pm === 'QRIS') ? 'block' : 'none';
-    document.getElementById('wrapper-sub-transfer').style.display = (pm === 'Transfer') ? 'block' : 'none';
-    if(pm === 'Transfer') updateLiveRekeningInfo();
-}
-
+/* ==========================================================================
+   5. MEMBERSHIP & DYNAMIC PAYMENT PROCESSING
+   ========================================================================== */
 function executeLiveSearchMember() {
-    const s = document.getElementById('kasir-search-member').value.toUpperCase().trim();
+    const rawQuery = document.getElementById('kasir-search-member').value.trim().toLowerCase();
     const box = document.getElementById('kasir-member-status-box');
-    if(!s) { activeMemberObj = null; box.innerText = ''; return; }
     
-    let m = sysDatabase.members.find(mem => mem.name.toUpperCase().includes(s) || mem.wa.includes(s));
-    if(m) {
-        activeMemberObj = m;
-        box.innerHTML = `<span style="color:#2d5a27;">✓ Member Terdeteksi: <b>${m.name}</b> (${m.poin} Poin)</span>`;
+    if (!rawQuery) {
+        activeMemberObj = null;
+        box.innerText = '';
+        return;
+    }
+
+    const match = sysDatabase.members.find(m => m.name.toLowerCase().includes(rawQuery) || m.phone.includes(rawQuery));
+    if (match) {
+        activeMemberObj = match;
+        box.innerHTML = `<span style="color:#34c759; font-size:11px; font-weight:bold;">✔ Member Terverifikasi: ${match.name} (Poin: ${match.points})</span>`;
     } else {
         activeMemberObj = null;
-        box.innerHTML = `<span style="color:#ff3b30;">✗ Member Tidak Ditemukan</span>`;
+        box.innerHTML = `<span style="color:#ff3b30; font-size:11px; font-weight:bold;">❌ Member Tidak Ditemukan</span>`;
     }
 }
 
 function registerFastMemberFromKasir() {
-    const name = document.getElementById('kasir-fast-name').value.trim().toUpperCase();
-    const wa = document.getElementById('kasir-fast-wa').value.trim();
-    if(!name || !wa) return alert('Lengkapi data member baru!');
-    
-    sysDatabase.members.push({ name, wa, poin: 0 });
+    const name = document.getElementById('kasir-fast-name').value.trim();
+    const phone = document.getElementById('kasir-fast-wa').value.trim();
+
+    if (!name || !phone) return alert('Lengkapi data registrasi member baru!');
+
+    const isDuplicate = sysDatabase.members.some(m => m.phone === phone);
+    if (isDuplicate) return alert('Nomor WhatsApp sudah terdaftar sebagai member!');
+
+    const newM = { id: 'M' + (sysDatabase.members.length + 1), name, phone, points: 10 };
+    sysDatabase.members.push(newM);
     saveToStorage();
-    document.getElementById('kasir-search-member').value = name;
-    executeLiveSearchMember();
+
     document.getElementById('kasir-fast-name').value = '';
     document.getElementById('kasir-fast-wa').value = '';
-    try { renderMemberTable(); } catch(e){}
-    alert('Member Berhasil Didaftarkan!');
+    document.getElementById('kasir-search-member').value = phone;
+    
+    executeLiveSearchMember();
+    if (activeRole === 'owner') renderOwnerDashboardMetrics();
+    alert(`Sukses Mendaftarkan Member Resmi: ${name}!`);
 }
 
-function updateLiveRekeningInfo() {
-    const sel = document.getElementById('sub-target-transfer');
-    const box = document.getElementById('live-rekening-info-box');
-    if(!sel || !box) return;
-    if(sysDatabase.rekening.length === 0) { box.innerText = 'Belum ada rekening diatur owner.'; return; }
-    
-    let match = sysDatabase.rekening[sel.selectedIndex];
-    if(match) box.innerText = `${match.bank}: ${match.nomor}`;
+function handlePaymentDropdownBranching() {
+    const method = document.getElementById('kasir-select-paymethod').value;
+    document.getElementById('wrapper-sub-cash').style.display = method === 'Cash' ? 'block' : 'none';
+    document.getElementById('wrapper-sub-qris').style.display = method === 'QRIS' ? 'block' : 'none';
+    document.getElementById('wrapper-sub-transfer').style.display = method === 'Transfer' ? 'block' : 'none';
 }
 
 function calculateCashReturn() {
-    let totals = recalculateCartTotals();
-    let cash = parseInt(document.getElementById('kasir-cash-input-uang').value) || 0;
-    let kembalian = cash - totals.grandTotal;
-    if (kembalian < 0) kembalian = 0;
-    document.getElementById('cash-return-info').innerText = `Kembalian: Rp ${kembalian.toLocaleString('id-ID')}`;
+    const gtText = document.getElementById('txt-grand-total-display').innerText.replace(/[^0-9]/g, '');
+    const grandTotal = parseInt(gtText) || 0;
+    const cashInput = parseInt(document.getElementById('kasir-cash-input-uang').value) || 0;
+    
+    const returnBox = document.getElementById('cash-return-info');
+    if (!returnBox) return;
+
+    if (cashInput < grandTotal) {
+        returnBox.innerText = `Uang Kurang: Rp ${(grandTotal - cashInput).toLocaleString('id-ID')}`;
+        returnBox.style.color = '#ff3b30';
+    } else {
+        returnBox.innerText = `Kembalian: Rp ${(cashInput - grandTotal).toLocaleString('id-ID')}`;
+        returnBox.style.color = '#ff9500';
+    }
 }
 
-// ==========================================================================
-// 4. ENGINE FINALISASI TRANSAKSI & CETAK NOTA THERMAL 58MM
-// ==========================================================================
-function finalizeTransactionReceipt(type) {
-    if (activeCart.length === 0) return alert('Keranjang belanja kosong!');
-    
-    let totals = recalculateCartTotals();
-    const pm = document.getElementById('kasir-select-paymethod').value;
-    
-    if (pm === 'Cash') {
-        let cashInput = parseInt(document.getElementById('kasir-cash-input-uang').value) || 0;
-        if (cashInput < totals.grandTotal) return alert('Uang tunai pembayaran tidak cukup!');
+/* ==========================================================================
+   6. TRANSACTION COMPLETION & THERMAL RECEIPT GENERATOR
+   ========================================================================== */
+function finalizeTransactionReceipt(printType) {
+    if (activeCart.length === 0) return alert('Keranjang belanja masih kosong!');
+
+    const subtotal = parseInt(document.getElementById('txt-subtotal-val').innerText.replace(/[^0-9]/g, '')) || 0;
+    const grandTotal = parseInt(document.getElementById('txt-grand-total-display').innerText.replace(/[^0-9]/g, '')) || 0;
+    const payMethod = document.getElementById('kasir-select-paymethod').value;
+    const serviceType = document.querySelector('input[name="service_type"]:checked').value;
+
+    let payDetails = payMethod;
+    if (payMethod === 'Cash') {
+        const inputCash = parseInt(document.getElementById('kasir-cash-input-uang').value) || 0;
+        if (inputCash < grandTotal) return alert('Pembayaran tunai belum mencukupi nominal tagihan!');
+        payDetails += ` (Tunai: Rp ${inputCash.toLocaleString('id-ID')})`;
+    } else if (payMethod === 'QRIS') {
+        payDetails += ` (${document.getElementById('sub-vendor-qris').value})`;
+    } else if (payMethod === 'Transfer') {
+        payDetails += ` (${document.getElementById('sub-target-transfer').value})`;
     }
-    
-    const trxId = 'TRX-' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 10);
-    const orderNum = sysDatabase.currentOrderSeq;
-    const customerName = activeMemberObj ? activeMemberObj.name : 'UMUM';
-    
-    // Tambah Poin ke Member jika terdeteksi (1 item = 1 poin)
+
+    // Tambah Poin Member jika terdaftar
     if (activeMemberObj) {
-        let memberIdx = sysDatabase.members.findIndex(m => m.name === activeMemberObj.name);
-        if (memberIdx !== -1) sysDatabase.members[memberIdx].poin += activeCart.length;
+        const matchedMember = sysDatabase.members.find(m => m.id === activeMemberObj.id);
+        if (matchedMember) {
+            const addedPoints = Math.floor(grandTotal / 10000);
+            matchedMember.points += addedPoints;
+        }
     }
-    
-    // Catat objek transaksi baru
-    let newTransaction = {
+
+    // Rekam Invoice Transaksi Ke Database
+    const trxId = 'TRX-' + Date.now();
+    const newTrx = {
+        orderSeq: sysDatabase.currentOrderSeq,
         id: trxId,
-        orderNumber: orderNum,
-        timestamp: new Date().toISOString(),
-        customer: customerName,
-        items: [...activeCart],
-        itemCount: activeCart.length,
-        subtotal: totals.subtotal,
-        discount: totals.nilaiDiskon + totals.nilaiVoucher,
-        total: totals.grandTotal,
-        payment: pm,
-        status: 'Sukses'
+        date: new Date().toISOString(),
+        customer: activeMemberObj ? activeMemberObj.name : 'Umum (Non-Member)',
+        serviceType: serviceType,
+        items: JSON.parse(JSON.stringify(activeCart)),
+        subtotal: subtotal,
+        grandTotal: grandTotal,
+        paymentMethod: payDetails,
+        status: 'SUKSES'
     };
-    
-    sysDatabase.transactions.push(newTransaction);
+
+    sysDatabase.transactions.push(newTrx);
     sysDatabase.currentOrderSeq++;
     saveToStorage();
-    
-    // Render Output Nota Thermal 58mm untuk Printer / Kertas Gulung
-    let receiptTarget = document.getElementById('thermal-receipt-output');
-    if (receiptTarget) {
+
+    // CETAK THERMAL PRINTER MANAGEMENT
+    if (printType === 'Print') {
         let itemsHtml = '';
-        activeCart.forEach(it => {
-            itemsHtml += `<div>${it.name.padEnd(16)} Rp${it.price.toLocaleString('id-ID').padStart(9)}</div>`;
+        activeCart.forEach(i => {
+            itemsHtml += `
+                <div style="display:flex; justify-content:space-between; font-size:11px;">
+                    <span>${i.name} x${i.qty}</span>
+                    <span>Rp ${(i.price * i.qty).toLocaleString('id-ID')}</span>
+                </div>`;
         });
-        
-        receiptTarget.innerHTML = `
-            <div style="text-align:center; font-family:monospace; font-size:11px;">
-                <b>PAKCHILL ENTERPRISE</b><br>
-                Healthy Fresh Beverage<br>
-                --------------------------------<br>
-                No Order: #${orderNum}<br>
-                ID Nota : ${trxId}<br>
-                Waktu   : ${new Date().toLocaleTimeString('id-ID')}<br>
-                Pelanggan: ${customerName}<br>
-                --------------------------------<br>
-                <div style="text-align:left;">${itemsHtml}</div>
-                --------------------------------<br>
-                Subtotal: Rp ${totals.subtotal.toLocaleString('id-ID')}<br>
-                Potongan: Rp ${(totals.nilaiDiskon + totals.nilaiVoucher).toLocaleString('id-ID')}<br>
-                <b>TOTAL   : Rp ${totals.grandTotal.toLocaleString('id-ID')}</b><br>
-                Metode  : ${pm}<br>
-                --------------------------------<br>
-                Terima Kasih Atas Kunjungan Anda<br>
-                Stay Healthy, Stay Fresh!<br>
+
+        const receiptArea = document.getElementById('thermal-receipt-output');
+        receiptArea.innerHTML = `
+            <div style="font-family:monospace; width:58mm; padding:5px; background:white; color:black;">
+                <div style="text-align:center; font-weight:bold; font-size:14px;">PAKCHILL JUICE</div>
+                <div style="text-align:center; font-size:10px; margin-bottom:5px;">Healthy Beverages Hub</div>
+                <hr style="border:0; border-top:1px dashed black; margin:4px 0;">
+                <div style="font-size:10px;">
+                    Order #: ${newTrx.orderSeq}<br>
+                    ID: ${newTrx.id}<br>
+                    Waktu: ${new Date(newTrx.date).toLocaleString('id-ID')}<br>
+                    Tipe: ${newTrx.serviceType}<br>
+                    Pelanggan: ${newTrx.customer}
+                </div>
+                <hr style="border:0; border-top:1px dashed black; margin:4px 0;">
+                ${itemsHtml}
+                <hr style="border:0; border-top:1px dashed black; margin:4px 0;">
+                <div style="display:flex; justify-content:space-between; font-size:11px;"><span>Subtotal:</span><span>Rp ${subtotal.toLocaleString('id-ID')}</span></div>
+                <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold;"><span>GRAND TOTAL:</span><span>Rp ${grandTotal.toLocaleString('id-ID')}</span></div>
+                <hr style="border:0; border-top:1px dashed black; margin:4px 0;">
+                <div style="font-size:10px;">Metode: ${payDetails}</div>
+                <div style="text-align:center; font-size:10px; margin-top:10px; font-weight:bold;">Terima Kasih Atas Kunjungan Anda!</div>
             </div>
         `;
-    }
-    
-    if (type === 'Print') {
         window.print();
-    } else if (type === 'Email') {
-        alert(`Notifikasi Transaksi ${trxId} Berhasil Dikirim via Simulasi API Node Mailer!`);
+    } else {
+        alert(`Transaksi Berhasil Ditransfer Berbentuk Email Digital/Notifikasi Ke Pelanggan! ID: ${trxId}`);
     }
-    
-    // Reset status Aplikasi setelah sukses transaksi
+
+    // Reset State Kasir Ke Kondisi Semula
     activeCart = [];
     activeMemberObj = null;
-    if(document.getElementById('kasir-search-member')) document.getElementById('kasir-search-member').value = '';
-    if(document.getElementById('kasir-member-status-box')) document.getElementById('kasir-member-status-box').innerText = '';
-    if(document.getElementById('kasir-cash-input-uang')) document.getElementById('kasir-cash-input-uang').value = '';
-    if(document.getElementById('cash-return-info')) document.getElementById('cash-return-info').innerText = 'Kembalian: Rp 0';
-    if(document.getElementById('txt-live-order-number')) document.getElementById('txt-live-order-number').innerText = `Order #: ${sysDatabase.currentOrderSeq}`;
+    document.getElementById('kasir-search-member').value = '';
+    document.getElementById('kasir-member-status-box').innerText = '';
+    if (document.getElementById('kasir-cash-input-uang')) document.getElementById('kasir-cash-input-uang').value = '';
+    if (document.getElementById('kasir-input-diskon')) document.getElementById('kasir-input-diskon').value = '0';
+    if (document.getElementById('kasir-input-voucher')) document.getElementById('kasir-input-voucher').value = '0';
     
+    document.getElementById('cash-return-info').innerText = 'Kembalian: Rp 0';
+    document.getElementById('txt-live-order-number').innerText = `Order #: ${sysDatabase.currentOrderSeq}`;
+
     renderCartUI();
     calculateLiveClosingDashboard();
     if (activeRole === 'owner') renderOwnerDashboardMetrics();
 }
 
+/* ==========================================================================
+   7. LIVE CLOSING MONITOR DASHBOARD (SHIFT 24h)
+   ========================================================================== */
 function calculateLiveClosingDashboard() {
-    let today = new Date().toDateString();
-    let todayTrx = sysDatabase.transactions.filter(t => new Date(t.timestamp).toDateString() === today && t.status === 'Sukses');
-    
-    let totalOmzet = todayTrx.reduce((sum, t) => sum + t.total, 0);
-    let totalQty = todayTrx.reduce((sum, t) => sum + t.itemCount, 0);
-    
-    if(document.getElementById('txt-closing-total-omzet')) document.getElementById('txt-closing-total-omzet').innerText = 'Rp ' + totalOmzet.toLocaleString('id-ID');
-    if(document.getElementById('txt-closing-total-qty')) document.getElementById('txt-closing-total-qty').innerText = totalQty + ' Item';
-    
-    // Hitung rincian kuantitas per nama item menu
-    let menuCountMap = {};
-    todayTrx.forEach(t => {
-        t.items.forEach(it => {
-            menuCountMap[it.name] = (menuCountMap[it.name] || 0) + 1;
+    const listTarget = document.getElementById('closing-menu-list-render');
+    if (!listTarget) return;
+
+    const targetTimeRange = Date.now() - (24 * 60 * 60 * 1000); // 24 Jam Terakhir
+    const liveTrx = sysDatabase.transactions.filter(t => new Date(t.date).getTime() >= targetTimeRange && t.status === 'SUKSES');
+
+    let totalOmzet = 0;
+    let totalQty = 0;
+    let menuMap = {};
+
+    liveTrx.forEach(t => {
+        totalOmzet += t.grandTotal;
+        t.items.forEach(item => {
+            totalQty += item.qty;
+            menuMap[item.name] = (menuMap[item.name] || 0) + item.qty;
         });
     });
-    
-    let listTarget = document.getElementById('closing-menu-list-render');
-    if (listTarget) {
-        listTarget.innerHTML = '';
-        Object.keys(menuCountMap).forEach(key => {
-            listTarget.innerHTML += `
-                <div style="display:flex; justify-content:space-between;">
-                    <span>• ${key}</span>
-                    <span>x${menuCountMap[key]}</span>
-                </div>
-            `;
-        });
-        if(Object.keys(menuCountMap).length === 0) listTarget.innerHTML = '<span style="color:#aaa;">Belum ada menu terjual hari ini.</span>';
+
+    document.getElementById('txt-closing-total-omzet').innerText = `Rp ${totalOmzet.toLocaleString('id-ID')}`;
+    document.getElementById('txt-closing-total-qty').innerText = `${totalQty} Item`;
+
+    listTarget.innerHTML = '';
+    const sortedMenus = Object.entries(menuMap);
+    if (sortedMenus.length === 0) {
+        listTarget.innerHTML = '<span style="color:#999; font-style:italic;">Belum ada menu terjual dalam 24 jam terakhir.</span>';
+        return;
     }
+
+    sortedMenus.forEach(([name, qty]) => {
+        listTarget.innerHTML += `<div style="display:flex; justify-content:space-between;"><span>• ${name}</span><span style="font-weight:bold;">${qty}x</span></div>`;
+    });
 }
 
-// ==========================================================================
-// 5. ENGINE SUB-DASHBOARD MANAGEMENT CONTROL (OWNER HUB)
-// ==========================================================================
+function exportKasirReportExcel() {
+    const targetTimeRange = Date.now() - (24 * 60 * 60 * 1000);
+    const dataRow = sysDatabase.transactions
+        .filter(t => new Date(t.date).getTime() >= targetTimeRange)
+        .map(t => ({
+            "Order #": t.orderSeq,
+            "ID Transaksi": t.id,
+            "Waktu": new Date(t.date).toLocaleString('id-ID'),
+            "Pelanggan": t.customer,
+            "Layanan": t.serviceType,
+            "Total Bayar": t.grandTotal,
+            "Metode": t.paymentMethod,
+            "Status": t.status
+        }));
+
+    const ws = XLSX.utils.json_to_sheet(dataRow);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Closing Shift Kasir");
+    XLSX.writeFile(wb, "Laporan_Closing_Kasir_Pakchill.xlsx");
+}
+
+function exportKasirReportPDF() {
+    const area = document.getElementById('closing-report-pdf-area');
+    html2pdf().from(area).save('Laporan_Closing_Kasir_Pakchill.pdf');
+}
+
+/* ==========================================================================
+   8. OWNER DASHBOARD STRATEGIC CONTROLS & MANAGEMENT METRICS
+   ========================================================================== */
+function renderOwnerDashboardMetrics() {
+    renderHistoryTable();
+    renderOwnerMembersTable();
+    renderOwnerRekeningTable();
+
+    const trxs = sysDatabase.transactions.filter(t => t.status === 'SUKSES');
+    const now = new Date();
+
+    let omzetHari = 0, omzetMinggu = 0, omzetBulan = 0, omzetTahun = 0;
+    let bulananMap = Array(12).fill(0);
+
+    trxs.forEach(t => {
+        const tDate = new Date(t.date);
+        const diffDays = (now - tDate) / (1000 * 60 * 60 * 24);
+
+        if (tDate.toDateString() === now.toDateString()) omzetHari += t.grandTotal;
+        if (diffDays <= 7) omzetMinggu += t.grandTotal;
+        if (tDate.getMonth() === now.getMonth() && tDate.getFullYear() === now.getFullYear()) omzetBulan += t.grandTotal;
+        if (tDate.getFullYear() === now.getFullYear()) omzetTahun += t.grandTotal;
+
+        if (tDate.getFullYear() === now.getFullYear()) {
+            bulananMap[tDate.getMonth()] += t.grandTotal;
+        }
+    });
+
+    document.getElementById('own-rekap-hari').innerText = `Rp ${omzetHari.toLocaleString('id-ID')}`;
+    document.getElementById('own-rekap-minggu').innerText = `Rp ${omzetMinggu.toLocaleString('id-ID')}`;
+    document.getElementById('own-rekap-bulan').innerText = `Rp ${omzetBulan.toLocaleString('id-ID')}`;
+    document.getElementById('own-rekap-tahun').innerText = `Rp ${omzetTahun.toLocaleString('id-ID')}`;
+
+    // Grafik Chart.js
+    const ctx = document.getElementById('canvasTrenOwner');
+    if (!ctx) return;
+
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+            datasets: [{
+                label: 'Omzet Bulanan Pakchill (Rp)',
+                data: bulananMap,
+                borderColor: '#2d5a27',
+                backgroundColor: 'rgba(45, 90, 39, 0.1)',
+                borderWidth: 3,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+}
+
 function saveNewMenuFromOwner() {
     const name = document.getElementById('own-add-menu-name').value.trim().toUpperCase();
     const price = parseInt(document.getElementById('own-add-menu-price').value) || 0;
-    if(!name || price <= 0) return alert('Data Menu Tidak Valid!');
-    
-    sysDatabase.menu.push({ id: 'm' + (sysDatabase.menu.length + 1), name, price });
+
+    if (!name || price <= 0) return alert('Data input menu tidak valid!');
+    sysDatabase.products.push({ id: 'P' + (Date.now()), name, price, isBundle: false });
     saveToStorage();
+
     document.getElementById('own-add-menu-name').value = '';
     document.getElementById('own-add-menu-price').value = '';
     renderKatalogKasir();
-    alert('Menu baru berhasil ditambahkan!');
+    alert('Menu baru sukses ditambahkan ke katalog!');
 }
 
 function saveNewBundleFromOwner() {
     const name = document.getElementById('own-add-bundle-name').value.trim().toUpperCase();
     const price = parseInt(document.getElementById('own-add-bundle-price').value) || 0;
-    if(!name || price <= 0) return alert('Data Paket Tidak Valid!');
-    
-    sysDatabase.bundles.push({ id: 'b' + (sysDatabase.bundles.length + 1), name, price });
+
+    if (!name || price <= 0) return alert('Data input bundling tidak valid!');
+    sysDatabase.products.push({ id: 'B' + (Date.now()), name, price, isBundle: true });
     saveToStorage();
+
     document.getElementById('own-add-bundle-name').value = '';
     document.getElementById('own-add-bundle-price').value = '';
     renderKatalogKasir();
-    alert('Paket Hemat diaktifkan!');
+    alert('Paket bundling hemat baru diaktifkan!');
 }
 
 function saveNewVoucherFromOwner() {
     const code = document.getElementById('own-vch-code').value.trim().toUpperCase();
     const nominal = parseInt(document.getElementById('own-vch-nominal').value) || 0;
     const type = document.getElementById('own-vch-type').value;
-    if(!code || nominal <= 0) return alert('Data Voucher/Diskon Tidak Valid!');
-    
+
+    if (!code || nominal <= 0) return alert('Data pengisian kupon promosi salah!');
     sysDatabase.vouchers.push({ code, nominal, type });
     saveToStorage();
+
     document.getElementById('own-vch-code').value = '';
     document.getElementById('own-vch-nominal').value = '';
-    alert('Aturan Diskon / Voucher berhasil didaftarkan!');
+    
+    renderVoucherSakuKasir();
+    alert('Aturan Diskon / Voucher baru sukses terdaftar!');
 }
 
-function saveNewRekeningFromOwner() {
-    const bank = document.getElementById('own-rek-bankname').value;
-    const nomor = document.getElementById('own-rek-number').value.trim();
-    if(!nomor) return alert('Masukkan nomor rekening / HP!');
-    
-    sysDatabase.rekening.push({ bank, nomor });
-    saveToStorage();
-    document.getElementById('own-rek-number').value = '';
-    
-    // Perbarui dropdown kasir langsung
-    const subTargetTransfer = document.getElementById('sub-target-transfer');
-    if(subTargetTransfer) {
-        subTargetTransfer.innerHTML = '';
-        sysDatabase.rekening.forEach(rek => {
-            subTargetTransfer.innerHTML += `<option value="${rek.bank}">${rek.bank}</option>`;
-        });
-    }
-    alert('Data Rekening Transfer Manual berhasil disimpan!');
-}
-
-function renderOwnerDashboardMetrics() {
-    let now = new Date();
-    let oneDay = 24 * 60 * 60 * 1000;
-    
-    let hariIni = sysDatabase.transactions.filter(t => new Date(t.timestamp).toDateString() === now.toDateString() && t.status === 'Sukses').reduce((s, t) => s + t.total, 0);
-    let seminggu = sysDatabase.transactions.filter(t => (now - new Date(t.timestamp)) <= (7 * oneDay) && t.status === 'Sukses').reduce((s, t) => s + t.total, 0);
-    let sebulan = sysDatabase.transactions.filter(t => new Date(t.timestamp).getMonth() === now.getMonth() && new Date(t.timestamp).getFullYear() === now.getFullYear() && t.status === 'Sukses').reduce((s, t) => s + t.total, 0);
-    let setahun = sysDatabase.transactions.filter(t => new Date(t.timestamp).getFullYear() === now.getFullYear() && t.status === 'Sukses').reduce((s, t) => s + t.total, 0);
-    
-    if(document.getElementById('own-rekap-hari')) document.getElementById('own-rekap-hari').innerText = 'Rp ' + hariIni.toLocaleString('id-ID');
-    if(document.getElementById('own-rekap-minggu')) document.getElementById('own-rekap-minggu').innerText = 'Rp ' + seminggu.toLocaleString('id-ID');
-    if(document.getElementById('own-rekap-bulan')) document.getElementById('own-rekap-bulan').innerText = 'Rp ' + sebulan.toLocaleString('id-ID');
-    if(document.getElementById('own-rekap-tahun')) document.getElementById('own-rekap-tahun').innerText = 'Rp ' + setahun.toLocaleString('id-ID');
-    
-    renderHistoryTable();
-    renderMemberTable();
-    initiateOwnerTrendChart();
-}
-
-function renderHistoryTable() {
-    const tbody = document.getElementById('own-render-history-rows');
-    if(!tbody) return;
+/* ==========================================================================
+   9. DATABASES CRUD OPERATIONS (MEMBER & PAYMENT GATEWAY REKENING)
+   ========================================================================== */
+function renderOwnerMembersTable() {
+    const tbody = document.getElementById('render-owner-members-target');
+    if (!tbody) return;
     tbody.innerHTML = '';
-    
-    const filterMonth = document.getElementById('own-filter-month-select').value;
-    
-    let filteredList = sysDatabase.transactions;
-    if(filterMonth !== 'all') {
-        filteredList = sysDatabase.transactions.filter(t => new Date(t.timestamp).getMonth().toString() === filterMonth);
-    }
-    
-    filteredList.forEach(t => {
-        let styleRow = t.status === 'Void' ? 'style="background:#ffeef0; text-decoration:line-through; color:#999;"' : '';
-        let actionButton = t.status === 'Sukses' ? `<button onclick="executeVoidTransaction('${t.id}')" style="background:#ff3b30; color:white; border:none; padding:4px 8px; font-size:11px; border-radius:6px; cursor:pointer; font-weight:bold;">VOID</button>` : '<span style="color:#aaa; font-style:italic;">N/A</span>';
-        
-        tbody.innerHTML += `
-            <tr ${styleRow}>
-                <td style="font-weight:bold; color:#ff9500;">#${t.orderNumber || '-'}</td>
-                <td>${t.id}</td>
-                <td>${new Date(t.timestamp).toLocaleString('id-ID')}</td>
-                <td>${t.customer}</td>
-                <td style="font-weight:bold;">Rp ${t.total.toLocaleString('id-ID')}</td>
-                <td><mark style="background:#f0f0f0; padding:2px 6px; border-radius:4px;\">${t.payment}</mark></td>
-                <td style="color:${t.status === 'Sukses' ? '#34c759' : '#ff3b30'}; font-weight:bold;">${t.status}</td>
-                <td>${actionButton}</td>
-            </tr>
-        `;
-    });
-}
 
-function renderMemberTable() {
-    const tbody = document.getElementById('own-render-member-rows');
-    if(!tbody) return;
-    tbody.innerHTML = '';
-    
     sysDatabase.members.forEach((m, idx) => {
         tbody.innerHTML += `
             <tr>
                 <td><b>${m.name}</b></td>
-                <td>${m.wa}</td>
-                <td style="color:#2d5a27; font-weight:bold;">${m.poin} Poin</td>
-                <td style="text-align:center;">
-                    <button onclick="resetSingleMemberPoin(${idx})" style="background:#ff9500; color:white; border:none; padding:4px 8px; font-size:11px; border-radius:6px; cursor:pointer; font-weight:bold;">Tukar Poin</button>
+                <td>${m.phone}</td>
+                <td><span style="background:#e4f0e2; padding:3px 8px; border-radius:6px; font-weight:bold;">${m.points} Pts</span></td>
+                <td>
+                    <button onclick="deleteMemberRow(${idx})" style="width:auto; margin:0; padding:4px 10px; background:#ff3b30; color:white; border:none; border-radius:6px; font-size:11px; cursor:pointer;">Hapus</button>
                 </td>
             </tr>
         `;
     });
 }
 
-function resetSingleMemberPoin(idx) {
-    if(sysDatabase.members[idx]) {
-        if(confirm(`Apakah member ${sysDatabase.members[idx].name} ingin menukarkan poinnya (Poin diset kembali ke 0)?`)) {
-            sysDatabase.members[idx].poin = 0;
-            saveToStorage();
-            renderMemberTable();
-            alert('Poin Berhasil Ditukarkan!');
-        }
-    }
+function deleteMemberRow(idx) {
+    if (!confirm('Yakin ingin menghapus data member ini secara permanen?')) return;
+    sysDatabase.members.splice(idx, 1);
+    saveToStorage();
+    renderOwnerMembersTable();
 }
 
-function executeVoidTransaction(id) {
-    if(!confirm(`Apakah Anda yakin ingin melakukan VOID pada transaksi ${id}?`)) return;
-    
-    let idx = sysDatabase.transactions.findIndex(t => t.id === id);
-    if(idx !== -1) {
-        let trxObj = sysDatabase.transactions[idx];
-        let memberMatch = sysDatabase.members.findIndex(m => m.name === trxObj.customer);
-        if(memberMatch !== -1) {
-            sysDatabase.members[memberMatch].poin -= trxObj.itemCount;
-            if(sysDatabase.members[memberMatch].poin < 0) sysDatabase.members[memberMatch].poin = 0;
-        }
-        sysDatabase.transactions[idx].total = 0;
-        sysDatabase.transactions[idx].status = 'Void';
-        saveToStorage();
-        renderHistoryTable();
-        renderMemberTable();
-        renderOwnerDashboardMetrics();
-        calculateLiveClosingDashboard();
-        alert(`Transaksi ${id} Berhasil Di-VOID (Omzet dinolkan).`);
-    }
-}
+function renderOwnerRekeningTable() {
+    const tbody = document.getElementById('render-owner-rekening-target');
+    if (!tbody) return;
+    tbody.innerHTML = '';
 
-// ==========================================================================
-// 6. ENGINE VISUALISASI INTEGRATED CHART.JS GRAFIK TREN
-// ==========================================================================
-function initiateOwnerTrendChart() {
-    const ctx = document.getElementById('canvasTrenOwner');
-    if(!ctx) return;
-    
-    // Hitung akumulasi omzet per bulan sepanjang tahun ini
-    let monthlyOmzetData = Array(12).fill(0);
-    let currentYear = new Date().getFullYear();
-    
-    sysDatabase.transactions.forEach(t => {
-        let tDate = new Date(t.timestamp);
-        if(tDate.getFullYear() === currentYear && t.status === 'Sukses') {
-            let month = tDate.getMonth();
-            monthlyOmzetData[month] += t.total;
-        }
-    });
-    
-    if (chartInstanceGlobal) chartInstanceGlobal.destroy();
-    
-    chartInstanceGlobal = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
-            datasets: [{
-                label: `Tren Omzet Finansial ${currentYear} (Rp)`,
-                data: monthlyOmzetData,
-                borderColor: '#1e3f1b',
-                backgroundGradientColor: 'rgba(45, 90, 39, 0.1)',
-                borderWidth: 3,
-                tension: 0.3,
-                fill: true,
-                backgroundColor: 'rgba(71, 130, 65, 0.1)'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
-        }
+    sysDatabase.rekening.forEach((r, idx) => {
+        tbody.innerHTML += `
+            <tr>
+                <td><span style="background:#007aff; color:white; font-weight:bold; padding:2px 8px; border-radius:6px; font-size:11px;">${r.bank}</span></td>
+                <td><b>${r.number}</b></td>
+                <td>${r.name}</td>
+                <td>
+                    <button onclick="editRekeningForm(${idx})" style="width:auto; margin:0; padding:4px 10px; background:#ff9500; color:white; border:none; border-radius:6px; font-size:11px; cursor:pointer;">Edit</button>
+                    <button onclick="deleteRekeningRow(${idx})" style="width:auto; margin:0; padding:4px 10px; background:#ff3b30; color:white; border:none; border-radius:6px; font-size:11px; cursor:pointer;">Hapus</button>
+                </td>
+            </tr>
+        `;
     });
 }
 
-// ==========================================================================
-// 7. EXTERNAL SCRIPT LIBRARIES EXPORTER (EXCEL & PDF)
-// ==========================================================================
-function exportKasirReportExcel() {
-    let tableData = [["Kategori Dashboard Closing Kasir (Hari Ini)"], [], ["Indikator", "Nilai Bersih / Kuantitas"]];
-    tableData.push(["Total Omzet Penjualan", document.getElementById('txt-closing-total-omzet').innerText]);
-    tableData.push(["Total Kuantitas Terjual", document.getElementById('txt-closing-total-qty').innerText]);
-    
-    let ws = XLSX.utils.aoa_to_sheet(tableData);
-    let wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Closing Kasir");
-    XLSX.writeFile(wb, `Closing_Kasir_${new Date().toLocaleDateString('id-ID')}.xlsx`);
+function syncRekeningDropdownOptions() {
+    const select = document.getElementById('sub-target-transfer');
+    if (!select) return;
+    select.innerHTML = '';
+
+    if (sysDatabase.rekening.length === 0) {
+        select.innerHTML = '<option value="">Tidak ada pilihan akun rekening</option>';
+        document.getElementById('live-rekening-info-box').innerText = '';
+        return;
+    }
+
+    sysDatabase.rekening.forEach(r => {
+        select.innerHTML += `<option value="${r.bank} - ${r.number}">${r.bank} (${r.name})</option>`;
+    });
+    updateLiveRekeningInfo();
 }
 
-function exportKasirReportPDF() {
-    const element = document.getElementById('closing-report-pdf-area');
-    if(!element) return;
-    let opt = {
-        margin: 10, filename: `Closing_Kasir_${new Date().toLocaleDateString('id-ID')}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    html2pdf().set(opt).from(element).save();
+function updateLiveRekeningInfo() {
+    const select = document.getElementById('sub-target-transfer');
+    const infoBox = document.getElementById('live-rekening-info-box');
+    if (select && infoBox) {
+        infoBox.innerText = `Tujuan Transfer Kasir: ${select.value}`;
+    }
+}
+
+function saveRekeningFormSubmit() {
+    const indexStr = document.getElementById('form-rek-id-index').value;
+    const bank = document.getElementById('form-rek-bank').value.trim().toUpperCase();
+    const number = document.getElementById('form-rek-nomor').value.trim();
+    const name = document.getElementById('form-rek-nama').value.trim().toUpperCase();
+
+    if (!bank || !number || !name) return alert('Isi semua kolom form akun rekening!');
+
+    if (indexStr === '') {
+        // Tambah Baru
+        sysDatabase.rekening.push({ id: 'R' + Date.now(), bank, number, name });
+    } else {
+        // Edit yang sudah ada
+        const idx = parseInt(indexStr);
+        sysDatabase.rekening[idx].bank = bank;
+        sysDatabase.rekening[idx].number = number;
+        sysDatabase.rekening[idx].name = name;
+    }
+
+    saveToStorage();
+    clearRekeningForm();
+    renderOwnerRekeningTable();
+    syncRekeningDropdownOptions();
+    alert('Informasi manajemen akun rekening sukses diperbarui!');
+}
+
+function editRekeningForm(idx) {
+    const item = sysDatabase.rekening[idx];
+    document.getElementById('title-crud-rekening').innerText = '✍ Edit Informasi Akun Rekening';
+    document.getElementById('form-rek-id-index').value = idx;
+    document.getElementById('form-rek-bank').value = item.bank;
+    document.getElementById('form-rek-nomor').value = item.number;
+    document.getElementById('form-rek-nama').value = item.name;
+}
+
+function deleteRekeningRow(idx) {
+    if (!confirm('Yakin ingin menghapus akun rekening ini?')) return;
+    sysDatabase.rekening.splice(idx, 1);
+    saveToStorage();
+    renderOwnerRekeningTable();
+    syncRekeningDropdownOptions();
+}
+
+function clearRekeningForm() {
+    document.getElementById('title-crud-rekening').innerText = '+ Tambah Akun Rekening Baru';
+    document.getElementById('form-rek-id-index').value = '';
+    document.getElementById('form-rek-bank').value = '';
+    document.getElementById('form-rek-nomor').value = '';
+    document.getElementById('form-rek-nama').value = '';
+}
+
+/* ==========================================================================
+   10. AUDIT SYSTEM LOG & VOID REVERSAL CONTROLS
+   ========================================================================== */
+function renderHistoryTable() {
+    const tbody = document.getElementById('render-owner-transactions-target');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    const filterMonth = document.getElementById('own-filter-month-select').value;
+
+    sysDatabase.transactions.forEach((t, index) => {
+        const trxMonth = new Date(t.date).getMonth().toString();
+        if (filterMonth !== 'all' && trxMonth !== filterMonth) return;
+
+        let actionBtn = '';
+        if (t.status === 'SUKSES') {
+            actionBtn = `<button onclick="executeVoidTransaction(${index})" style="width:auto; margin:0; padding:4px 10px; background:#ff3b30; color:white; border:none; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">VOID</button>`;
+        } else {
+            actionBtn = `<span style="color:#8e8e93; font-style:italic; font-size:11px;">Batal Teraudit</span>`;
+        }
+
+        const statusStyle = t.status === 'SUKSES' ? 'color:#34c759; font-weight:bold;' : 'color:#ff3b30; font-weight:bold; text-decoration:line-through;';
+
+        tbody.innerHTML += `
+            <tr>
+                <td><b>${t.orderSeq}</b></td>
+                <td style="font-size:11px; font-family:monospace;">${t.id}</td>
+                <td style="font-size:11px;">${new Date(t.date).toLocaleString('id-ID')}</td>
+                <td>${t.customer}</td>
+                <td><small>${t.serviceType}</small></td>
+                <td><b>Rp ${t.grandTotal.toLocaleString('id-ID')}</b></td>
+                <td><small>${t.paymentMethod}</small></td>
+                <td><span style="${statusStyle}">${t.status}</span></td>
+                <td>${actionBtn}</td>
+            </tr>
+        `;
+    });
+}
+
+function executeVoidTransaction(index) {
+    if (!confirm('PERINGATAN AUDIT: Apakah Anda yakin ingin membatalkan (VOID) transaksi ini? Omzet akan dikurangi dan poin member yang didapat akan hangus.')) return;
+    
+    sysDatabase.transactions[index].status = 'VOID';
+    saveToStorage();
+    
+    renderOwnerDashboardMetrics();
+    calculateLiveClosingDashboard();
+    alert('Audit Log: Transaksi sukses di-VOID (Dibatalkan) dari pembukuan!');
 }
 
 function exportOwnerReportExcel() {
-    let wb = XLSX.utils.book_new();
-    
-    // Lembar 1: Log Transaksi
-    let trxRows = [["No Order", "ID Nota", "Waktu", "Pelanggan", "Total Bersih", "Metode", "Status"]];
-    sysDatabase.transactions.forEach(t => {
-        trxRows.push([t.orderNumber, t.id, new Date(t.timestamp).toLocaleString('id-ID'), t.customer, t.total, t.payment, t.status]);
-    });
-    let wsTrx = XLSX.utils.aoa_to_sheet(trxRows);
-    XLSX.utils.book_append_sheet(wb, wsTrx, "Log Transaksi");
-    
-    // Lembar 2: Data Member Poin
-    let memRows = [["Nama Member", "Nomor WhatsApp", "Total Akumulasi Poin"]];
-    sysDatabase.members.forEach(m => {
-        memRows.push([m.name, m.wa, m.poin]);
-    });
-    let wsMem = XLSX.utils.aoa_to_sheet(memRows);
-    XLSX.utils.book_append_sheet(wb, wsMem, "Database Member");
-    
-    XLSX.writeFile(wb, `Laporan_Owner_Pakchill_${new Date().getFullYear()}.xlsx`);
+    const dataRow = sysDatabase.transactions.map(t => ({
+        "Order #": t.orderSeq,
+        "ID Invoice": t.id,
+        "Waktu Transaksi": new Date(t.date).toLocaleString('id-ID'),
+        "Pelanggan": t.customer,
+        "Tipe Layanan": t.serviceType,
+        "Subtotal": t.subtotal,
+        "Grand Total (Net)": t.grandTotal,
+        "Metode Pembayaran": t.paymentMethod,
+        "Status Validasi": t.status
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(dataRow);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Laporan Keuangan Global");
+    XLSX.writeFile(wb, "Laporan_Eksekutif_Owner_Pakchill.xlsx");
 }
 
 function exportOwnerReportPDF() {
-    const element = document.getElementById('owner-report-pdf-area');
-    if(!element) return;
-    let opt = {
-        margin: 10, filename: `Laporan_Owner_Pakchill_${Date.now()}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-    };
-    html2pdf().set(opt).from(element).save();
+    const area = document.getElementById('owner-report-pdf-area');
+    html2pdf().from(area).save('Laporan_Tren_Owner_Pakchill.pdf');
 }
