@@ -1,222 +1,155 @@
 /* ==========================================================================
-   PAKCHILL POS PREMIUM UPDATE - THEME: SAGE GREEN & FROSTED GLASS
-   (HANYA MENGUBAH WARNA & EFEK VISUAL, STRUKTUR UTAMA ELEMEN 100% TETAP)
+   PAKCHILL POS SYSTEM - 100% ABSOLUTE OVERRIDE
+   THEME: ULTRA-PREMIUM SAGE GREEN & FROSTED WHITE GLASS (ANTI-DARK)
    ========================================================================== */
 
-:root {
-    /* Latar Belakang: Hijau Sage Lembut, Cerah, & Sangat Nyaman di Mata */
-    --bg-primary: linear-gradient(135deg, #e4ede1 0%, #cbdcc7 50%, #b8cfb3 100%);
-    
-    /* Efek Kaca Frosted: Putih Bening Transparan */
-    --glass-bg: rgba(255, 255, 255, 0.45);
-    --glass-bg-subtle: rgba(255, 255, 255, 0.25);
-    --glass-input: rgba(255, 255, 255, 0.65);
-    --glass-border: rgba(255, 255, 255, 0.5);
-    
-    /* Tipografi / Huruf Kontras Tinggi: Hijau Sage Tua Berwibawa */
-    --text-main: #253623;
-    --text-sub: #526b4f;
-    --text-muted: #7c9679;
-    
-    /* Tombol Interaktif: Sage Premium Adaptif */
-    --btn-sage-grad: linear-gradient(135deg, #597a55 0%, #43613f 100%);
-    --btn-sage-hover: linear-gradient(135deg, #4d6b49 0%, #354e32 100%);
-}
-
-/* ==========================================================================
-   GLOBAL RESET & BASE COLOR
-   ========================================================================== */
-* {
-    box-sizing: border-box;
-}
-
-body {
-    background: var(--bg-primary) !important;
+/* 1. PAKSA LATAR BELAKANG GLOBAL JADI HIJAU SAGE CERAH & LEMBUT (BUANG HIJAU PEKAT BUSUK) */
+html, body, div, section, main, article, .workspace-container, .container, .main-container {
+    background: linear-gradient(135deg, #e4ede1 0%, #cbdcc7 50%, #b8cfb3 100%) !important;
     background-attachment: fixed !important;
-    color: var(--text-main) !important;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    color: #253623 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif !important;
 }
 
-/* ==========================================================================
-   HALAMAN LOGIN / PIN SCREEN (SAGE & BENING SEPERTI YANG DIINGINKAN)
-   ========================================================================== */
-/* Memperbaiki area latar belakang hitam pekat di foto menjadi sage cerah */
-#login-screen, .login-container, [id*="login"] {
-    background: var(--bg-primary) !important;
+/* 2. PAKSA HALAMAN LOGIN / PIN SCREEN JADI SAGE BENING TRANSPARAN */
+#login-screen, 
+.login-screen, 
+.login-container, 
+[id*="login"], 
+[class*="login"] {
+    background: linear-gradient(135deg, #e4ede1 0%, #cbdcc7 50%, #b8cfb3 100%) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
-/* Teks Judul Utama di halaman login */
-#login-screen h1, .login-container h1, .brand-title {
-    color: var(--text-main) !important;
-    font-weight: 800 !important;
-}
-
-/* Teks Sub-judul / Deskripsi */
-#login-screen p, .brand-subtitle, #login-screen small {
-    color: var(--text-sub) !important;
-}
-
-/* Kotak Baris PIN Otentikasi (Mengubah box hitam/gelap menjadi Putih Bening Kaca) */
+/* 3. UBAH KOTAK PIN (YANG DI FOTO HITAM/GELAP) JADI PUTIH BENING KACA (FROSTED GLASS) */
 .pin-display-wrapper, 
-#login-screen input[type="password"], 
-input[id*="pin"], 
-.pin-input-box {
-    background: var(--glass-bg) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    border: 1px solid var(--glass-border) !important;
-    color: var(--text-main) !important;
-    box-shadow: 0 8px 24px rgba(142, 164, 138, 0.15) !important;
+.pin-input-box,
+#login-pin-input-box,
+input[type="password"],
+[id*="pin"],
+[class*="pin"] {
+    background: rgba(255, 255, 255, 0.55) !important;
+    backdrop-filter: blur(25px) saturate(130%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(130%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    color: #253623 !important;
+    box-shadow: 0 10px 25px rgba(142, 164, 138, 0.2) !important;
 }
 
-/* Tombol "Buka Kunci Sistem" (Mengubah hijau pekat mencolok menjadi Sage Lembut Premium) */
+/* 4. UBAH TOMBOL "BUKA KUNCI SISTEM" JADI WARNA SAGE PREMIUM YANG SERASI DENGAN SECTION */
 #login-screen button, 
-.btn-login, 
-#login-screen input[type="submit"] {
-    background: var(--btn-sage-grad) !important;
+.btn-unlock-system, 
+button[onclick*="login"],
+[id*="login"] button,
+.btn-login {
+    background: linear-gradient(135deg, #597a55 0%, #43613f 100%) !important;
     color: #ffffff !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     font-weight: 700 !important;
     box-shadow: 0 6px 16px rgba(67, 97, 63, 0.15) !important;
-    transition: all 0.25s ease !important;
+    text-shadow: none !important;
 }
 
 #login-screen button:hover, 
-.btn-login:hover {
-    background: var(--btn-sage-hover) !important;
+.btn-unlock-system:hover {
+    background: linear-gradient(135deg, #4d6b49 0%, #354e32 100%) !important;
     box-shadow: 0 8px 22px rgba(67, 97, 63, 0.25) !important;
 }
 
+/* 5. PAKSA SEMUA MODUL PANEL / KOTAK CARD INTERIOR JADI PUTIH BENING */
+.card, .panel, .ios-panel-card, .container-box, div[class*="card"], div[id*="panel"] {
+    background: rgba(255, 255, 255, 0.45) !important;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 12px 32px rgba(142, 164, 138, 0.12) !important;
+    color: #253623 !important;
+}
 
-/* ==========================================================================
-   STRUKTUR DASHBOARD UTAMA, NAVBAR, & PANEL INTERIOR
-   ========================================================================== */
-/* Navigation Bar Atas */
+/* 6. NAVIGASI ATAS (HEADER) */
 nav, .navbar, header {
     background: rgba(255, 255, 255, 0.4) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
-    border-bottom: 1px solid var(--glass-border) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5) !important;
 }
 
-nav h1, .navbar-brand {
-    color: var(--text-main) !important;
-    font-weight: 800 !important;
-}
-
-/* Kotak Modul / Card / Panel (Mengubah background gelap menjadi Putih Bening) */
-.card, .panel, .container-box, .ios-panel-card, div[class*="card"] {
-    background: var(--glass-bg) !important;
-    backdrop-filter: blur(25px) !important;
-    -webkit-backdrop-filter: blur(25px) !important;
-    border: 1px solid var(--glass-border) !important;
-    box-shadow: 0 12px 32px rgba(142, 164, 138, 0.12) !important;
-    color: var(--text-main) !important;
-}
-
-/* Judul di setiap Section */
-h2, h3, h4, .section-title {
-    color: var(--text-main) !important;
+/* 7. SEMUA HURUF / TEKS DISET SESUAI WARNA SECTION (SAGE TUA TAJAM) */
+h1, h2, h3, h4, h5, h6, th, .brand-title, .section-title {
+    color: #253623 !important;
     font-weight: 700 !important;
+    text-shadow: none !important;
 }
 
+p, span, label, td, small, .brand-subtitle {
+    color: #526b4f !important;
+    text-shadow: none !important;
+}
 
-/* ==========================================================================
-   SECTIONS: KATALOG, SELEKTOR, & INPUT FIELDS
-   ========================================================================== */
-/* Kartu Item Produk di Dalam Katalog */
-.product-item, .product-card, [id*="product"] {
+/* 8. KARTU KATALOG PRODUK */
+.product-item, .product-card, [id*="product"], [class*="product"] {
     background: rgba(255, 255, 255, 0.5) !important;
     border: 1px solid rgba(255, 255, 255, 0.7) !important;
-    transition: all 0.25s ease !important;
 }
 .product-item:hover, .product-card:hover {
     background: #ffffff !important;
-    border-color: var(--text-sub) !important;
-    box-shadow: 0 6px 16px rgba(96, 128, 92, 0.12) !important;
+    border-color: #526b4f !important;
 }
 
-/* Sinkronisasi Semua Teks di Dalam Kartu Produk */
-.product-item h5, .product-card h4, .product-title { color: var(--text-main) !important; }
-.product-item span, .product-card span, .product-price { color: var(--text-sub) !important; font-weight: 600; }
-
-/* Seluruh Form Input dan Select Option Dropdown */
+/* 9. SELURUH INPUT & DROPDOWN */
 input, select, textarea {
-    background-color: var(--glass-input) !important;
+    background-color: rgba(255, 255, 255, 0.65) !important;
     border: 1px solid rgba(0, 0, 0, 0.08) !important;
-    color: var(--text-main) !important;
+    color: #253623 !important;
 }
 input:focus, select:focus {
     background-color: #ffffff !important;
-    border-color: var(--text-sub) !important;
-}
-input::placeholder {
-    color: var(--text-muted) !important;
+    border-color: #597a55 !important;
 }
 
-
-/* ==========================================================================
-   SECTIONS: RINGKASAN KERANJANG & TOTAL AKHIR
-   ========================================================================== */
-/* Kotak Informasi Total Tagihan Nominal Akhir */
-.total-box, .total-tagihan-box, [id*="total"] {
+/* 10. TOTAL BOX / NOMINAL AKHIR RINGKASAN BELANJA */
+.total-box, .total-tagihan-box, [id*="total"], [class*="total"] {
     background: rgba(255, 255, 255, 0.7) !important;
     border: 1px solid #ffffff !important;
 }
-.total-box span, .total-tagihan-box span {
-    color: var(--text-sub) !important;
-}
-.total-box h2, .total-tagihan-box h2, .grand-total-amount {
-    color: #3b5937 !important; /* Hijau sage tua kontras tinggi khusus nominal angka */
+.total-box h2, .total-tagihan-box h2, .grand-total-amount, [id*="total"] span {
+    color: #3b5937 !important; /* Hijau sage tua pekat kontras tinggi khusus angka nominal */
 }
 
-/* Tombol Transaksi / Konfirmasi Utama di Bagian Bawah */
-.btn-primary, .btn-checkout, .ios-primary-btn, button[id*="proses"] {
-    background: var(--btn-sage-grad) !important;
+/* 11. SEMUA TOMBOL UTAMA DI SETIAP SECTION (ADAPTIF SAGE) */
+.btn, button, .ios-primary-btn, .btn-primary, [class*="btn-"] {
+    background: linear-gradient(135deg, #597a55 0%, #43613f 100%) !important;
     color: #ffffff !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
-.btn-primary:hover, .btn-checkout:hover, .ios-primary-btn:hover {
-    background: var(--btn-sage-hover) !important;
+.btn:hover, button:hover, .btn-primary:hover {
+    background: linear-gradient(135deg, #4d6b49 0%, #354e32 100%) !important;
 }
 
+/* Pengecualian Tombol Void / Bahaya (Tetap Merah Soft Transparan Agar Tidak Keliru) */
+.btn-danger, #btn-trigger-void-receipt, [class*="void"], [class*="danger"] {
+    background: rgba(255, 59, 48, 0.15) !important;
+    color: #cc251b !important;
+    border: 1px solid rgba(255, 59, 48, 0.2) !important;
+}
+.btn-danger:hover, #btn-trigger-void-receipt:hover {
+    background: #ff3b30 !important;
+    color: #ffffff !important;
+}
 
-/* ==========================================================================
-   SECTIONS: DASHBOARD OWNER & TABEL MANAJEMEN DATA (CRUD)
-   ========================================================================== */
-/* Kotak Ringkasan Pencapaian Finansial Owner (Hari, Minggu, Bulan, Tahun) */
+/* 12. TABEL CRUD & METRIK OWNER */
 .rekap-box, .metric-card, [id*="rekap"] {
     background: rgba(255, 255, 255, 0.55) !important;
-    border: 1px solid var(--glass-border) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
 }
-.rekap-box h5, .metric-card h5 { color: var(--text-sub) !important; }
-.rekap-box h2, .metric-card h2 { color: var(--text-main) !important; }
-
-/* Komponen Tabel CRUD */
-table {
-    color: var(--text-main) !important;
-}
-th {
-    color: var(--text-sub) !important;
-    border-bottom: 2px solid rgba(90, 114, 87, 0.12) !important;
-}
-td {
+table td {
     background: rgba(255, 255, 255, 0.3) !important;
     border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
 }
 tr:hover td {
     background: rgba(255, 255, 255, 0.65) !important;
-}
-
-/* Badges Status di dalam tabel */
-.badge-success, .badge-sukses { background: rgba(52, 199, 89, 0.15) !important; color: #207d37 !important; border: 1px solid rgba(52, 199, 89, 0.2) !important; }
-.badge-danger, .badge-void { background: rgba(255, 59, 48, 0.12) !important; color: #cc251b !important; border: 1px solid rgba(255, 59, 48, 0.2) !important; }
-
-/* Custom Scrollbar Agar Serasi */
-::-webkit-scrollbar-thumb {
-    background: rgba(90, 122, 85, 0.25) !important;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(90, 122, 85, 0.45) !important;
 }
