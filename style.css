@@ -1,161 +1,176 @@
 /* ==========================================================================
-   1. GLOBAL VARIABLES & PREMIUM CONFIGURATION
+   1. GLOBAL VARIABLES & iOS DESIGN SYSTEM RESETS
    ========================================================================== */
 :root {
     --pakchill-green-dark: #1e3f1b;
     --pakchill-green-medium: #2d5a27;
-    --pakchill-green-soft: #478241;
-    --pakchill-light-bg: rgba(255, 255, 255, 0.85);
-    --ios-blur: blur(25px);
-    --shadow-premium: 0 10px 40px rgba(30, 63, 27, 0.07);
-    --border-ios: 1px solid rgba(255, 255, 255, 0.5);
+    --pakchill-green-light: #478241;
+    --pakchill-bg-system: #f2f2f7;
+    --pakchill-card-glass: rgba(255, 255, 255, 0.85);
+    --ios-system-blue: #007aff;
+    --ios-system-red: #ff3b30;
+    --ios-system-orange: #ff9500;
+    --ios-system-gray: #8e8e93;
+    --radius-ios-large: 16px;
+    --radius-ios-medium: 12px;
+    --radius-ios-small: 8px;
+    --transition-ios: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-    min-height: 100vh;
-    background: linear-gradient(-45deg, #e4f0e2, #cbdcc8, #b8dbb4, #f2f7f1);
-    background-size: 400% 400%;
-    animation: ambientFluidMotion 14s ease infinite;
+    background-color: var(--pakchill-bg-system);
     color: #1c1c1e;
     overflow-x: hidden;
-}
-
-@keyframes ambientFluidMotion {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    -webkit-font-smoothing: antialiased;
 }
 
 /* ==========================================================================
-   2. AUTHENTICATION & LOGIN SCREEN INTERFACE
+   2. AUTHENTICATION & LOGIN INTERFACE OVERLAY
    ========================================================================== */
 #login-screen-overlay {
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
-    min-height: 100vh; 
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%; 
-    z-index: 999;
-    background: linear-gradient(135deg, #dcecd9, #c4dbbf);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #e5e5ea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
     overflow: hidden;
 }
 
+/* Floating Decorative Orbs background */
 .floating-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.45;
+    filter: blur(80px);
+    opacity: 0.4;
     z-index: 1;
-    animation: orbFloatingMovement 12s ease-in-out infinite alternate;
+    animation: orbFloat 12s infinite ease-in-out;
 }
-.orb-1 { width: 300px; height: 300px; background: #b1d8a9; top: -50px; left: -50px; }
-.orb-2 { width: 400px; height: 400px; background: #89b380; bottom: -100px; right: -50px; animation-delay: -3s; }
-.orb-3 { width: 250px; height: 250px; background: #e6f3e3; top: 40%; left: 60%; animation-delay: -6s; }
+.orb-1 { width: 350px; height: 350px; background: var(--pakchill-green-light); top: -50px; left: -50px; }
+.orb-2 { width: 400px; height: 400px; background: var(--ios-system-orange); bottom: -100px; right: -50px; animation-delay: 2s; }
+.orb-3 { width: 300px; height: 300px; background: var(--pakchill-green-dark); top: 40%; left: 50%; animation-delay: 4s; }
 
-@keyframes orbFloatingMovement {
-    0% { transform: translate(0px, 0px) scale(1); }
-    50% { transform: translate(40px, -60px) scale(1.1); }
-    100% { transform: translate(-30px, 30px) scale(0.9); }
+@keyframes orbFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.1); }
 }
 
 .login-glass-card {
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: var(--ios-blur); 
-    -webkit-backdrop-filter: var(--ios-blur);
-    padding: 40px 30px; 
-    border-radius: 32px;
-    width: 100%; 
-    max-width: 360px; 
-    text-align: center;
-    box-shadow: 0 20px 50px rgba(30, 63, 27, 0.12); 
-    border: var(--border-ios);
     position: relative;
     z-index: 5;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
-}
-.login-glass-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 30px 60px rgba(30, 63, 27, 0.18);
+    width: 100%;
+    max-width: 380px;
+    padding: 35px 30px;
+    background: var(--pakchill-card-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
 }
 
 .pakchill-logo-placeholder {
-    width: 100px; 
-    height: 100px; 
-    margin: 0 auto 18px; 
-    border-radius: 22%;
-    background: #fff url('logo-pakchill.png') no-repeat center; 
-    background-size: cover;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    width: 75px;
+    height: 75px;
+    background: var(--pakchill-green-dark);
+    margin: 0 auto 15px auto;
+    border-radius: 18px;
+    box-shadow: 0 4px 12px rgba(30, 63, 27, 0.3);
+    position: relative;
+}
+.pakchill-logo-placeholder::after {
+    content: "P";
+    color: white;
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 75px;
 }
 
 /* ==========================================================================
-   3. NAVIGATION HEADER & LAYOUT CONTAINERS
+   3. NAVIGATION BAR & MAIN CONTAINER WORKSPACE
    ========================================================================== */
 nav {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: var(--ios-blur);
-    -webkit-backdrop-filter: var(--ios-blur);
-    padding: 12px 4%;
+    height: 65px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 0 25px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    border-bottom: var(--border-ios);
-    position: sticky;
+    justify-content: space-between;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
 }
 
 #badge-status-role {
-    background: var(--pakchill-green-dark);
+    font-size: 11px;
+    font-weight: bold;
     color: white;
-    padding: 5px 14px;
+    padding: 4px 10px;
     border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.1);
 }
 
 .logout-btn {
-    width: auto !important;
-    margin: 0 !important;
-    padding: 6px 14px !important;
-    background: #ff3b30 !important;
-    color: white !important;
-    border: none !important;
+    background: transparent;
+    color: var(--ios-system-red);
+    border: 1px solid rgba(255, 59, 48, 0.3);
+    padding: 6px 14px;
+    font-size: 12px;
     font-weight: bold;
-    border-radius: 10px !important;
+    border-radius: 8px;
     cursor: pointer;
+    transition: var(--transition-ios);
+}
+.logout-btn:hover {
+    background: var(--ios-system-red);
+    color: white;
 }
 
 .workspace-container {
-    padding: 20px 3%;
+    max-width: 1400px;
+    margin: 65px auto 0 auto;
+    padding: 25px;
 }
 
 .main-welcome-title {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 800;
-    color: var(--pakchill-green-dark);
+    color: #1c1c1e;
     margin-bottom: 20px;
+    letter-spacing: -0.5px;
 }
 
 /* ==========================================================================
-   4. KASIR OPERATIONAL WORKSPACE (GRID MODULES)
+   4. LAYOUT GRID OPERASIONAL KASIR & CONTROL HUB
    ========================================================================== */
 .kasir-operational-grid {
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
     gap: 20px;
+    align-items: start;
 }
 
-@media (max-width: 900px) {
-    .kasir-operational-grid { grid-template-columns: 1fr; }
+@media (max-width: 1024px) {
+    .kasir-operational-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .katalog-container-flex {
@@ -164,219 +179,294 @@ nav {
     gap: 20px;
 }
 
+/* CARD PANEL MODERN iOS GLASSMORPHISM STYLE */
 .ios-panel-card {
-    background: var(--pakchill-light-bg);
-    backdrop-filter: var(--ios-blur);
-    -webkit-backdrop-filter: var(--ios-blur);
-    border-radius: 24px;
-    padding: 22px;
-    box-shadow: var(--shadow-premium);
-    border: var(--border-ios);
+    background: white;
+    border-radius: var(--radius-ios-large);
+    padding: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
 }
 
-/* KATALOG PRODUK ADAPTIF */
+/* KATALOG ADAPTIVE CARD GRID */
 .products-adaptive-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 14px;
+    gap: 12px;
 }
 
 .product-item-card {
-    background: white;
-    padding: 18px 12px;
-    border-radius: 20px;
+    background: #f2f2f7;
+    border-radius: var(--radius-ios-medium);
+    padding: 15px 10px;
     text-align: center;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-    border: 1px solid rgba(0,0,0,0.03);
     position: relative;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: var(--transition-ios);
+    border: 1px solid transparent;
 }
-.product-item-card:active { transform: scale(0.95); }
-
-.badge-bundling-tag {
-    position: absolute;
-    top: 5px; left: 5px;
-    background: #ff9500; color: white;
-    font-size: 9px; font-weight: bold;
-    padding: 2px 6px; border-radius: 6px;
+.product-item-card:hover {
+    transform: translateY(-3px);
+    background: white;
+    border-color: var(--pakchill-green-medium);
+    box-shadow: 0 6px 15px rgba(45, 90, 39, 0.12);
 }
-
-/* SEGMENTED CONTROL TIPE LAYANAN (iOS STYLE) */
-.segmented-control-ios {
-    display: flex;
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 12px;
-    padding: 3px;
-    margin-bottom: 12px;
-}
-.segmented-control-ios input[type="radio"] { display: none; }
-.segmented-control-ios label {
-    flex: 1; text-align: center;
-    padding: 8px 2px; font-size: 11px;
-    font-weight: 700; color: #555;
-    cursor: pointer; border-radius: 9px;
-    transition: background 0.2s ease, color 0.2s ease;
-}
-.segmented-control-ios input[type="radio"]:checked + label {
-    background: white; color: var(--pakchill-green-dark);
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+.product-item-card:active {
+    transform: scale(0.97);
 }
 
 /* ==========================================================================
-   5. SHOPPING CART & CALCULATOR COMPONENTS
+   5. OPERATIONS CORE FOR SHOPPING CART VIEW
    ========================================================================== */
 #cart-items-wrapper {
-    min-height: 60px;
+    min-height: 80px;
     max-height: 280px;
     overflow-y: auto;
+    padding-right: 4px;
 }
 
 .cart-item-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(0,0,0,0.04);
+    justify-content: space-between;
+    animation: slideInRow 0.25s ease-out;
 }
 
-.cost-row { 
-    display: flex; 
-    justify-content: space-between; 
-    font-size: 14px; 
-    margin-bottom: 8px; 
+@keyframes slideInRow {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.input-inline-row { 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    margin-bottom: 6px; 
+/* BILLING AND FINAL PRICING CALCULATOR TABS */
+.input-inline-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    gap: 10px;
 }
-.input-inline-row input { 
-    width: 140px !important; 
-    margin-bottom: 0 !important; 
-    padding: 6px 10px !important; 
-    text-align: right; 
+.input-inline-row input {
+    width: 140px;
+    text-align: right;
+    margin-bottom: 0;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
 }
 
-/* DAFTAR KLIK VOUCHER FAST INTEGRATION */
-#vouchers-render-target button {
-    transition: transform 0.15s ease, opacity 0.15s ease;
-}
-#vouchers-render-target button:active {
-    transform: scale(0.95);
-    opacity: 0.9;
+.cost-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 6px;
 }
 
 .total-tagihan-box {
-    display: flex; justify-content: space-between; align-items: center;
-    margin: 15px 0 5px 0; padding: 12px;
-    background: rgba(45, 90, 39, 0.07); border-radius: 14px; font-weight: 800;
+    background: #f2f2f7;
+    border-radius: var(--radius-ios-medium);
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0;
+    border: 1px solid rgba(0,0,0,0.03);
 }
-#txt-grand-total-display { color: var(--pakchill-green-dark); font-size: 19px; }
-
-.payment-info-box { 
-    background: rgba(255,255,255,0.5); 
-    padding: 12px; 
-    border-radius: 16px; 
-    margin-bottom: 15px; 
+.total-tagihan-box span:first-child {
+    font-size: 12px;
+    font-weight: 800;
+    color: #666;
+}
+.total-tagihan-box span:last-child {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--pakchill-green-dark);
 }
 
 /* ==========================================================================
-   6. UI FORM FORMS, BUTTONS & FORM INPUT CONTROLS
+   6. PREMIUM STANDARD FORMS, INPUTS & BUTTONS
    ========================================================================== */
-input, select, button {
-    width: 100%; padding: 12px 14px; margin-bottom: 10px;
-    border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.08);
-    font-size: 14px; outline: none;
-    transition: border-color 0.2s ease, background 0.2s ease;
+input, select {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 13px;
+    border-radius: var(--radius-ios-small);
+    border: 1px solid #d1d1d6;
+    background-color: #f2f2f7;
+    color: #1c1c1e;
+    margin-bottom: 10px;
+    outline: none;
+    transition: var(--transition-ios);
 }
-input:focus, select:focus { 
-    border-color: var(--pakchill-green-soft); 
-    background: white; 
+input:focus, select:focus {
+    background-color: white;
+    border-color: var(--pakchill-green-medium);
+    box-shadow: 0 0 0 3px rgba(45, 90, 39, 0.15);
 }
 
-button.ios-primary-btn { 
-    background: var(--pakchill-green-dark); color: white; 
-    font-weight: 700; border: none; cursor: pointer; margin-bottom: 0; 
+/* SEGMENTED CONTROL COMPONENT FOR SERVICE TYPE */
+.segmented-control-ios {
+    display: flex;
+    background: #e5e5ea;
+    padding: 2px;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
-button.ios-primary-btn:active {
+.segmented-control-ios input[type="radio"] {
+    display: none;
+}
+.segmented-control-ios label {
+    flex: 1;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 6px 0;
+    cursor: pointer;
+    border-radius: 6px;
+    color: #666;
+    transition: var(--transition-ios);
+    margin: 0;
+}
+.segmented-control-ios input[type="radio"]:checked + label {
+    background: white;
+    color: black;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* UNIVERSAL BUTTON DESIGN */
+.ios-primary-btn {
+    width: 100%;
+    border: none;
+    padding: 12px;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: var(--radius-ios-medium);
+    cursor: pointer;
+    transition: var(--transition-ios);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.ios-primary-btn:hover {
+    filter: brightness(1.1);
+}
+.ios-primary-btn:active {
     transform: scale(0.98);
 }
 
-.qris-container-preset { 
-    text-align: center; 
-    padding: 10px; 
-    background: white; 
-    border-radius: 12px; 
-    margin-top: 5px; 
-}
-.qris-container-preset img { 
-    max-width: 140px; 
-    height: auto; 
+.payment-info-box {
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: var(--radius-ios-medium);
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 /* ==========================================================================
-   7. OWNER CONTROL EXECUTIVE INTERFACE & MATRIX HUB
+   7. STRATEGIC REKAP CORES & MANAGEMENT INTERFACE TABLES (CRUD)
    ========================================================================== */
-.rekap-owner-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
-    gap: 15px; 
-    margin-bottom: 20px; 
+.rekap-owner-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
 }
-.card-rekap-box { 
-    padding: 20px; 
-    border-radius: 20px; 
-    color: white; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+
+.card-rekap-box {
+    border-radius: var(--radius-ios-large);
+    padding: 20px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 .card-rekap-box h5 {
-    font-size: 12px;
-    opacity: 0.9;
+    font-size: 11px;
+    font-weight: bold;
     text-transform: uppercase;
+    opacity: 0.85;
     letter-spacing: 0.5px;
     margin-bottom: 5px;
 }
 .card-rekap-box h2 {
-    font-size: 22px;
-    font-weight: 800;
+    font-size: 20px;
+    font-weight: 900;
 }
 
-/* ENTERPRISE DATA TABLES GENERAL STYLE */
+/* PREMIUM GRID MANAGEMENT DATA VIEW */
 .ios-table-view {
-    width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    text-align: left;
+    background: white;
 }
-.ios-table-view th { 
-    background: rgba(0,0,0,0.03); 
-    padding: 12px; 
-    text-align: left; 
-    font-weight: 700; 
-    color: #444; 
-    border-bottom: 2px solid rgba(0,0,0,0.05);
+.ios-table-view th {
+    background: #f2f2f7;
+    color: #444;
+    font-weight: 800;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e5ea;
 }
-.ios-table-view td { 
-    padding: 12px; 
-    border-bottom: 1px solid rgba(0,0,0,0.04); 
+.ios-table-view td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f2f2f7;
+    color: #1c1c1e;
     vertical-align: middle;
 }
-.ios-table-view tbody tr:hover {
-    background: rgba(255,255,255,0.4);
+.ios-table-view tr:last-child td {
+    border-bottom: none;
+}
+.ios-table-view tr:hover td {
+    background: rgba(0,0,0,0.01);
 }
 
+/* BADGES FOR STATUS LABELS */
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+.badge-sukses { background-color: rgba(52, 199, 89, 0.12); color: #248a3d; }
+.badge-void { background-color: rgba(255, 59, 48, 0.12); color: #dd332a; }
+
 /* ==========================================================================
-   8. PRINTER OPTIMIZATION TARGET (NOTIF THERMAL 58MM)
+   8. PRINTER PROFILES OPTIMIZATION (58MM THERMAL RECEIPTS)
    ========================================================================== */
 @media print {
-    body * { display: none !important; }
-    #thermal-receipt-output, #thermal-receipt-output * { display: block !important; }
-    #thermal-receipt-output { 
-        position: absolute; 
-        top: 0; left: 0; 
-        width: 58mm; 
-        background: white; 
-        color: black; 
-        padding: 5px; 
+    body * {
+        visibility: hidden;
     }
+    #thermal-receipt-output, #thermal-receipt-output * {
+        visibility: visible;
+    }
+    #thermal-receipt-output {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 58mm;
+        margin: 0;
+        padding: 0;
+        display: block !important;
+    }
+}
+
+/* SCROLLBAR CUSTOMIZATION FOR MODERN VIEWPORTS */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
 }
