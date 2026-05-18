@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PAKCHILL POS v5.2 - Enterprise Mobile Edition</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    
+    <title>PAKCHILL POS v5.2 - Premium Management System</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -20,318 +18,383 @@
         
         <div class="login-glass-card">
             <div class="pakchill-logo-placeholder"></div>
-            <h2 style="color: var(--pakchill-green-dark); font-weight: 800; margin-bottom: 5px;">PAKCHILL POS</h2>
-            <p style="font-size: 11px; color: #555; margin-bottom: 25px; letter-spacing: 0.5px;">Enterprise Management System</p>
+            <h2 style="font-weight: 800; font-size: 20px; color: var(--pakchill-green-dark); margin-bottom: 5px;">PAKCHILL POS</h2>
+            <p style="font-size: 11px; color: #666; margin-bottom: 25px;">Premium Cashier & Strategic Engine v5.2</p>
             
-            <input type="password" id="sys-pin-access" placeholder="Masukkan PIN Otentikasi" style="text-align: center;">
-            <button class="ios-primary-btn" onclick="executeAuthentication()">Buka Kunci Sistem</button>
+            <div style="text-align: left; margin-bottom: 5px;">
+                <label style="font-size: 11px; font-weight: 700; color: var(--pakchill-green-dark);">PIN OTENTIKASI SISTEM</label>
+            </div>
+            <input type="password" id="sys-pin-access" placeholder="••••" maxlength="6" style="text-align: center; font-size: 20px; letter-spacing: 6px; padding: 10px; border-radius: 14px;">
+            
+            <button class="ios-primary-btn" onclick="executeAuthentication()" style="margin-top: 10px; padding: 14px; border-radius: 14px;">Buka Kunci Sistem</button>
+            <div style="margin-top: 15px; font-size: 10px; color: #888;">Staff PIN: 1234 | Owner PIN: 9999</div>
         </div>
     </div>
 
     <div id="main-app-layer" style="display: none;">
+        
         <nav>
-            <div style="font-weight: 900; font-size: 22px; letter-spacing: -0.5px; color: var(--pakchill-green-dark)">
-                PAKCHILL <span id="txt-nav-role-label" style="font-size:12px; font-weight:400; color: var(--pakchill-green-soft)">APP</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 32px; height: 32px; background: url('logo-pakchill.png') no-repeat center; background-size: cover; border-radius: 8px;"></div>
+                <div>
+                    <h1 style="font-size: 15px; font-weight: 800; color: var(--pakchill-green-dark); letter-spacing: 0.5px;">PAKCHILL</h1>
+                    <p id="txt-nav-role-label" style="font-size: 9px; font-weight: bold; color: #666; letter-spacing: 0.5px;">STAFF MODE</p>
+                </div>
             </div>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <div id="badge-status-role">Staff</div>
-                <button onclick="triggerSystemLogout()" class="logout-btn">Keluar</button>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span id="badge-status-role">Staff</span>
+                <button class="logout-btn" onclick="triggerSystemLogout()">Keluar</button>
             </div>
         </nav>
-        
+
         <div class="workspace-container">
-            <h1 class="main-welcome-title">Selamat Datang Di Mesin Kasir PAKCHILL</h1>
-            
-            <div id="view-segment-kasir" class="kasir-operational-grid">
+            <h2 class="main-welcome-title" id="txt-live-order-number">Order #: --</h2>
+
+            <div class="kasir-operational-grid">
                 
                 <div class="katalog-container-flex">
-                    <div class="ios-panel-card katalog-section-card">
-                        <h3 style="color: var(--pakchill-green-medium); margin-bottom: 10px;">Katalog Produk & Paket Bundling</h3>
-                        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Pilih menu pesanan pelanggan</p>
-                        <div id="katalog-render-target" class="products-adaptive-grid"></div>
+                    <div class="ios-panel-card">
+                        <h3 style="font-size: 14px; font-weight: 800; margin-bottom: 15px; color: var(--pakchill-green-dark);">🛍️ KATALOG PRODUK & BUNDLING</h3>
+                        <div class="products-adaptive-grid" id="katalog-render-target">
+                            </div>
                     </div>
-                    
-                    <div class="ios-panel-card closing-dashboard-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
-                            <div>
-                                <h3 style="color: #ff9500;">Dashboard Closing Kasir (24 Jam Terakhir)</h3>
-                                <p style="font-size: 12px; color: #666;">Pantauan omzet berjalan otomatis ter-reset harian</p>
+
+                    <div class="ios-panel-card">
+                        <h3 style="font-size: 14px; font-weight: 800; margin-bottom: 10px; color: var(--pakchill-green-dark);">🧁 PILIHAN EKSTRA TOPING</h3>
+                        <p style="font-size: 10px; color: #666; margin-bottom: 12px;">*Pilih menu utama di atas terlebih dahulu, lalu centang toping tambahan di bawah ini.</p>
+                        <div id="toping-render-target" style="display: flex; flex-wrap: wrap; gap: 8px;">
                             </div>
-                            <div style="display:flex; gap:6px;">
-                                <button onclick="exportKasirReportExcel()" style="width:auto; margin:0; padding:6px 10px; font-size:11px; background:#34c759; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Excel</button>
-                                <button onclick="exportKasirReportPDF()" style="width:auto; margin:0; padding:6px 10px; font-size:11px; background:#ff3b30; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">PDF</button>
-                            </div>
+                    </div>
+
+                    <div class="ios-panel-card">
+                        <h3 style="font-size: 14px; font-weight: 800; margin-bottom: 12px; color: var(--pakchill-green-dark);">📝 REGISTRASI CEPAT MEMBER BARU</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <input type="text" id="kasir-fast-name" placeholder="Nama Lengkap Pelanggan">
+                            <input type="text" id="kasir-fast-wa" placeholder="No. WhatsApp (08...)">
                         </div>
-                        <div class="closing-stats-box" id="closing-report-pdf-area" style="background: white; padding: 15px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.05);">
-                            <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:bold; margin-bottom:10px; padding-bottom:5px; border-bottom:1px dashed #ddd;">
-                                <span>Total Omzet Penjualan (Harian):</span>
-                                <span id="txt-closing-total-omzet" style="color:#34c759;">Rp 0</span>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:12px;">
-                                <span>Total Kuantitas Terjual:</span>
-                                <span id="txt-closing-total-qty" style="font-weight:bold;">0 Item</span>
-                            </div>
-                            <h5 style="margin-bottom:6px; color:#555; font-size:12px;">Rincian Menu Terjual:</h5>
-                            <div id="closing-menu-list-render" style="font-size:12px; color:#333; display:flex; flex-direction:column; gap:4px;"></div>
-                        </div>
+                        <button class="ios-primary-btn" onclick="registerFastMemberFromKasir()" style="background: var(--pakchill-green-medium); padding: 10px;">Daftarkan Member Resmi</button>
                     </div>
                 </div>
 
-                <div class="ios-panel-card checkout-section-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <h3 style="color: var(--pakchill-green-medium); margin-bottom:0;">Keranjang Belanja</h3>
-                        <div id="txt-live-order-number" style="background:#ff9500; color:white; padding:4px 10px; border-radius:8px; font-size:12px; font-weight:bold;">Order #: 101</div>
-                    </div>
-                    
-                    <div class="segmented-control-ios">
-                        <input type="radio" id="service-dinein" name="service_type" value="Dine In" checked>
-                        <label for="service-dinein">Dine In</label>
+                <div class="katalog-container-flex">
+                    <div class="ios-panel-card" style="position: sticky; top: 75px;">
+                        <h3 style="font-size: 14px; font-weight: 800; margin-bottom: 12px; color: var(--pakchill-green-dark);">🛒 KERANJANG BELANJA</h3>
                         
-                        <input type="radio" id="service-dineout" name="service_type" value="Dine Out">
-                        <label for="service-dineout">Dine Out</label>
-                        
-                        <input type="radio" id="service-gofood" name="service_type" value="GoFood">
-                        <label for="service-gofood">GoFood</label>
-                        
-                        <input type="radio" id="service-grabfood" name="service_type" value="GrabFood">
-                        <label for="service-grabfood">GrabFood</label>
-                        
-                        <input type="radio" id="service-shopeefood" name="service_type" value="Shopee Food">
-                        <label for="service-shopeefood">Shopee Food</label>
-                    </div>
+                        <div id="cart-items-wrapper">
+                            </div>
 
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; color: #666; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.08); margin-top: 10px;">
-                        <span style="width: 40%;">Nama Item</span>
-                        <span style="width: 35%; text-align: center;">Kuantitas</span>
-                        <span style="width: 25%; text-align: right;">Harga Total</span>
-                    </div>
-                    
-                    <div id="cart-items-wrapper"></div>
-                    
-                    <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.08);">
-                        <div class="cost-row"><span>Subtotal</span><span id="txt-subtotal-val">Rp 0</span></div>
-                        
-                        <div class="input-inline-row">
-                            <label>Diskon / Kupon Aktif</label>
-                            <input type="text" id="kasir-input-diskon" value="0" oninput="recalculateCartTotals()">
-                        </div>
-                        <div class="input-inline-row">
-                            <label>Voucher Resmi Aktif</label>
-                            <input type="text" id="kasir-input-voucher" value="0" oninput="recalculateCartTotals()">
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(0,0,0,0.08);">
+                            <label style="font-size: 11px; font-weight: 700; color: #444;">DATA MEMBER (CARI NAMA / WHATSAPP)</label>
+                            <input type="text" id="kasir-search-member" placeholder="Ketik data member..." oninput="executeLiveSearchMember()">
+                            <div id="kasir-member-status-box" style="margin-bottom: 8px;"></div>
+
+                            <div id="wrapper-claim-poin-kasir" style="display: none; background: rgba(255,149,0,0.08); padding: 10px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,149,0,0.2);">
+                                <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; margin-bottom: 5px;">
+                                    <span>Tukarkan Poin (Max: <span id="txt-max-claim-points">0 Pts</span>)</span>
+                                    <span style="color: #ff9500;">1 Poin = Rp 100</span>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="number" id="kasir-claim-poin-input" placeholder="Jumlah poin..." min="0" oninput="recalculateCartTotals()" style="margin:0;">
+                                    <span id="live-info-potongan-poin" style="font-size: 11px; font-weight: bold; color: #ff9500; display: flex; align-items: center; min-width: 110px; justify-content: flex-end;"></span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div style="margin-top: 12px; margin-bottom: 12px;">
-                            <p style="font-size: 11px; font-weight: bold; color: var(--pakchill-green-medium); margin-bottom: 6px;">Kupon / Voucher Tersedia (Klik untuk Terapkan):</p>
+                        <div style="margin-top: 10px;">
+                            <div class="input-inline-row">
+                                <span style="font-size: 11px; font-weight: bold; color:#555;">Kupon / Kode Diskon:</span>
+                                <input type="text" id="kasir-input-diskon" value="0" oninput="recalculateCartTotals()">
+                            </div>
+                            <div class="input-inline-row">
+                                <span style="font-size: 11px; font-weight: bold; color:#555;">Kode Voucher Potongan:</span>
+                                <input type="text" id="kasir-input-voucher" value="0" oninput="recalculateCartTotals()">
+                            </div>
+                        </div>
+
+                        <div style="margin: 10px 0;">
+                            <div style="font-size: 10px; font-weight: bold; color:#8e8e93; margin-bottom: 5px;">PINTASAN VOUCHER AKTIF OWNER:</div>
                             <div id="vouchers-render-target" style="display: flex; flex-wrap: wrap; gap: 6px;">
                                 </div>
                         </div>
 
+                        <div class="cost-row" style="margin-top:12px;">
+                            <span>Subtotal Belanja:</span>
+                            <span id="txt-subtotal-val" style="font-weight: bold;">Rp 0</span>
+                        </div>
                         <div class="total-tagihan-box">
-                            <span>TOTAL TAGIHAN</span>
+                            <span>TOTAL AKHIR:</span>
                             <span id="txt-grand-total-display">Rp 0</span>
                         </div>
-                    </div>
-                    
-                    <div class="payment-info-box">
-                        <h4 style="font-size:13px; margin-bottom:10px; color: var(--pakchill-green-dark); font-weight: bold;">Informasi & Pembayaran</h4>
-                        <label style="font-size:11px; font-weight:bold; color:#666;">Cari Member (Ketik Nama / No WA):</label>
-                        <input type="text" id="kasir-search-member" placeholder="Masukkan Nama / No WA..." oninput="executeLiveSearchMember()">
-                        <div id="kasir-member-status-box"></div>
-                        
-                        <div style="background: rgba(45, 90, 39, 0.04); padding: 10px; border-radius: 12px; border: 1px dashed rgba(45, 90, 39, 0.2); margin-top:5px; margin-bottom:12px;">
-                            <p style="font-size:11px; font-weight:bold; color:#478241; margin-bottom:6px;">Pendaftaran Member Baru Resmi:</p>
-                            <div style="display: flex; flex-direction: column; gap: 6px;">
-                                <div style="display: flex; gap: 6px;">
-                                    <input type="text" id="kasir-fast-name" placeholder="Nama Lengkap" style="margin-bottom:0; font-size:12px; padding:6px;">
-                                    <input type="text" id="kasir-fast-wa" placeholder="No WA (Contoh: 0812...)" style="margin-bottom:0; font-size:12px; padding:6px;">
+
+                        <div class="payment-info-box">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px;">
+                                <div>
+                                    <label style="font-size: 10px; font-weight: bold; color:#444;">TIPE LAYANAN</label>
+                                    <div class="segmented-control-ios" style="margin-top:4px; margin-bottom:0;">
+                                        <input type="radio" name="service_type" id="srv-dine" value="Dine In" checked>
+                                        <label Lothar for="srv-dine">DINE IN</label>
+                                        <input type="radio" name="service_type" id="srv-take" value="Take Away">
+                                        <label for="srv-take">TAKE AWAY</label>
+                                    </div>
                                 </div>
-                                <button onclick="registerFastMemberFromKasir()" style="width:100%; margin:0; padding:8px; font-size:11px; background: var(--pakchill-green-soft); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">+ Daftarkan Member</button>
+                                <div>
+                                    <label style="font-size: 10px; font-weight: bold; color:#444;">METODE BAYAR</label>
+                                    <select id="kasir-select-paymethod" onchange="handlePaymentDropdownBranching()" style="margin-top:4px; margin-bottom:0;">
+                                        <option value="Cash / Tunai">Cash / Tunai</option>
+                                        <option value="QRIS Mandiri">QRIS Mandiri</option>
+                                        <option value="Transfer Mandiri">Transfer Mandiri</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="wrapper-sub-cash">
+                                <label style="font-size: 11px; font-weight: 700;">JUMLAH UANG CASH DITERIMA</label>
+                                <input type="number" id="kasir-cash-input-uang" placeholder="Masukkan nominal uang..." oninput="calculateCashReturn()">
+                                <div id="cash-return-info" style="font-size: 13px; font-weight: 800; text-align: right; margin-top: 2px;">Kembalian: Rp 0</div>
+                            </div>
+
+                            <div id="wrapper-sub-transfer" style="display:none; margin-top: 5px;">
+                                <select id="sub-target-transfer" onchange="updateLiveRekeningInfo()">
+                                    </select>
+                                <div id="live-rekening-info-box" style="font-size: 11px; font-weight: bold; color: var(--pakchill-green-medium); margin-top:4px;"></div>
                             </div>
                         </div>
-                        
-                        <label style="font-size:11px; font-weight:bold; color:#666;">Metode Pembayaran:</label>
-                        <select id="kasir-select-paymethod" onchange="handlePaymentDropdownBranching()">
-                            <option value="Cash">Tunai (Cash)</option>
-                            <option value="QRIS">QRIS (Otomatis Gambar QR)</option>
-                            <option value="Transfer">Transfer Bank / E-Wallet (Dinamis)</option>
-                        </select>
-                        
-                        <div id="wrapper-sub-cash" style="margin-bottom: 12px; display: block;">
-                            <input type="number" id="kasir-cash-input-uang" placeholder="Masukkan Uang Tunai Jual (Rp)" oninput="calculateCashReturn()">
-                            <div id="cash-return-info" style="font-size:13px; font-weight:bold; color:#ff9500; margin-top:4px;">Kembalian: Rp 0</div>
-                        </div>
-                        
-                        <div id="wrapper-sub-qris" style="display:none; margin-bottom:12px;">
-                            <select id="sub-vendor-qris">
-                                <option value="Mandiri">QRIS Bank Mandiri</option>
-                                <option value="ShopeePay">QRIS ShopeePay</option>
-                            </select>
-                            <div class="qris-container-preset" id="qris-image-box">
-                                <img src="qris-pakchill.png" alt="QRIS Preset Image" onerror="this.style.display='none'; document.getElementById('qris-fallback-text').innerText='[ File qris-pakchill.png Belum Ada ]';">
-                                <p id="qris-fallback-text" style="font-size:11px; font-weight: bold; margin-top:4px; color:#c00;">qris-pakchill.png</p>
-                            </div>
-                        </div>
-                        
-                        <div id="wrapper-sub-transfer" style="display:none; margin-bottom:12px;">
-                            <select id="sub-target-transfer" onchange="updateLiveRekeningInfo()"></select>
-                            <div id="live-rekening-info-box" style="font-size:12px; font-weight:bold; color:var(--pakchill-green-medium); margin-top:4px;"></div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <button class="ios-primary-btn" onclick="finalizeTransactionReceipt('Print')" style="background: var(--pakchill-green-dark);">🖨️ Cetak Struk</button>
+                            <button class="ios-primary-btn" onclick="finalizeTransactionReceipt('Digital')" style="background: #007aff;">📧 Struk Digital</button>
                         </div>
                     </div>
-                    
-                    <button class="ios-primary-btn" onclick="finalizeTransactionReceipt('Print')">PROSES & CETAK NOTA THERMAL</button>
-                    <button class="ios-primary-btn" onclick="finalizeTransactionReceipt('Email')" style="background:#007aff; margin-top:8px;">PROSES & NOTIFIKASI EMAIL</button>
                 </div>
             </div>
 
-            <div id="view-segment-owner" style="display: none; margin-top: 25px;">
-                <hr style="border:0; border-top:1px dashed rgba(0,0,0,0.1); margin-bottom:25px;">
-                
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:15px;">
-                    <h2 style="color:var(--pakchill-green-dark); font-weight:800; margin:0;">Owner Control Executive Dashboard</h2>
-                    <div style="display:flex; gap:8px;">
-                        <button onclick="exportOwnerReportExcel()" style="width:auto; background:#1d6f42; color:white; font-weight:bold; border:none; padding:8px 16px; border-radius:12px; cursor:pointer; font-size:13px;">Ekspor Laporan Excel</button>
-                        <button onclick="exportOwnerReportPDF()" style="width:auto; background:#b3261e; color:white; font-weight:bold; border:none; padding:8px 16px; border-radius:12px; cursor:pointer; font-size:13px;">Ekspor PDF</button>
+            <div class="ios-panel-card" style="margin-top: 20px;" id="closing-report-pdf-area">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 10px; margin-bottom: 15px;">
+                    <h3 style="font-size: 14px; font-weight: 800; color: var(--pakchill-green-dark);">📊 LAPORAN CLOSING SHIFT (24 JAM TERAKHIR)</h3>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="exportKasirReportExcel()" style="width:auto; margin:0; padding:6px 12px; background:#34c759; color:white; border:none; font-weight:bold; border-radius:8px; cursor:pointer; font-size:11px;">Unduh Excel</button>
+                        <button onclick="exportKasirReportPDF()" style="width:auto; margin:0; padding:6px 12px; background:#ff9500; color:white; border:none; font-weight:bold; border-radius:8px; cursor:pointer; font-size:11px;">Cetak PDF</button>
                     </div>
                 </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <div style="margin-bottom: 10px;">Ringkasan Pendapatan Shift: <b id="txt-closing-total-omzet" style="color:var(--pakchill-green-dark); font-size:15px;">Rp 0</b></div>
+                        <div>Volume Menu Terjual: <b id="txt-closing-total-qty">0 Item</b></div>
+                    </div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 11px; margin-bottom: 5px; color:#555;">RINCIAN PERFORMA MENU TERJUAL:</div>
+                        <div id="closing-menu-list-render" style="background:rgba(0,0,0,0.02); padding:10px; border-radius:10px; max-height:120px; overflow-y:auto; gap:4px; display:flex; flex-direction:column;">
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-segment-owner" style="display: none; margin-top: 30px; border-top: 3px double var(--pakchill-green-dark); padding-top: 25px;">
+                <h2 style="font-size: 20px; font-weight: 800; color: var(--pakchill-green-dark); margin-bottom: 15px;">👑 EXECUTIVE OWNER HUB & MATRIX HUB</h2>
                 
                 <div class="rekap-owner-grid">
-                    <div class="card-rekap-box" style="background:#34c759;"><h5>Omzet Hari Ini</h5><h2 id="own-rekap-hari">Rp 0</h2></div>
-                    <div class="card-rekap-box" style="background:#007aff;"><h5>7 Hari Terakhir</h5><h2 id="own-rekap-minggu">Rp 0</h2></div>
-                    <div class="card-rekap-box" style="background:#ff9500;"><h5>Bulan Ini</h5><h2 id="own-rekap-bulan">Rp 0</h2></div>
-                    <div class="card-rekap-box" style="background:#5856d6;"><h5>Tahun Ini</h5><h2 id="own-rekap-tahun">Rp 0</h2></div>
-                </div>
-                
-                <div id="owner-report-pdf-area">
-                    <div class="ios-panel-card">
-                        <h3>Visualisasi Tren Finansial Bulanan</h3>
-                        <div style="position: relative; height:240px; width:100%; margin-top:15px;">
-                            <canvas id="canvasTrenOwner"></canvas>
-                        </div>
+                    <div class="card-rekap-box" style="background: linear-gradient(135deg, #1e3f1b, #2d5a27);">
+                        <h5>Omzet Hari Ini</h5>
+                        <h2 id="own-rekap-hari">Rp 0</h2>
+                    </div>
+                    <div class="card-rekap-box" style="background: linear-gradient(135deg, #2d5a27, #478241);">
+                        <h5>Omzet 7 Hari Terakhir</h5>
+                        <h2 id="own-rekap-minggu">Rp 0</h2>
+                    </div>
+                    <div class="card-rekap-box" style="background: linear-gradient(135deg, #b05d00, #ff9500);">
+                        <h5>Omzet Bulan Ini</h5>
+                        <h2 id="own-rekap-bulan">Rp 0</h2>
+                    </div>
+                    <div class="card-rekap-box" style="background: linear-gradient(135deg, #1c1c1e, #3a3a3c);">
+                        <h5>Total Omzet Tahunan</h5>
+                        <h2 id="own-rekap-tahun">Rp 0</h2>
                     </div>
                 </div>
 
-                <div class="owner-double-form-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-top:20px;">
-                    <div class="ios-panel-card">
-                        <h4 style="color:var(--pakchill-green-dark); margin-bottom:12px;">+ Registrasi Item Menu Baru</h4>
-                        <input type="text" id="own-add-menu-name" placeholder="Nama Produk Baru (Misal: MATCHA)">
-                        <input type="number" id="own-add-menu-price" placeholder="Harga Jual Jernih (Rp)">
-                        <button onclick="saveNewMenuFromOwner()" class="ios-primary-btn" style="background:var(--pakchill-green-medium)">Simpan Menu</button>
+                <div class="ios-panel-card" style="margin-bottom: 20px;" id="owner-report-pdf-area">
+                    <h3 style="font-size: 14px; font-weight: 800; color: var(--pakchill-green-dark); margin-bottom: 12px;">📈 TREN PERKEMBANGAN OMZET FINANSIAL (JANUARI - DESEMBER)</h3>
+                    <div style="height: 260px; position: relative;">
+                        <canvas id="canvasTrenOwner"></canvas>
                     </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                     
                     <div class="ios-panel-card">
-                        <h4 style="color:var(--pakchill-green-dark); margin-bottom:12px;">+ Buat Paket Bundling Hemat</h4>
-                        <input type="text" id="own-add-bundle-name" placeholder="Nama Paket (Misal: COMBO SEHAT)">
-                        <input type="number" id="own-add-bundle-price" placeholder="Harga Paket Combo (Rp)">
-                        <button onclick="saveNewBundleFromOwner()" class="ios-primary-btn" style="background:#ff9500;">Aktifkan Paket</button>
+                        <h3 style="font-size: 13px; font-weight: 800; color: var(--pakchill-green-dark); margin-bottom: 10px;">➕ MANAJEMEN INVENTARIS MENU UTAMA</h3>
+                        <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 8px;">
+                            <input type="text" id="own-add-menu-name" placeholder="Nama Menu Baru">
+                            <input type="number" id="own-add-menu-price" placeholder="Harga Jual (Rp)">
+                        </div>
+                        <button class="ios-primary-btn" onclick="saveNewMenuFromOwner()">Simpan Perubahan Menu</button>
+                        
+                        <div style="margin-top: 15px; max-height: 160px; overflow-y: auto; border: 1px solid #e5e5ea; border-radius: 12px;">
+                            <table class="ios-table-view">
+                                <thead>
+                                    <tr><th>Nama Menu Utama</th><th>Harga Jual</th><th>Aksi Kontrol</th></tr>
+                                </thead>
+                                <tbody id="render-owner-products-target"></tbody>
+                            </table>
+                        </div>
                     </div>
+
+                    <div class="ios-panel-card">
+                        <h3 style="font-size: 13px; font-weight: 800; color: var(--pakchill-green-dark); margin-bottom: 10px;">🎁 MANAJEMEN PAKET BUNDLING HEMAT</h3>
+                        <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 8px;">
+                            <input type="text" id="own-add-bundle-name" placeholder="Nama Paket Bundling">
+                            <input type="number" id="own-add-bundle-price" placeholder="Harga Paket (Rp)">
+                        </div>
+                        <button class="ios-primary-btn" onclick="saveNewBundleFromOwner()" style="background:#b05d00;">Simpan Perubahan Paket</button>
+                        
+                        <div style="margin-top: 15px; max-height: 160px; overflow-y: auto; border: 1px solid #e5e5ea; border-radius: 12px;">
+                            <table class="ios-table-view">
+                                <thead>
+                                    <tr><th>Nama Paket Bundling</th><th>Harga Paket</th><th>Aksi Kontrol</th></tr>
+                                </thead>
+                                <tbody id="render-owner-bundles-target"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="ios-panel-card">
+                        <h3 style="font-size: 13px; font-weight: 800; color: var(--pakchill-green-dark); margin-bottom: 10px;">🎟️ MANAJEMEN KUPON & VOUCHER PROMO</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+                            <input type="text" id="own-vch-code" placeholder="KODE VOUCHER">
+                            <input type="number" id="own-vch-nominal" placeholder="Nominal Rp">
+                            <select id="own-vch-type">
+                                <option value="Diskon Manual / Kupon">Diskon / Kupon</option>
+                                <option value="Voucher Khusus">Voucher Potongan</option>
+                            </select>
+                        </div>
+                        <button class="ios-primary-btn" onclick="saveNewVoucherFromOwner()" style="background:#5856d6;">Daftarkan Aturan Promo</button>
+                        
+                        <div style="margin-top: 15px; max-height: 160px; overflow-y: auto; border: 1px solid #e5e5ea; border-radius: 12px;">
+                            <table class="ios-table-view">
+                                <thead>
+                                    <tr><th>Kode Kupon</th><th>Nominal</th><th>Kategori</th><th>Aksi Kontrol</th></tr>
+                                </thead>
+                                <tbody id="render-owner-vouchers-target"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="ios-panel-card">
+                        <h3 style="font-size: 13px; font-weight: 800; color: var(--pakchill-green-dark); margin-bottom: 10px;">🧁 MANAJEMEN EKSTRA TOPING KASIR</h3>
+                        <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 8px;">
+                            <input type="text" id="own-add-toping-name" placeholder="Nama Toping Tambahan">
+                            <input type="number" id="own-add-toping-price" placeholder="Harga Toping (Rp)">
+                        </div>
+                        <button class="ios-primary-btn" onclick="saveNewTopingFromOwner()" style="background:#007aff;">Simpan Perubahan Toping</button>
+                        
+                        <div style="margin-top: 15px; max-height: 160px; overflow-y: auto; border: 1px solid #e5e5ea; border-radius: 12px;">
+                            <table class="ios-table-view">
+                                <thead>
+                                    <tr><th>Nama Toping</th><th>Harga Tambahan</th><th>Aksi Kontrol</th></tr>
+                                </thead>
+                                <tbody id="render-owner-topings-target"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="ios-panel-card" style="margin-top:20px;">
-                    <h4 style="color:var(--pakchill-green-dark); margin-bottom:12px;">+ Aturan Kupon Promosi & Potongan Voucher</h4>
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
-                        <input type="text" id="own-vch-code" placeholder="Kode Unik Kupon (Misal: PROMO20)">
-                        <input type="number" id="own-vch-nominal" placeholder="Nominal Potongan (Rp)">
-                        <select id="own-vch-type">
-                            <option value="Diskon">Diskon Manual / Kupon</option>
-                            <option value="Voucher">Voucher Resmi</option>
-                        </select>
-                    </div>
-                    <button onclick="saveNewVoucherFromOwner()" class="ios-primary-btn" style="margin-top:10px; background:#007aff;">Daftarkan Kode Promo</button>
-                </div>
-
-                <div class="ios-panel-card" style="margin-top:20px;">
-                    <h3 style="color:var(--pakchill-green-dark); margin-bottom:12px;">Manajemen Database Member Terdaftar</h3>
-                    <div style="overflow-x:auto;">
-                        <table class="ios-table-view">
-                            <thead>
-                                <tr>
-                                    <th>Nama Member</th>
-                                    <th>Nomor WhatsApp</th>
-                                    <th>Akumulasi Poin</th>
-                                    <th>Aksi Pengelolaan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="render-owner-members-target"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="ios-panel-card" style="margin-top:20px;">
-                    <h3 style="color:var(--pakchill-green-dark); margin-bottom:12px;">Pengaturan Akun Rekening Bank / E-Wallet</h3>
+                <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 20px; margin-bottom: 20px;">
                     
-                    <div class="form-crud-container" style="background:rgba(0,0,0,0.02); padding:15px; border-radius:16px; margin-bottom:15px; border:1px dashed rgba(0,0,0,0.1);">
-                        <h5 id="title-crud-rekening" style="margin-bottom:10px; color:var(--pakchill-green-medium); font-weight:bold;">+ Tambah Akun Rekening Baru</h5>
-                        <input type="hidden" id="form-rek-id-index" value="">
-                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
-                            <input type="text" id="form-rek-bank" placeholder="Nama Bank/E-Wallet (Misal: BCA)">
-                            <input type="text" id="form-rek-nomor" placeholder="Nomor Rekening / No HP">
-                            <input type="text" id="form-rek-nama" placeholder="Atas Nama (a/n)">
+                    <div class="ios-panel-card">
+                        <h3 style="font-size: 13px; font-weight: 800; color: var(--pakchill-green-dark); margin-bottom: 10px;">👥 DATABASE & PEMBARUAN DATA MEMBER</h3>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 8px; background: rgba(0,0,0,0.02); padding: 8px; border-radius: 10px;">
+                            <input type="text" id="form-edit-member-name" placeholder="Nama Member" style="margin:0;">
+                            <input type="text" id="form-edit-member-phone" placeholder="No WhatsApp" style="margin:0;">
+                            <input type="number" id="form-edit-member-points" placeholder="Poin Koleksi" style="margin:0;">
                         </div>
-                        <div style="display:flex; gap:10px; margin-top:10px;">
-                            <button onclick="saveRekeningFormSubmit()" class="ios-primary-btn" style="width:auto; padding:8px 20px;">Simpan Rekening</button>
-                            <button onclick="clearRekeningForm()" style="width:auto; padding:8px 20px; background:#8e8e93; color:white; border:none; border-radius:12px; cursor:pointer;">Batal</button>
+                        <button class="ios-primary-btn" onclick="submitUpdateMemberFormOwner()" style="background:var(--pakchill-green-medium); margin-bottom: 12px; padding: 8px 12px; font-size:12px;">Simpan Hasil Edit Member</button>
+
+                        <div style="max-height: 180px; overflow-y: auto; border: 1px solid #e5e5ea; border-radius: 12px;">
+                            <table class="ios-table-view">
+                                <thead>
+                                    <tr><th>Nama Member</th><th>No. WhatsApp</th><th>Loyalty Points</th><th>Kontrol Aksi</th></tr>
+                                </thead>
+                                <tbody id="render-owner-members-target"></tbody>
+                            </table>
                         </div>
                     </div>
 
-                    <div style="overflow-x:auto;">
-                        <table class="ios-table-view">
-                            <thead>
-                                <tr>
-                                    <th>Bank / E-Wallet</th>
-                                    <th>Nomor Rekening</th>
-                                    <th>Atas Nama (a/n)</th>
-                                    <th>Aksi Pengelolaan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="render-owner-rekening-target"></tbody>
-                        </table>
+                    <div class="ios-panel-card">
+                        <h3 style="font-size: 13px; font-weight: 800; color: var(--pakchill-green-dark); margin-bottom: 10px;" id="title-crud-rekening">+ Tambah Akun Rekening Baru</h3>
+                        <input type="hidden" id="form-rek-id-index">
+                        <div style="display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 8px;">
+                            <input type="text" id="form-rek-bank" placeholder="NAMA BANK (e.g., MANDIRI)">
+                            <input type="text" id="form-rek-nomor" placeholder="Nomor Rekening Akun">
+                        </div>
+                        <input type="text" id="form-rek-nama" placeholder="NAMA ATAS NAMA PEMILIK REKENING">
+                        
+                        <div style="display: flex; gap: 10px;">
+                            <button class="ios-primary-btn" onclick="saveRekeningFormSubmit()" style="margin:0;">Simpan Akun Rekening</button>
+                            <button class="ios-primary-btn" onclick="clearRekeningForm()" style="background:#8e8e93; margin:0; width: 35%;">Batal</button>
+                        </div>
+
+                        <div style="margin-top: 15px; max-height: 120px; overflow-y: auto; border: 1px solid #e5e5ea; border-radius: 12px;">
+                            <table class="ios-table-view">
+                                <thead>
+                                    <tr><th>Bank</th><th>No Rekening</th><th>Atas Nama</th><th>Kontrol</th></tr>
+                                </thead>
+                                <tbody id="render-owner-rekening-target"></tbody>
+                            </table>
+                        </div>
                     </div>
+
                 </div>
 
-                <div class="ios-panel-card" style="margin-top:20px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-                        <h3 style="color:var(--pakchill-green-dark); margin:0;">Audit Penjualan & Pembatalan Transaksi (Log Void)</h3>
-                        <select id="own-filter-month-select" onchange="renderHistoryTable()" style="width:180px; margin:0;">
-                            <option value="all">Semua Bulan</option>
-                            <option value="0">Januari</option>
-                            <option value="1">Februari</option>
-                            <option value="2">Maret</option>
-                            <option value="3">April</option>
-                            <option value="4">Mei</option>
-                            <option value="5">Juni</option>
-                            <option value="6">Juli</option>
-                            <option value="7">Agustus</option>
-                            <option value="8">September</option>
-                            <option value="9">Oktober</option>
-                            <option value="10">November</option>
-                            <option value="11">Desember</option>
-                        </select>
+                <div class="ios-panel-card" style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 12px; margin-bottom: 15px;">
+                        <div>
+                            <h3 style="font-size: 14px; font-weight: 800; color: var(--pakchill-green-dark);">📑 AUDIT PENJUALAN & PEMBATALAN TRANSAKSI (LOG VOID)</h3>
+                            <p style="font-size: 11px; color:#666; margin-top:2px;">Gunakan kontrol aksi VOID untuk membatalkan riwayat transaksi secara berjenjang.</p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <select id="own-filter-month-select" onchange="renderAuditHistoryTable()" style="margin:0; width: 140px; padding: 6px 10px;">
+                                <option value="all">Semua Bulan</option>
+                                <option value="0">Januari</option>
+                                <option value="1">Februari</option>
+                                <option value="2">Maret</option>
+                                <option value="3">April</option>
+                                <option value="4">Mei</option>
+                                <option value="5">Juni</option>
+                                <option value="6">Juli</option>
+                                <option value="7">Agustus</option>
+                                <option value="8">September</option>
+                                <option value="9">Oktobor</option>
+                                <option value="10">November</option>
+                                <option value="11">Desember</option>
+                            </select>
+                            <button onclick="exportFilteredOwnerReportExcel()" style="width:auto; margin:0; padding:8px 12px; background:#34c759; color:white; border:none; font-weight:bold; border-radius:8px; cursor:pointer; font-size:11px;">Unduh Excel (Bulan)</button>
+                            <button onclick="exportFilteredOwnerReportPDF()" style="width:auto; margin:0; padding:8px 12px; background:#ff9500; color:white; border:none; font-weight:bold; border-radius:8px; cursor:pointer; font-size:11px;">Unduh PDF (Bulan)</button>
+                        </div>
                     </div>
-                    <div style="overflow-x:auto;">
-                        <table class="ios-table-view">
+
+                    <div style="width: 100%; overflow-x: auto; border: 1px solid #e5e5ea; border-radius: 14px;" id="owner-audit-table-pdf-target">
+                        <table class="ios-table-view" style="min-width: 950px;">
                             <thead>
                                 <tr>
-                                    <th>Order #</th>
+                                    <th>Seq</th>
                                     <th>ID Transaksi</th>
-                                    <th>Waktu Berjalan</th>
+                                    <th>Waktu Pembayaran</th>
                                     <th>Pelanggan</th>
-                                    <th>Tipe Layanan</th>
-                                    <th>Total Bayar</th>
-                                    <th>Metode</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
+                                    <th>Layanan</th>
+                                    <th>Total Net</th>
+                                    <th>Detail Akun Bayar</th>
+                                    <th>Status Audit</th>
+                                    <th>Aksi Otoritas</th>
                                 </tr>
                             </thead>
-                            <tbody id="render-owner-transactions-target"></tbody>
+                            <tbody id="render-owner-transactions-target">
+                                </tbody>
                         </table>
                     </div>
                 </div>
 
-            </div>
-        </div>
-    </div>
-
-    <div id="thermal-receipt-output"></div>
+            </div> </div> </div> <div id="thermal-receipt-output" style="display: none;"></div>
 
     <script src="script.js"></script>
 </body>
