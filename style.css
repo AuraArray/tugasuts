@@ -1,0 +1,323 @@
+:root {
+    --pakchill-green-dark: #1e3f1b;
+    --pakchill-green-medium: #2d5a27;
+    --pakchill-green-soft: #478241;
+    --pakchill-light-bg: rgba(255, 255, 255, 0.85);
+    --ios-blur: blur(25px);
+    --shadow-premium: 0 10px 40px rgba(30, 63, 27, 0.07);
+    --border-ios: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #e4f0e2, #cbdcc8, #b8dbb4, #f2f7f1);
+    background-size: 400% 400%;
+    animation: ambientFluidMotion 14s ease infinite;
+    color: #1c1c1e;
+    overflow-x: hidden;
+}
+
+@keyframes ambientFluidMotion {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* POLESAN LAYAR DEPAN (LOGIN SCREEN OVERLAY) DENGAN FLOATING ORBS */
+#login-screen-overlay {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    min-height: 100vh; 
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%; 
+    z-index: 999;
+    background: linear-gradient(135deg, #dcecd9, #c4dbbf);
+    overflow: hidden;
+}
+
+/* Bulatan Partikel Mengambang (Floating Orbs Visual Effect) */
+.floating-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.45;
+    z-index: 1;
+    animation: orbFloatingMovement 12s ease-in-out infinite alternate;
+}
+.orb-1 { width: 300px; height: 300px; background: #b1d8a9; top: -50px; left: -50px; }
+.orb-2 { width: 400px; height: 400px; background: #89b380; bottom: -100px; right: -50px; animation-delay: -3s; }
+.orb-3 { width: 250px; height: 250px; background: #e6f3e3; top: 40%; left: 60%; animation-delay: -6s; }
+
+@keyframes orbFloatingMovement {
+    0% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+    50% { transform: translate(40px, -60px) rotate(90deg) scale(1.1); }
+    100% { transform: translate(-30px, 30px) rotate(180deg) scale(0.9); }
+}
+
+/* Efek Transisi Mikro Kartu Glassmorphism saat Disorot */
+.login-glass-card {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: var(--ios-blur); 
+    -webkit-backdrop-filter: var(--ios-blur);
+    padding: 40px 30px; 
+    border-radius: 32px;
+    width: 100%; 
+    max-width: 360px; 
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(30, 63, 27, 0.12); 
+    border: var(--border-ios);
+    position: relative;
+    z-index: 5;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+.login-glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 60px rgba(30, 63, 27, 0.18);
+}
+
+.pakchill-logo-placeholder {
+    width: 100px; 
+    height: 100px; 
+    margin: 0 auto 18px; 
+    border-radius: 22%;
+    background: #fff url('logo-pakchill.png') no-repeat center; 
+    background-size: cover;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+/* STRUKTUR WORKSPACE WORKFLOW */
+nav {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: var(--ios-blur);
+    -webkit-backdrop-filter: var(--ios-blur);
+    padding: 12px 4%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: var(--border-ios);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#badge-status-role {
+    background: var(--pakchill-green-dark);
+    color: white;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.logout-btn {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 6px 14px !important;
+    background: #ff3b30 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: bold;
+    border-radius: 10px !important;
+    cursor: pointer;
+}
+
+.workspace-container {
+    padding: 20px 3%;
+    width: 100%;
+}
+
+.main-welcome-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--pakchill-green-dark);
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+.kasir-operational-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.katalog-container-flex {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ios-panel-card {
+    background: var(--pakchill-light-bg);
+    backdrop-filter: var(--ios-blur);
+    -webkit-backdrop-filter: var(--ios-blur);
+    border-radius: 24px;
+    padding: 22px;
+    box-shadow: var(--shadow-premium);
+    border: var(--border-ios);
+}
+
+.products-adaptive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 14px;
+}
+
+.product-item-card {
+    background: white;
+    padding: 18px 12px;
+    border-radius: 20px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: all 0.2s ease;
+}
+.product-item-card:active { 
+    transform: scale(0.95); 
+}
+
+/* FITUR BARU: SEGMENTED CONTROL TIPE LAYANAN MODEL iOS */
+.segmented-control-ios {
+    display: flex;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 3px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+.segmented-control-ios input[type="radio"] {
+    display: none;
+}
+.segmented-control-ios label {
+    flex: 1;
+    text-align: center;
+    padding: 8px 2px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #555;
+    cursor: pointer;
+    border-radius: 9px;
+    transition: all 0.2s ease;
+}
+.segmented-control-ios input[type="radio"]:checked + label {
+    background: white;
+    color: var(--pakchill-green-dark);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* WRAPPER KERANJANG TERKONTROL */
+#cart-items-wrapper {
+    min-height: 80px;
+    max-height: 280px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    padding-right: 2px;
+}
+
+.cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+/* SEKTOR ADAPTASI INPUT DAN ELEMENT TOMBOL */
+input, select, button {
+    width: 100%; 
+    padding: 12px 14px; 
+    margin-bottom: 10px;
+    border-radius: 12px; 
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 14px; 
+    outline: none; 
+    transition: all 0.2s ease;
+}
+input:focus, select:focus { 
+    border-color: var(--pakchill-green-soft); 
+    background: white; 
+    box-shadow: 0 0 0 3px rgba(71, 130, 65, 0.15); 
+}
+
+button.ios-primary-btn { 
+    background: var(--pakchill-green-dark); 
+    color: white; 
+    font-weight: 700; 
+    border: none; 
+    cursor: pointer; 
+    margin-bottom: 0; 
+}
+button.ios-primary-btn:active { 
+    transform: scale(0.97); 
+}
+
+.cost-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.input-inline-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+.input-inline-row label { font-size: 13px; color: #555; }
+.input-inline-row input { 
+    width: 140px !important; 
+    margin-bottom: 0 !important; 
+    padding: 6px 10px !important; 
+    text-align: right; 
+    font-size: 14px; 
+}
+
+.total-tagihan-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0 5px 0;
+    padding: 12px;
+    background: rgba(45, 90, 39, 0.07);
+    border-radius: 14px;
+    font-weight: 800; 
+    font-size: 16px;
+}
+#txt-grand-total-display { color: var(--pakchill-green-dark); font-size: 19px; }
+
+.payment-info-box {
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(0,0,0,0.05);
+    padding: 12px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+}
+
+#kasir-member-status-box { font-size: 12px; font-weight: bold; margin-bottom: 8px; }
+
+/* REKAP PANEL KONTROL OWNER */
+.rekap-owner-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 15px; 
+    margin-bottom: 20px; 
+}
+.card-rekap-box { 
+    padding: 20px; 
+    border-radius: 20px; 
+    color: white; 
+    box-shadow: 0 6
