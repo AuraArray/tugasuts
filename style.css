@@ -1,3 +1,6 @@
+/* ==========================================================================
+   1. GLOBAL VARIABLES & PREMIUM CONFIGURATION
+   ========================================================================== */
 :root {
     --pakchill-green-dark: #1e3f1b;
     --pakchill-green-medium: #2d5a27;
@@ -12,7 +15,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
@@ -30,7 +33,9 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-/* POLESAN LAYAR DEPAN (LOGIN SCREEN OVERLAY) DENGAN FLOATING ORBS */
+/* ==========================================================================
+   2. AUTHENTICATION & LOGIN SCREEN INTERFACE
+   ========================================================================== */
 #login-screen-overlay {
     display: flex; 
     justify-content: center; 
@@ -43,7 +48,6 @@ body {
     overflow: hidden;
 }
 
-/* Bulatan Partikel Mengambang (Floating Orbs Visual Effect) */
 .floating-orb {
     position: absolute;
     border-radius: 50%;
@@ -57,12 +61,11 @@ body {
 .orb-3 { width: 250px; height: 250px; background: #e6f3e3; top: 40%; left: 60%; animation-delay: -6s; }
 
 @keyframes orbFloatingMovement {
-    0% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
-    50% { transform: translate(40px, -60px) rotate(90deg) scale(1.1); }
-    100% { transform: translate(-30px, 30px) rotate(180deg) scale(0.9); }
+    0% { transform: translate(0px, 0px) scale(1); }
+    50% { transform: translate(40px, -60px) scale(1.1); }
+    100% { transform: translate(-30px, 30px) scale(0.9); }
 }
 
-/* Efek Transisi Mikro Kartu Glassmorphism saat Disorot */
 .login-glass-card {
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: var(--ios-blur); 
@@ -93,7 +96,9 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.05);
 }
 
-/* STRUKTUR WORKSPACE WORKFLOW */
+/* ==========================================================================
+   3. NAVIGATION HEADER & LAYOUT CONTAINERS
+   ========================================================================== */
 nav {
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: var(--ios-blur);
@@ -115,7 +120,6 @@ nav {
     border-radius: 20px;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.3px;
 }
 
 .logout-btn {
@@ -132,7 +136,6 @@ nav {
 
 .workspace-container {
     padding: 20px 3%;
-    width: 100%;
 }
 
 .main-welcome-title {
@@ -140,14 +143,19 @@ nav {
     font-weight: 800;
     color: var(--pakchill-green-dark);
     margin-bottom: 20px;
-    letter-spacing: -0.5px;
 }
 
+/* ==========================================================================
+   4. KASIR OPERATIONAL WORKSPACE (GRID MODULES)
+   ========================================================================== */
 .kasir-operational-grid {
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
     gap: 20px;
-    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .kasir-operational-grid { grid-template-columns: 1fr; }
 }
 
 .katalog-container-flex {
@@ -166,6 +174,7 @@ nav {
     border: var(--border-ios);
 }
 
+/* KATALOG PRODUK ADAPTIF */
 .products-adaptive-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -179,51 +188,48 @@ nav {
     text-align: center;
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-    position: relative;
-    overflow: hidden;
     border: 1px solid rgba(0,0,0,0.03);
-    transition: all 0.2s ease;
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.product-item-card:active { 
-    transform: scale(0.95); 
+.product-item-card:active { transform: scale(0.95); }
+
+.badge-bundling-tag {
+    position: absolute;
+    top: 5px; left: 5px;
+    background: #ff9500; color: white;
+    font-size: 9px; font-weight: bold;
+    padding: 2px 6px; border-radius: 6px;
 }
 
-/* FITUR BARU: SEGMENTED CONTROL TIPE LAYANAN MODEL iOS */
+/* SEGMENTED CONTROL TIPE LAYANAN (iOS STYLE) */
 .segmented-control-ios {
     display: flex;
     background: rgba(0, 0, 0, 0.05);
     border-radius: 12px;
     padding: 3px;
     margin-bottom: 12px;
-    border: 1px solid rgba(0, 0, 0, 0.02);
 }
-.segmented-control-ios input[type="radio"] {
-    display: none;
-}
+.segmented-control-ios input[type="radio"] { display: none; }
 .segmented-control-ios label {
-    flex: 1;
-    text-align: center;
-    padding: 8px 2px;
-    font-size: 11px;
-    font-weight: 700;
-    color: #555;
-    cursor: pointer;
-    border-radius: 9px;
-    transition: all 0.2s ease;
+    flex: 1; text-align: center;
+    padding: 8px 2px; font-size: 11px;
+    font-weight: 700; color: #555;
+    cursor: pointer; border-radius: 9px;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 .segmented-control-ios input[type="radio"]:checked + label {
-    background: white;
-    color: var(--pakchill-green-dark);
+    background: white; color: var(--pakchill-green-dark);
     box-shadow: 0 3px 10px rgba(0,0,0,0.08);
 }
 
-/* WRAPPER KERANJANG TERKONTROL */
+/* ==========================================================================
+   5. SHOPPING CART & CALCULATOR COMPONENTS
+   ========================================================================== */
 #cart-items-wrapper {
-    min-height: 80px;
+    min-height: 60px;
     max-height: 280px;
     overflow-y: auto;
-    margin-bottom: 15px;
-    padding-right: 2px;
 }
 
 .cart-item-row {
@@ -234,85 +240,89 @@ nav {
     border-bottom: 1px solid rgba(0,0,0,0.04);
 }
 
-/* SEKTOR ADAPTASI INPUT DAN ELEMENT TOMBOL */
-input, select, button {
-    width: 100%; 
-    padding: 12px 14px; 
-    margin-bottom: 10px;
-    border-radius: 12px; 
-    border: 1px solid rgba(0, 0, 0, 0.08);
+.cost-row { 
+    display: flex; 
+    justify-content: space-between; 
     font-size: 14px; 
-    outline: none; 
-    transition: all 0.2s ease;
-}
-input:focus, select:focus { 
-    border-color: var(--pakchill-green-soft); 
-    background: white; 
-    box-shadow: 0 0 0 3px rgba(71, 130, 65, 0.15); 
+    margin-bottom: 8px; 
 }
 
-button.ios-primary-btn { 
-    background: var(--pakchill-green-dark); 
-    color: white; 
-    font-weight: 700; 
-    border: none; 
-    cursor: pointer; 
-    margin-bottom: 0; 
+.input-inline-row { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    margin-bottom: 6px; 
 }
-button.ios-primary-btn:active { 
-    transform: scale(0.97); 
-}
-
-.cost-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    margin-bottom: 8px;
-    font-weight: 500;
-}
-
-.input-inline-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 6px;
-}
-.input-inline-row label { font-size: 13px; color: #555; }
 .input-inline-row input { 
     width: 140px !important; 
     margin-bottom: 0 !important; 
     padding: 6px 10px !important; 
     text-align: right; 
-    font-size: 14px; 
+}
+
+/* DAFTAR KLIK VOUCHER FAST INTEGRATION */
+#vouchers-render-target button {
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+#vouchers-render-target button:active {
+    transform: scale(0.95);
+    opacity: 0.9;
 }
 
 .total-tagihan-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 15px 0 5px 0;
-    padding: 12px;
-    background: rgba(45, 90, 39, 0.07);
-    border-radius: 14px;
-    font-weight: 800; 
-    font-size: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin: 15px 0 5px 0; padding: 12px;
+    background: rgba(45, 90, 39, 0.07); border-radius: 14px; font-weight: 800;
 }
 #txt-grand-total-display { color: var(--pakchill-green-dark); font-size: 19px; }
 
-.payment-info-box {
-    background: rgba(255,255,255,0.5);
-    border: 1px solid rgba(0,0,0,0.05);
-    padding: 12px;
-    border-radius: 16px;
-    margin-bottom: 15px;
+.payment-info-box { 
+    background: rgba(255,255,255,0.5); 
+    padding: 12px; 
+    border-radius: 16px; 
+    margin-bottom: 15px; 
 }
 
-#kasir-member-status-box { font-size: 12px; font-weight: bold; margin-bottom: 8px; }
+/* ==========================================================================
+   6. UI FORM FORMS, BUTTONS & FORM INPUT CONTROLS
+   ========================================================================== */
+input, select, button {
+    width: 100%; padding: 12px 14px; margin-bottom: 10px;
+    border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 14px; outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+input:focus, select:focus { 
+    border-color: var(--pakchill-green-soft); 
+    background: white; 
+}
 
-/* REKAP PANEL KONTROL OWNER */
+button.ios-primary-btn { 
+    background: var(--pakchill-green-dark); color: white; 
+    font-weight: 700; border: none; cursor: pointer; margin-bottom: 0; 
+}
+button.ios-primary-btn:active {
+    transform: scale(0.98);
+}
+
+.qris-container-preset { 
+    text-align: center; 
+    padding: 10px; 
+    background: white; 
+    border-radius: 12px; 
+    margin-top: 5px; 
+}
+.qris-container-preset img { 
+    max-width: 140px; 
+    height: auto; 
+}
+
+/* ==========================================================================
+   7. OWNER CONTROL EXECUTIVE INTERFACE & MATRIX HUB
+   ========================================================================== */
 .rekap-owner-grid { 
     display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
     gap: 15px; 
     margin-bottom: 20px; 
 }
@@ -320,4 +330,53 @@ button.ios-primary-btn:active {
     padding: 20px; 
     border-radius: 20px; 
     color: white; 
-    box-shadow: 0 6
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+}
+.card-rekap-box h5 {
+    font-size: 12px;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+.card-rekap-box h2 {
+    font-size: 22px;
+    font-weight: 800;
+}
+
+/* ENTERPRISE DATA TABLES GENERAL STYLE */
+.ios-table-view {
+    width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px;
+}
+.ios-table-view th { 
+    background: rgba(0,0,0,0.03); 
+    padding: 12px; 
+    text-align: left; 
+    font-weight: 700; 
+    color: #444; 
+    border-bottom: 2px solid rgba(0,0,0,0.05);
+}
+.ios-table-view td { 
+    padding: 12px; 
+    border-bottom: 1px solid rgba(0,0,0,0.04); 
+    vertical-align: middle;
+}
+.ios-table-view tbody tr:hover {
+    background: rgba(255,255,255,0.4);
+}
+
+/* ==========================================================================
+   8. PRINTER OPTIMIZATION TARGET (NOTIF THERMAL 58MM)
+   ========================================================================== */
+@media print {
+    body * { display: none !important; }
+    #thermal-receipt-output, #thermal-receipt-output * { display: block !important; }
+    #thermal-receipt-output { 
+        position: absolute; 
+        top: 0; left: 0; 
+        width: 58mm; 
+        background: white; 
+        color: black; 
+        padding: 5px; 
+    }
+}
