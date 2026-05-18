@@ -8,234 +8,25 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
-    <style>
-        :root {
-            --pakchill-green-dark: #1e3f1b;
-            --pakchill-green-medium: #2d5a27;
-            --pakchill-green-soft: #478241;
-            --pakchill-light-bg: rgba(255, 255, 255, 0.85);
-            --ios-blur: blur(25px);
-            --shadow-premium: 0 10px 40px rgba(30, 63, 27, 0.07);
-            --border-ios: 1px solid rgba(255, 255, 255, 0.5);
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-        body {
-            min-height: 100vh;
-            background: linear-gradient(-45deg, #e4f0e2, #cbdcc8, #b8dbb4, #f2f7f1);
-            background-size: 400% 400%;
-            animation: ambientFluidMotion 14s ease infinite;
-            color: #1c1c1e;
-            overflow-x: hidden;
-        }
-        @keyframes ambientFluidMotion {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        nav {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: var(--ios-blur);
-            -webkit-backdrop-filter: var(--ios-blur);
-            padding: 12px 4%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: var(--border-ios);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        #badge-status-role {
-            background: var(--pakchill-green-dark);
-            color: white;
-            padding: 5px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
-        .logout-btn {
-            width: auto !important;
-            margin: 0 !important;
-            padding: 6px 14px !important;
-            background: #ff3b30 !important;
-            color: white !important;
-            border: none !important;
-            font-weight: bold;
-            border-radius: 10px !important;
-            cursor: pointer;
-        }
-        .workspace-container {
-            padding: 20px 3%;
-            width: 100%;
-        }
-        .main-welcome-title {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--pakchill-green-dark);
-            margin-bottom: 20px;
-            letter-spacing: -0.5px;
-        }
-        .kasir-operational-grid {
-            display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 20px;
-            align-items: start;
-        }
-        .katalog-container-flex {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .ios-panel-card {
-            background: var(--pakchill-light-bg);
-            backdrop-filter: var(--ios-blur);
-            -webkit-backdrop-filter: var(--ios-blur);
-            border-radius: 24px;
-            padding: 22px;
-            box-shadow: var(--shadow-premium);
-            border: var(--border-ios);
-            margin-bottom: 20px;
-        }
-        .products-adaptive-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 14px;
-        }
-        @media (max-width: 850px) {
-            .kasir-operational-grid { grid-template-columns: 1fr; }
-            .katalog-container-flex { order: 1; }
-            .checkout-section-card { order: 2; }
-            .products-adaptive-grid { grid-template-columns: repeat(2, 1fr) !important; }
-            .main-welcome-title { font-size: 20px; }
-        }
-        .product-item-card {
-            background: white;
-            padding: 18px 12px;
-            border-radius: 20px;
-            text-align: center;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.03);
-            transition: all 0.2s ease;
-        }
-        .product-item-card:active { transform: scale(0.95); }
-        .badge-bundling-tag {
-            position: absolute;
-            top: 0; left: 0;
-            background: #ff9500; color: white;
-            font-size: 9px; font-weight: 800;
-            padding: 3px 9px; border-bottom-right-radius: 12px;
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        #cart-items-wrapper {
-            min-height: 80px;
-            max-height: 240px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-        }
-        .cart-item-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.04);
-        }
-        .cost-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        .input-inline-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-        .input-inline-row label { font-size: 13px; color: #555; }
-        .input-inline-row input { width: 120px !important; margin-bottom: 0 !important; padding: 6px 10px !important; text-align: right; font-size: 14px; }
-        .total-tagihan-box {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 15px 0 5px 0;
-            padding: 12px;
-            background: rgba(45, 90, 39, 0.07);
-            border-radius: 14px;
-            font-weight: 800; font-size: 16px;
-        }
-        #txt-grand-total-display { color: var(--pakchill-green-dark); font-size: 19px; }
-        .payment-info-box {
-            background: rgba(255,255,255,0.5);
-            border: 1px solid rgba(0,0,0,0.05);
-            padding: 12px;
-            border-radius: 16px;
-            margin-bottom: 15px;
-        }
-        #kasir-member-status-box { font-size: 12px; font-weight: bold; margin-bottom: 8px; }
-        #login-screen-overlay {
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; position: fixed;
-            top:0; left:0; width:100%; height:100%; z-index: 999;
-            background: linear-gradient(135deg, #e4f0e2, #cbdcc8);
-        }
-        .login-glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur);
-            padding: 40px 30px; border-radius: 32px;
-            width: 100%; max-width: 360px; text-align: center;
-            box-shadow: 0 20px 50px rgba(30, 63, 27, 0.12); border: var(--border-ios);
-        }
-        .pakchill-logo-placeholder {
-            width: 100px; height: 100px; margin: 0 auto 18px; border-radius: 22%;
-            background: #fff url('logo-pakchill.png') no-repeat center; background-size: cover;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-        }
-        input, select, button {
-            width: 100%; padding: 12px 14px; margin-bottom: 10px;
-            border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.08);
-            font-size: 14px; outline: none; transition: all 0.2s ease;
-        }
-        input:focus, select:focus { border-color: var(--pakchill-green-soft); background: white; box-shadow: 0 0 0 3px rgba(71, 130, 65, 0.15); }
-        button.ios-primary-btn { background: var(--pakchill-green-dark); color: white; font-weight: 700; border: none; cursor: pointer; margin-bottom: 0; }
-        button.ios-primary-btn:active { transform: scale(0.97); }
-        .rekap-owner-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .card-rekap-box { padding: 20px; border-radius: 20px; color: white; box-shadow: 0 6px 20px rgba(0,0,0,0.05); }
-        .card-rekap-box h5 { font-size: 12px; text-transform: uppercase; opacity: 0.9; margin-bottom: 5px; letter-spacing: 0.5px; }
-        .card-rekap-box h2 { font-size: 24px; font-weight: 800; }
-        .ios-table-view { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; margin-top: 10px; }
-        .ios-table-view th { background: rgba(0,0,0,0.04); padding: 12px 10px; font-weight: 700; color: #444; }
-        .ios-table-view td { padding: 12px 10px; border-bottom: 1px solid rgba(0,0,0,0.04); background: white; }
-        .qris-container-preset { width: 100%; max-width: 220px; margin: 10px auto; border: 1px solid #e0e0e0; border-radius: 14px; padding: 10px; background: white; }
-        #live-rekening-info-box { padding: 10px; background: #f0f7ff; border-radius: 10px; font-size: 12px; font-weight: bold; color: #007aff; border: 1px solid #cbdff7; margin-top: 4px; }
-        #thermal-receipt-output { width: 58mm; padding: 6px; background: #fff; color: #000; font-family: "Courier New", Courier, monospace; font-size: 11px; line-height: 1.2; display: none; }
-        @media print {
-            body * { display: none !important; }
-            #thermal-receipt-output, #thermal-receipt-output * { display: block !important; }
-            #thermal-receipt-output { position: absolute; left: 0; top: 0; width: 58mm; }
-        }
-    </style>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div id="login-screen-overlay">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+        
         <div class="login-glass-card">
             <div class="pakchill-logo-placeholder"></div>
             <h2 style="color: var(--pakchill-green-dark); font-weight: 800; margin-bottom: 5px;">PAKCHILL POS</h2>
-            <p style="font-size: 11px; color: #666; margin-bottom: 25px; letter-spacing: 0.5px;">Enterprise Management System</p>
+            <p style="font-size: 11px; color: #555; margin-bottom: 25px; letter-spacing: 0.5px;">Enterprise Management System</p>
+            
             <input type="password" id="sys-pin-access" placeholder="Masukkan PIN Otentikasi" style="text-align: center;">
             <button class="ios-primary-btn" onclick="executeAuthentication()">Buka Kunci Sistem</button>
-            <p style="font-size: 10px; color: #999; margin-top: 10px;">Kasir: 123 | Owner: 000</p>
-        </div>
+            
+            </div>
     </div>
 
     <div id="main-app-layer" style="display: none;">
@@ -253,6 +44,7 @@
             <h1 class="main-welcome-title">Selamat Datang Di Mesin Kasir PAKCHILL</h1>
             
             <div id="view-segment-kasir" class="kasir-operational-grid">
+                
                 <div class="katalog-container-flex">
                     <div class="ios-panel-card katalog-section-card">
                         <h3 style="color: var(--pakchill-green-medium); margin-bottom: 10px;">Katalog Produk & Paket Bundling</h3>
@@ -263,8 +55,8 @@
                     <div class="ios-panel-card closing-dashboard-card">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
                             <div>
-                                <h3 style="color: #ff9500;">Dashboard Closing Kasir (Hari Ini)</h3>
-                                <p style="font-size: 12px; color: #666;">Pantauan omzet shift & kuantitas item terjual berjalan</p>
+                                <h3 style="color: #ff9500;">Dashboard Closing Kasir (24 Jam Terakhir)</h3>
+                                <p style="font-size: 12px; color: #666;">Pantauan omzet berjalan otomatis ter-reset harian</p>
                             </div>
                             <div style="display:flex; gap:6px;">
                                 <button onclick="exportKasirReportExcel()" style="width:auto; margin:0; padding:6px 10px; font-size:11px; background:#34c759; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Excel</button>
@@ -273,7 +65,7 @@
                         </div>
                         <div class="closing-stats-box" id="closing-report-pdf-area" style="background: white; padding: 15px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.05);">
                             <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:bold; margin-bottom:10px; padding-bottom:5px; border-bottom:1px dashed #ddd;">
-                                <span>Total Omzet Penjualan:</span>
+                                <span>Total Omzet Penjualan (Harian):</span>
                                 <span id="txt-closing-total-omzet" style="color:#34c759;">Rp 0</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:12px;">
@@ -291,20 +83,40 @@
                         <h3 style="color: var(--pakchill-green-medium); margin-bottom:0;">Keranjang Belanja</h3>
                         <div id="txt-live-order-number" style="background:#ff9500; color:white; padding:4px 10px; border-radius:8px; font-size:12px; font-weight:bold;">Order #: 101</div>
                     </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; color: #666; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.08);">
-                        <span style="width: 45%;">Nama Item</span>
-                        <span style="width: 35%; text-align: right;">Harga Satuan</span>
-                        <span style="width: 20%; text-align: right;">Hapus</span>
+                    
+                    <div class="segmented-control-ios">
+                        <input type="radio" id="service-dinein" name="service_type" value="Dine In" checked onchange="saveServiceSelectionState()">
+                        <label for="service-dinein">Dine In</label>
+                        
+                        <input type="radio" id="service-dineout" name="service_type" value="Dine Out" onchange="saveServiceSelectionState()">
+                        <label for="service-dineout">Dine Out</label>
+                        
+                        <input type="radio" id="service-gofood" name="service_type" value="GoFood" onchange="saveServiceSelectionState()">
+                        <label for="service-gofood">GoFood</label>
+                        
+                        <input type="radio" id="service-grabfood" name="service_type" value="GrabFood" onchange="saveServiceSelectionState()">
+                        <label for="service-grabfood">GrabFood</label>
+                        
+                        <input type="radio" id="service-shopeefood" name="service_type" value="Shopee Food" onchange="saveServiceSelectionState()">
+                        <label for="service-shopeefood">Shopee Food</label>
                     </div>
+
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; color: #666; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.08); margin-top: 10px;">
+                        <span style="width: 40%;">Nama Item</span>
+                        <span style="width: 35%; text-align: center;">Jumlah Kuantitas</span>
+                        <span style="width: 25%; text-align: right;">Total Harga</span>
+                    </div>
+                    
                     <div id="cart-items-wrapper"></div>
+                    
                     <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.08);">
                         <div class="cost-row"><span>Subtotal</span><span id="txt-subtotal-val">Rp 0</span></div>
                         <div class="input-inline-row">
-                            <label>Diskon Manual (Rp)</label>
+                            <label>Diskon Manual / Kode Kupon</label>
                             <input type="text" id="kasir-input-diskon" value="0" oninput="recalculateCartTotals()">
                         </div>
                         <div class="input-inline-row">
-                            <label>Potongan Voucher (Rp)</label>
+                            <label>Potongan Voucher Resmi</label>
                             <input type="text" id="kasir-input-voucher" value="0" oninput="recalculateCartTotals()">
                         </div>
                         <div class="total-tagihan-box">
@@ -318,7 +130,8 @@
                         <label style="font-size:11px; font-weight:bold; color:#666;">Cari Member (Ketik Nama / No WA):</label>
                         <input type="text" id="kasir-search-member" placeholder="Masukkan Nama / No WA..." oninput="executeLiveSearchMember()">
                         <div id="kasir-member-status-box"></div>
-                        <div style="background: rgba(0,0,0,0.02); padding: 10px; border-radius: 12px; border: 1px dashed rgba(0,0,0,0.1); margin-top:5px; margin-bottom:12px;">
+                        
+                        <div style="background: rgba(45, 90, 39, 0.04); padding: 10px; border-radius: 12px; border: 1px dashed rgba(45, 90, 39, 0.2); margin-top:5px; margin-bottom:12px;">
                             <p style="font-size:11px; font-weight:bold; color:#478241; margin-bottom:6px;">Pendaftaran Member Baru Resmi:</p>
                             <div style="display: flex; flex-direction: column; gap: 6px;">
                                 <div style="display: flex; gap: 6px;">
@@ -335,10 +148,12 @@
                             <option value="QRIS">QRIS (Otomatis Gambar QR)</option>
                             <option value="Transfer">Transfer Bank / E-Wallet (Dinamis)</option>
                         </select>
+                        
                         <div id="wrapper-sub-cash" style="margin-bottom: 12px; display: block;">
                             <input type="number" id="kasir-cash-input-uang" placeholder="Masukkan Uang Tunai Jual (Rp)" oninput="calculateCashReturn()">
                             <div id="cash-return-info" style="font-size:13px; font-weight:bold; color:#ff9500; margin-top:4px;">Kembalian: Rp 0</div>
                         </div>
+                        
                         <div id="wrapper-sub-qris" style="display:none; margin-bottom:12px;">
                             <select id="sub-vendor-qris">
                                 <option value="Mandiri">QRIS Bank Mandiri</option>
@@ -349,211 +164,113 @@
                                 <p id="qris-fallback-text" style="font-size:11px; font-weight: bold; margin-top:4px; color:#c00;">qris-pakchill.png</p>
                             </div>
                         </div>
+                        
                         <div id="wrapper-sub-transfer" style="display:none; margin-bottom:12px;">
                             <select id="sub-target-transfer" onchange="updateLiveRekeningInfo()"></select>
                             <div id="live-rekening-info-box"></div>
                         </div>
                     </div>
+                    
                     <button class="ios-primary-btn" onclick="finalizeTransactionReceipt('Print')">PROSES & CETAK NOTA THERMAL</button>
                     <button class="ios-primary-btn" onclick="finalizeTransactionReceipt('Email')" style="background:#007aff; margin-top:8px;">PROSES & NOTIFIKASI EMAIL</button>
                 </div>
             </div>
 
-            <div id="view-segment-owner" style="display: none;">
+            <div id="view-segment-owner" style="display: none; margin-top: 25px;">
+                <hr style="border:0; border-top:1px dashed rgba(0,0,0,0.1); margin-bottom:25px;">
+                <h2 style="color:var(--pakchill-green-dark); margin-bottom:20px; font-weight:800;">Owner Control Executive Dashboard</h2>
+                
                 <div class="rekap-owner-grid">
                     <div class="card-rekap-box" style="background:#34c759;"><h5>Omzet Hari Ini</h5><h2 id="own-rekap-hari">Rp 0</h2></div>
                     <div class="card-rekap-box" style="background:#007aff;"><h5>7 Hari Terakhir</h5><h2 id="own-rekap-minggu">Rp 0</h2></div>
                     <div class="card-rekap-box" style="background:#ff9500;"><h5>Bulan Ini</h5><h2 id="own-rekap-bulan">Rp 0</h2></div>
                     <div class="card-rekap-box" style="background:#5856d6;"><h5>Tahun Ini</h5><h2 id="own-rekap-tahun">Rp 0</h2></div>
                 </div>
+                
                 <div class="ios-panel-card">
                     <h3>Visualisasi Tren Finansial Bulanan</h3>
                     <div style="position: relative; height:240px; width:100%; margin-top:15px;">
                         <canvas id="canvasTrenOwner"></canvas>
                     </div>
                 </div>
+
+                <div class="ios-panel-card" style="margin-top:20px;">
+                    <h3 style="color:var(--pakchill-green-dark); margin-bottom:12px;">Manajemen Database Member Terdaftar</h3>
+                    <div style="overflow-x:auto;">
+                        <table class="ios-table-view" id="table-owner-members">
+                            <thead>
+                                <tr>
+                                    <th>Nama Member</th>
+                                    <th>Nomor WhatsApp</th>
+                                    <th>Akumulasi Poin</th>
+                                    <th>Aksi Pengelolaan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="render-owner-members-target"></tbody>
+                        </table>
+                    </div>
                 </div>
+
+                <div class="ios-panel-card" style="margin-top:20px;">
+                    <h3 style="color:var(--pakchill-green-dark); margin-bottom:12px;">Pengaturan Akun Rekening Bank / E-Wallet</h3>
+                    
+                    <div class="form-crud-container" style="background:rgba(0,0,0,0.02); padding:15px; border-radius:16px; margin-bottom:15px; border:1px dashed rgba(0,0,0,0.1);">
+                        <h5 id="title-crud-rekening" style="margin-bottom:10px; color:var(--pakchill-green-medium);">+ Tambah Akun Rekening Baru</h5>
+                        <input type="hidden" id="form-rek-id-index" value="">
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
+                            <input type="text" id="form-rek-bank" placeholder="Nama Bank/E-Wallet (Misal: BCA)">
+                            <input type="text" id="form-rek-nomor" placeholder="Nomor Rekening / No HP">
+                            <input type="text" id="form-rek-nama" placeholder="Atas Nama (a/n)">
+                        </div>
+                        <div style="display:flex; gap:10px; margin-top:10px;">
+                            <button onclick="saveRekeningFormSubmit()" class="ios-primary-btn" style="width:auto; padding:8px 20px;">Simpan Rekening</button>
+                            <button onclick="clearRekeningForm()" style="width:auto; padding:8px 20px; background:#8e8e93; color:white; border:none; border-radius:12px; cursor:pointer;">Batal</button>
+                        </div>
+                    </div>
+
+                    <div style="overflow-x:auto;">
+                        <table class="ios-table-view">
+                            <thead>
+                                <tr>
+                                    <th>Bank / E-Wallet</th>
+                                    <th>Nomor Rekening</th>
+                                    <th>Atas Nama (a/n)</th>
+                                    <th>Aksi Pengelolaan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="render-owner-rekening-target"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="ios-panel-card" style="margin-top:20px;">
+                    <h3 style="color:var(--pakchill-green-dark); margin-bottom:12px;">Audit Penjualan & Pembatalan Transaksi (Log Void)</h3>
+                    <div style="overflow-x:auto;">
+                        <table class="ios-table-view">
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>ID Transaksi</th>
+                                    <th>Waktu Berjalan</th>
+                                    <th>Pelanggan</th>
+                                    <th>Tipe Layanan</th>
+                                    <th>Total Bayar</th>
+                                    <th>Metode</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="render-owner-transactions-target"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
     <div id="thermal-receipt-output"></div>
 
-    <script>
-        let sysDatabase = JSON.parse(localStorage.getItem('pakchill_enterprise_db_v5.2')) || {
-            menu: [ { id: 'm1', name: 'PACHOY', price: 15000 }, { id: 'm2', name: 'NANAS', price: 12000 } ],
-            bundles: [],
-            vouchers: [ { code: 'PAKCHILLSEHAT', nominal: 5000, type: 'Voucher' } ],
-            rekening: [ { bank: 'BCA', nomor: '8410923121 a/n PT PAKCHILL' }, { bank: 'GoPay', nomor: '081234567890 a/n PAKCHILL INDO' } ],
-            members: [ { name: 'APRIL', wa: '0812', poin: 10 } ],
-            transactions: [],
-            lastOrderDate: new Date().toDateString(),
-            currentOrderSeq: 101
-        };
-
-        const todayStr = new Date().toDateString();
-        if (sysDatabase.lastOrderDate !== todayStr) {
-            sysDatabase.currentOrderSeq = 101;
-            sysDatabase.lastOrderDate = todayStr;
-            localStorage.setItem('pakchill_enterprise_db_v5.2', JSON.stringify(sysDatabase));
-        }
-
-        let activeRole = null;
-        let activeCart = [];
-        let activeMemberObj = null;
-
-        function saveToStorage() {
-            localStorage.setItem('pakchill_enterprise_db_v5.2', JSON.stringify(sysDatabase));
-        }
-
-        function executeAuthentication() {
-            const pinInput = document.getElementById('sys-pin-access');
-            if (!pinInput) return;
-            const pin = pinInput.value.trim();
-            
-            if (pin === '123') {
-                activeRole = 'kasir';
-                if(document.getElementById('txt-nav-role-label')) document.getElementById('txt-nav-role-label').innerText = 'STAFF KASIR';
-                if(document.getElementById('badge-status-role')) {
-                    document.getElementById('badge-status-role').innerText = 'Staff Kasir';
-                    document.getElementById('badge-status-role').style.background = '#2d5a27';
-                }
-                if(document.getElementById('view-segment-kasir')) document.getElementById('view-segment-kasir').style.display = 'grid';
-                if(document.getElementById('view-segment-owner')) document.getElementById('view-segment-owner').style.display = 'none';
-                unlockInterface();
-            } else if (pin === '000') {
-                activeRole = 'owner';
-                if(document.getElementById('txt-nav-role-label')) document.getElementById('txt-nav-role-label').innerText = 'OWNER HUB';
-                if(document.getElementById('badge-status-role')) {
-                    document.getElementById('badge-status-role').innerText = 'Owner Control';
-                    document.getElementById('badge-status-role').style.background = '#5856d6';
-                }
-                if(document.getElementById('view-segment-kasir')) document.getElementById('view-segment-kasir').style.display = 'grid';
-                if(document.getElementById('view-segment-owner')) document.getElementById('view-segment-owner').style.display = 'block';
-                unlockInterface();
-            } else {
-                alert('PIN Otentikasi Salah! Akses Sistem Terkunci.');
-            }
-        }
-
-        function unlockInterface() {
-            if(document.getElementById('login-screen-overlay')) document.getElementById('login-screen-overlay').style.display = 'none';
-            if(document.getElementById('main-app-layer')) document.getElementById('main-app-layer').style.display = 'block';
-            if(document.getElementById('sys-pin-access')) document.getElementById('sys-pin-access').value = '';
-            if(document.getElementById('txt-live-order-number')) document.getElementById('txt-live-order-number').innerText = `Order #: ${sysDatabase.currentOrderSeq}`;
-            
-            renderKatalogKasir();
-            renderCartUI();
-            calculateLiveClosingDashboard();
-        }
-
-        function renderKatalogKasir() {
-            const target = document.getElementById('katalog-render-target');
-            if (!target) return;
-            target.innerHTML = '';
-            sysDatabase.menu.forEach(item => {
-                target.innerHTML += `
-                    <div class="product-item-card" onclick="pushItemToCart('${item.name}', ${item.price})">
-                        <div style="font-weight:900; font-size:15px; color:var(--pakchill-green-dark);">${item.name}</div>
-                        <div style="color:var(--pakchill-green-soft); font-weight:700; margin-top:5px;">Rp ${item.price.toLocaleString('id-ID')}</div>
-                    </div>`;
-            });
-        }
-
-        function pushItemToCart(name, price) {
-            // PERBAIKAN: uid dibungkus aman menjadi String agar tidak crash saat di-render
-            activeCart.push({ name, price, uid: 'uid_' + Date.now() + '_' + Math.floor(Math.random() * 1000) });
-            renderCartUI();
-        }
-
-        function removeItemFromCart(uid) {
-            activeCart = activeCart.filter(item => item.uid !== uid);
-            renderCartUI();
-        }
-
-        function renderCartUI() {
-            const container = document.getElementById('cart-items-wrapper');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            if (activeCart.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:#999; font-size:13px; padding:20px;">Keranjang belanja kosong.</p>';
-                if(document.getElementById('txt-subtotal-val')) document.getElementById('txt-subtotal-val').innerText = 'Rp 0';
-                if(document.getElementById('txt-grand-total-display')) document.getElementById('txt-grand-total-display').innerText = 'Rp 0';
-                return;
-            }
-            
-            activeCart.forEach(item => {
-                container.innerHTML += `
-                    <div class="cart-item-row">
-                        <div style="width: 45%; font-weight:bold; font-size:13px;">${item.name}</div>
-                        <div style="width: 35%; text-align: right; font-size:13px; color:#333;">Rp ${item.price.toLocaleString('id-ID')}</div>
-                        <div style="width: 20%; text-align: right;">
-                            <button onclick="removeItemFromCart('${item.uid}')" style="width:auto; margin:0; padding:3px 8px; background:#ff3b30; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">✕</button>
-                        </div>
-                    </div>`;
-            });
-            recalculateCartTotals();
-        }
-
-        function recalculateCartTotals() {
-            let subtotal = activeCart.reduce((sum, item) => sum + item.price, 0);
-            if(document.getElementById('txt-subtotal-val')) {
-                document.getElementById('txt-subtotal-val').innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
-            }
-            let diskon = parseInt(document.getElementById('kasir-input-diskon')?.value) || 0;
-            let voucher = parseInt(document.getElementById('kasir-input-voucher')?.value) || 0;
-            let grandTotal = subtotal - diskon - voucher;
-            if(grandTotal < 0) grandTotal = 0;
-            if(document.getElementById('txt-grand-total-display')) {
-                document.getElementById('txt-grand-total-display').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID');
-            }
-        }
-
-        function handlePaymentDropdownBranching() {
-            const method = document.getElementById('kasir-select-paymethod').value;
-            document.getElementById('wrapper-sub-cash').style.display = method === 'Cash' ? 'block' : 'none';
-            document.getElementById('wrapper-sub-qris').style.display = method === 'QRIS' ? 'block' : 'none';
-            document.getElementById('wrapper-sub-transfer').style.display = method === 'Transfer' ? 'block' : 'none';
-        }
-
-        function calculateCashReturn() {
-            let subtotal = activeCart.reduce((sum, item) => sum + item.price, 0);
-            let diskon = parseInt(document.getElementById('kasir-input-diskon')?.value) || 0;
-            let voucher = parseInt(document.getElementById('kasir-input-voucher')?.value) || 0;
-            let grandTotal = subtotal - diskon - voucher;
-            let cash = parseInt(document.getElementById('kasir-cash-input-uang').value) || 0;
-            let returnVal = cash - grandTotal;
-            if(returnVal < 0) returnVal = 0;
-            document.getElementById('cash-return-info').innerText = 'Kembalian: Rp ' + returnVal.toLocaleString('id-ID');
-        }
-
-        function calculateLiveClosingDashboard() {
-            // Dashboard live stats report generator placeholder
-            document.getElementById('txt-closing-total-omzet').innerText = 'Rp ' + (sysDatabase.transactions?.reduce((s,t)=>s+t.total,0)||0).toLocaleString('id-ID');
-        }
-
-        function triggerSystemLogout() {
-            activeRole = null; activeCart = [];
-            document.getElementById('main-app-layer').style.display = 'none';
-            document.getElementById('login-screen-overlay').style.display = 'flex';
-        }
-        
-        function finalizeTransactionReceipt(type) {
-            alert('Transaksi Berhasil Diproses Melalui ' + type);
-            
-            // PERBAIKAN: Mengosongkan form & keterangan input otomatis setelah sukses
-            activeCart = [];
-            if(document.getElementById('kasir-input-diskon')) document.getElementById('kasir-input-diskon').value = '0';
-            if(document.getElementById('kasir-input-voucher')) document.getElementById('kasir-input-voucher').value = '0';
-            if(document.getElementById('kasir-cash-input-uang')) document.getElementById('kasir-cash-input-uang').value = '';
-            if(document.getElementById('kasir-search-member')) document.getElementById('kasir-search-member').value = '';
-            if(document.getElementById('cash-return-info')) document.getElementById('cash-return-info').innerText = 'Kembalian: Rp 0';
-            
-            sysDatabase.currentOrderSeq++;
-            saveToStorage();
-            document.getElementById('txt-live-order-number').innerText = `Order #: ${sysDatabase.currentOrderSeq}`;
-            renderCartUI();
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
